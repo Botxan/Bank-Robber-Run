@@ -63,11 +63,13 @@ int read_args(int* argcp, char* args[], int max, int* eofp)
 ///////////////////////////////////////
 
 int execute(int argc, char *argv[])
-{
-        return 0;
+{	
+	
+	return 1;
+		
 }
 
-int main ()
+void main ()
 {
    char * Prompt = "myShell0> ";
    int eof= 0;
