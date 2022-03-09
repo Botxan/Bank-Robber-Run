@@ -6,7 +6,7 @@ CFLAGS=
 LDFLAGS=
 LDLIBS=
 
-SRC= stee.c myshell0.c 
+SRC= myshell0.c stee.c 
 OBJ= ${SRC:.c=.o}
 DEP= ${SRC:.c=.d}
 

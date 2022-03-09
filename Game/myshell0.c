@@ -67,7 +67,7 @@ int execute(int argc, char *argv[])
         return 0;
 }
 
-main ()
+int main ()
 {
    char * Prompt = "myShell0> ";
    int eof= 0;
