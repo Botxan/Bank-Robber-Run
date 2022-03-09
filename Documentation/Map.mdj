@@ -26,7 +26,6 @@
 							"_parent": {
 								"$ref": "AAAAAAFF+qBtyKM79qY="
 							},
-							"fillColor": "#00a9ff",
 							"font": "Arial;13;0",
 							"left": 328,
 							"top": 88,
@@ -569,6 +568,30 @@
 							"width": 89,
 							"height": 57,
 							"text": "key card opt"
+						},
+						{
+							"_type": "UMLTextBoxView",
+							"_id": "AAAAAAF/bkvAwqnQWmc=",
+							"_parent": {
+								"$ref": "AAAAAAFF+qBtyKM79qY="
+							},
+							"fillColor": "#38bcff",
+							"font": "Arial;13;0",
+							"left": 208,
+							"top": 32,
+							"width": 60,
+							"height": 25,
+							"text": "Van"
+						},
+						{
+							"_type": "FreelineEdgeView",
+							"_id": "AAAAAAF/bkxnB6nXiPw=",
+							"_parent": {
+								"$ref": "AAAAAAFF+qBtyKM79qY="
+							},
+							"font": "Arial;13;0",
+							"lineStyle": 1,
+							"points": "264:56;329:89"
 						}
 					]
 				}
