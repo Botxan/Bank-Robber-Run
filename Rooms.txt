@@ -1,0 +1,68 @@
+MainEntrance:
+	Janitor.npc
+	 -Janitor_card.tool
+	rock.tool
+	window.object
+		-Rock used -Bank/Office_worker.npc moves
+				
+Bank:
+	Client1.npc
+	Client2.npc
+	Client3.npc
+	SecurityGuard.npc
+	Janitor.npc
+	Office_worker.npc
+		-KeyCard.tool
+JanitorRoom:
+	Janitor.npc
+	Camera.object
+	Bleach.tool
+	Screwdriver.tool
+Reception:
+	Recepcionist1.npc
+	Recepcionist2.npc
+	HackingDevice.tool
+Corridor:
+	Office_worker1.npc	
+	Office_worker2.npc
+	Office_worker3.npc
+	CoffeMachine.object
+		-Bleach.tool used BossOffice/Boss.npc moves to WC
+Office:
+	Office1_worker.npc
+	Client1.npc
+	Client2.npc
+Office2:
+	Office2_worker.npc
+	Client1.npc
+WC:
+	-code.txt(if boss went to W/C)
+BossOffice: 
+	Boss.npc
+		-code.txt
+	boss_card.tool
+
+Roof:
+	Lockpick.tool
+Parking:
+	Car.object
+		-Lockpick used -KeyCard.tool JanitorCard.tool
+	Car2.object
+	Ferrari.object
+		-Any object used -BossOffice/Boss.npc
+				
+Basement:
+	
+VaultCorridor:
+	-Lasers.object
+		-HackingDevice used -VaultRoom doesn't end game
+VaultRoom:
+	-VaultDoor.object
+		-Asks for code -Reveals Vault dir
+Vault:
+	Money.tool
+	
+	
+
+	
+	
