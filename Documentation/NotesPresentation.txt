@@ -1,0 +1,21 @@
+Folders Level:
+  - 1st level-> Main Folder and Directory
+  - 2nd level-> Main entrance
+  - 3rd level-> Parking, Reception and Bank
+  - 4th level-> Janitor room, Basement and Corridor
+  - 5th level-> Vault Corridor, Office #1, Office #2, WC, Boss office and Roof
+  - 6th level-> Vault room
+  - 7th level-> Vault
+  - Hidden Folder -> 'Air ducts' access from roof or boss office. Also, is the way to go from janitor room to WC.
+  
+MODO: 'anidado' (nested)
+
+Main Functions-> access, use, pick up, view, help, exit and timer.
+
+Main idea:
+  - Assalt the vault
+  - Need access to differents rooms(folders) to obtain the cards to get the vault.
+  - Rooms will have different persmissions and hidden object to advance.
+  - The main actor will have 'logs' to save the progress 
+  - Battles to obtain the minimum to open the vault. 
+  - One inventory for each participant. If you exit the game, you can save all you obtain for the nest time. 
