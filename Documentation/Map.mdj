@@ -252,16 +252,6 @@
 						},
 						{
 							"_type": "FreelineEdgeView",
-							"_id": "AAAAAAF/bikPs6kn1Ao=",
-							"_parent": {
-								"$ref": "AAAAAAFF+qBtyKM79qY="
-							},
-							"font": "Arial;13;0",
-							"lineStyle": 1,
-							"points": "264:272;342:282"
-						},
-						{
-							"_type": "FreelineEdgeView",
 							"_id": "AAAAAAF/bikenakqrWw=",
 							"_parent": {
 								"$ref": "AAAAAAFF+qBtyKM79qY="
@@ -370,19 +360,6 @@
 							},
 							"lineStyle": 1,
 							"points": "433:428;550:396"
-						},
-						{
-							"_type": "UMLTextView",
-							"_id": "AAAAAAF/bit8GalWfDs=",
-							"_parent": {
-								"$ref": "AAAAAAFF+qBtyKM79qY="
-							},
-							"font": "Arial;13;0",
-							"left": 264,
-							"top": 256,
-							"width": 89,
-							"height": 57,
-							"text": "key card opt"
 						},
 						{
 							"_type": "UMLTextView",
