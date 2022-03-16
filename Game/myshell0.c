@@ -11,6 +11,9 @@
 #define MAXLINE 200
 #define MAXARGS 20
 
+
+char * Prompt;
+
 /////////// reading commands:
 
 int read_args(int* argcp, char* args[], int max, int* eofp)
