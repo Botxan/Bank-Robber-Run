@@ -7,10 +7,12 @@
 #include <string.h>
 #include <errno.h>
 
+
 #define error(a) {perror(a); exit(1);};
 #define MAXLINE 200
 #define MAXARGS 20
 
+#include "./function/view.h"
 
 char * Prompt;
 
@@ -68,11 +70,16 @@ int read_args(int* argcp, char* args[], int max, int* eofp)
 int execute(int argc, char *argv[])
 {	
 	
-	return 1;
+	if(strcmp(argv[0], "view") == 0 || strcmp(argv[0], "ls") == 0)
+	{
 		
+		view(argc,argv);
+		
+	}
+	return 1;
 }
 
-void main ()
+int main ()
 {
    char * Prompt = "myShell0> ";
    int eof= 0;
@@ -86,4 +93,5 @@ void main ()
       }
       if (eof) exit(0);
    }
+
 }
