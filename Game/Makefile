@@ -1,8 +1,10 @@
 # Makefile
 
-CC=gcc -rdynamic 
-CPPFLAGS= -MMD
-CFLAGS= -Wall -Werror -Wextra -std=c99 -g
+CC=gcc -fsanitize=address
+CPPFLAGS= -MMD -D_XOPEN_SOURCE=500
+CFLAGS= -Wall -Wextra -std=c99 -O0 -g
+LDFLAGS=
+LDLIBS=
 
 SRC= myshell0.c  function/view.c 
 OBJ= ${SRC:.c=.o}
