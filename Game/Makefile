@@ -15,6 +15,6 @@ all: myshell0
 myshell0 : ${OBJ}
 
 clean:
-	rm -f ${OBJ} ${DEP} main
+	rm -f ${OBJ} ${DEP} myshell0
 
 # END
