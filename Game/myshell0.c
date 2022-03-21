@@ -13,8 +13,11 @@
 #define MAXARGS 20
 
 #include "./function/view.h"
+#include "./function/cd.h"
 
 char * Prompt;
+
+char *home;
 
 /////////// reading commands:
 
@@ -76,6 +79,10 @@ int execute(int argc, char *argv[])
 		view(argc,argv);
 		
 	}
+	if(strcmp(argv[0], "access") == 0 || strcmp(argv[0], "cd") == 0)
+	{
+		cd(argc,argv,home);
+	}
 	return 1;
 }
 
@@ -85,6 +92,7 @@ int main ()
    int eof= 0;
    int argc;
    char *args[MAXARGS];
+   home = getcwd(NULL, 0);
 
    while (1) {
       write(0,Prompt, strlen(Prompt));

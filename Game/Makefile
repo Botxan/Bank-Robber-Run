@@ -4,7 +4,7 @@ CC=gcc -rdynamic
 CPPFLAGS= -MMD
 CFLAGS= -Wall -Werror -Wextra -std=c99 -g
 
-SRC= myshell0.c  function/view.c 
+SRC= myshell0.c  function/view.c function/cd.c
 OBJ= ${SRC:.c=.o}
 DEP= ${SRC:.c=.d}
 

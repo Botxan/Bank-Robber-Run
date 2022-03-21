@@ -12,7 +12,24 @@
 
 #include "view.h"
 
-int verif(char argv[]);
+
+int verif(char argv[])
+{
+	char test[2]="/.";
+	for(size_t i=0;i<strlen(argv);i++)
+	{
+		for(size_t t=0;t<strlen(test);t++)
+		{
+			if(argv[i]==test[t])
+			{
+				write(1,"You can't use this atribut.\n\n", strlen("You can't use this atribut\n\n"));
+				return 0;
+			}
+		}
+	}
+	return 1;
+}
+
 
 void view(int argc,char *argv[])
 {
@@ -60,28 +77,27 @@ void view(int argc,char *argv[])
 					
 					if(verif(argv[1]))
 					{
-					
-					
-					DIR *d =opendir(argv[1]);
-					if(d)
-					{
-						while((dir =readdir(d)) !=NULL)
+							DIR *d =opendir(argv[1]);
+						if(d)
 						{
-							if (dir->d_name[0] != '.' && dir->d_name[strlen(dir->d_name)-1] != '~')
+							while((dir =readdir(d)) !=NULL)
 							{
-								write(0,dir->d_name, strlen(dir->d_name));
-								write(0,"\n", strlen("\n"));
+								if (dir->d_name[0] != '.' && dir->d_name[strlen(dir->d_name)-1] != '~')
+								{
+									write(0,dir->d_name, strlen(dir->d_name));
+									write(0,"\n", strlen("\n"));
 					
-							}	
-						}
+								}	
+							}
 						closedir(d);
-					}
-					else
-					{
+						}
+						else
+						{
 						
 						write(1,"this room doesn't exist\n", strlen("this room doesn't exist\n"));
+						}
 					}
-					}
+					
 					
 			}
 			break;
@@ -91,7 +107,7 @@ void view(int argc,char *argv[])
 					if(strcmp(argv[1],"-r")==0 || strcmp(argv[1],"-room")==0)
 					{					
 										
-										
+										const char* home = getcwd(NULL, 0);
 										DIR *d =opendir(argv[2]);
                                         if(d)
                                         {
@@ -111,7 +127,7 @@ void view(int argc,char *argv[])
 					
 														}
 												}
-												chdir("..");
+												chdir(home);
                                                 closedir(d);
 												
                                         }
@@ -123,7 +139,7 @@ void view(int argc,char *argv[])
 					}
 					else if (strcmp(argv[2],"-r")==0 || strcmp(argv[2],"-room")==0)
 					{
-										
+										const char* home = getcwd(NULL, 0);
 										DIR *d =opendir(argv[1]);
                                         if(d)
                                         {
@@ -147,7 +163,7 @@ void view(int argc,char *argv[])
 					
 														}
 												}
-												chdir("..");
+												chdir(home);
                                                 closedir(d);
 												
                                         }
@@ -187,22 +203,5 @@ void view(int argc,char *argv[])
 	
 }
 
-
-int verif(char argv[])
-{
-	char test[2]="/.";
-	for(size_t i=0;i<strlen(argv);i++)
-	{
-		for(size_t t=0;t<strlen(test);t++)
-		{
-			if(argv[i]==test[t])
-			{
-				write(1,"You can't use this atribut.\n\n", strlen("You can't use this atribut\n\n"));
-				return 0;
-			}
-		}
-	}
-	return 1;
-}
 
 
