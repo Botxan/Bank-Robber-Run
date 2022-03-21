@@ -7,6 +7,9 @@
 #include <stdio.h>
 #include <string.h>
 
+extern int search(char *word, int file);
+extern char* blank(char* input);
+
 void use(int argc, char *argv[]){
 
  if(argc  < 2){
@@ -34,27 +37,12 @@ void use(int argc, char *argv[]){
  int item = open(argv[1],O_RDONLY,0600);
  char uses[5];
  char cmd[5];char arg1[5] ; char arg2[];
- read(item,uses,lseek(item,4,1));
- read(item,cmd,lseek(item,9,5));
- read(item,arg1,lseek(item,19,5));
- read(item,arg2,lseek(item,28,15));
+ read(item,uses,lseek(item,searh("use:",item),1));
+ read(item,cmd,lseek(item,searh("cmd:",file),5));
+ read(item,arg1,lseek(item,searh("arg1",file),5));
+ read(item,arg2,lseek(item,search("arg2",file),15));
  int u = atoi(uses);
  u = u-1;
-
- char* blank(char* input) //font:https://stackoverflow.com/questions/13084236/function-to-remove-spaces-from-string-char-array-in-c
-{
-    int i,j;
-    char *output=input;
-    for (i = 0, j = 0; i<strlen(input); i++,j++)
-    {
-     	if (input[i]!=' ')
-            output[j]=input[i];
-        else
-            j--;
-    }
-    output[j]=0;
-    return output;
-}
 
  if(arg2[1] != NULL ){
   if(fork() == 0) execlp(blank(cmd),blank(cmd),blank(arg1),blank(arg2),NULL);
@@ -65,7 +53,7 @@ void use(int argc, char *argv[]){
   }
 
  if(u == 0){
-  fprint(stdout,"*I don't think  I'll nedd this anymore*");
+q  fprint(stdout,"*I don't think  I'll nedd this anymore*");
   unlink(argv[1]);
  }else{
    char newu[2] = u +'0';
