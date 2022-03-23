@@ -81,7 +81,7 @@ int execute(int argc, char *argv[])
 	}
 	if(strcmp(argv[0], "access") == 0 || strcmp(argv[0], "cd") == 0)
 	{
-		if(cd(argc,argv,home)==1) Prompt=argv[1];
+		if(cd(argc,argv,home,0)==1) Prompt=argv[1];
 	}
 	return 1;
 }
