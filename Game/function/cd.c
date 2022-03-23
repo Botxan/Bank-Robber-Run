@@ -38,7 +38,7 @@ int cd(int argc,char *argv[],char home[]){
 	
 	if (argc > 2) {
 			printf("%s: Too many operands \nUsage: %s <pathname>\n", (char *) argv[0], (char *) argv[0]);
-			exit(1);
+			return 0;
 	}
 	if(argc == 2) {
 		//printf("argc is 2\n");
