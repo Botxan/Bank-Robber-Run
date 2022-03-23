@@ -53,18 +53,22 @@ int cd(int argc,char *argv[],char home[]){
 		{
 		
 		if(i < 0)
+		{
 			printf("Room couldn't be changed\n");
+			return 0;
+		}
 		else{
 			printf("Room changed\n");
 			//printf("home = %s\n", home1);
 			//printf("%d\n",strcmp(home,home1));
-			
+			return 1;
 		}
 		}
 		else
 		{
 			printf("You can't exit of the game like that.\n");
 			chdir(homemain);
+			return 0;
 		}
 		}
 }	

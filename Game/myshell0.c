@@ -81,21 +81,22 @@ int execute(int argc, char *argv[])
 	}
 	if(strcmp(argv[0], "access") == 0 || strcmp(argv[0], "cd") == 0)
 	{
-		cd(argc,argv,home);
+		if(cd(argc,argv,home)==1) Prompt=argv[1];
 	}
 	return 1;
 }
 
 int main ()
 {
-   char * Prompt = "myShell0> ";
    int eof= 0;
    int argc;
    char *args[MAXARGS];
    home = getcwd(NULL, 0);
-
+   Prompt="Game"; 
    while (1) {
+
       write(0,Prompt, strlen(Prompt));
+      write(0,">",strlen(">"));
       if (read_args(&argc, args, MAXARGS, &eof) && argc > 0) {
          execute(argc, args);
       }
