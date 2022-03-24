@@ -11,13 +11,35 @@
 #define error(a) {perror(a); exit(1);};
 #define MAXLINE 200
 #define MAXARGS 20
+///////ROOMS
+#define VAN 0
+#define MAIN_ENTRANCE 1
+#define HALL 2
+#define LANDF 3
+#define ELECPANEL 4
+#define CORRIDOR 5
+#define OFF1 6
+#define OFF2 7
+#define SEC 8
+
+#define NKEYS 4
+///////DRESS
+#define SUIT 0
+#define ELEC 1
 
 #include "./function/view.h"
 #include "./function/cd.h"
 
-char * Prompt;
+typedef struct { char *key; int val; } t_symstruct;
 
+static t_symstruct lookuptable[] = {
+    { "Van", VAN }, { "Main entrance", MAIN_ENTRANCE }, { "Main banking hall", HALL }, { "Lost and found", LANDF }
+};
+
+char * Prompt;
+int dress;
 char *home;
+int id;
 
 /////////// reading commands:
 
@@ -81,11 +103,27 @@ int execute(int argc, char *argv[])
 	}
 	if(strcmp(argv[0], "access") == 0 || strcmp(argv[0], "cd") == 0)
 	{
-		if(cd(argc,argv,home)==1) Prompt=argv[1];
+		if(cd(argc,argv,home)==1)
+		{
+		 	Prompt=argv[1];
+			id=keyfromstring(argv[1]);
+		}
 	}
 	return 1;
 }
-
+////////////////////////////////////////////////////
+//function for room ids
+int keyfromstring(char *key)
+{
+    int i;
+    for (i=0; i < NKEYS; i++) {
+        t_symstruct *sym = lookuptable[i];
+        if (strcmp(sym->key, key) == 0)
+            return sym->val;
+    }
+    return 0;
+}
+/////////////////////////////////////////////////
 int main ()
 {
    int eof= 0;
