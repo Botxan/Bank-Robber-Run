@@ -121,7 +121,7 @@ int execute(int argc, char *argv[])
 		{
 			write(0,"\n", strlen("\n"));
 			char *path=strcat(function,"/view");
-			execl(path,*argv,*argv);
+			execl(path,*argv,argv[1],argv[2]);
 			
 			if (errno != 0)
 			{
