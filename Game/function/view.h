@@ -3,7 +3,7 @@
 
 
 
-void view(int argc,char *argv[]);
+int view(int argc,char *argv[]);
 
 
 
