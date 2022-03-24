@@ -2,11 +2,18 @@
 // myShell0
 //////////////////////////////////////////////////
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <string.h>
+
+#include <sys/syscall.h> 
+#include <fcntl.h>
 #include <errno.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <dirent.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+
 
 
 #define error(a) {perror(a); exit(1);};
@@ -41,6 +48,7 @@ char * Prompt;
 int dress;
 char *home;
 int id;
+char *function;
 
 /////////// reading commands:
 
@@ -111,25 +119,35 @@ int execute(int argc, char *argv[])
 	{
 		if(fork()==0)
 		{
-			execl("view",*argv);
+			write(0,"\n", strlen("\n"));
+			char *path=strcat(function,"/view");
+			execl(path,*argv,NULL);
+			
+			if (errno != 0)
+			{
+            			printf("Error launching child process: %s\n", strerror(errno));
+            			return 1;
+			}
+		
 		}
 
 	}
 	if(strcmp(argv[0], "access") == 0 || strcmp(argv[0], "cd") == 0)
 	{
-	char *roomText;
+		char *roomText;
 		if(cd(argc,argv,home,0)==1)
 		{
-		 	Prompt=argv[1];
+			
+		 	Prompt=strrchr(getcwd(NULL, 0),'/')+1;
 			id=idFromName(argv[1]);
 			roomText="";
 			switch(id)
 			{
-			case VAN :
-			break;
-			case ENTRANCE :
-			roomText="nice bank!\n";
-			break;
+				case VAN :
+				break;
+				case ENTRANCE :
+				roomText="nice bank!\n";
+				break;
 			}
 			write(0,roomText,strlen(roomText));
 		}
@@ -144,6 +162,7 @@ int main ()
    int eof= 0;
    int argc;
    char *args[MAXARGS];
+   function = getcwd(NULL, 0);
    chdir("Directories/Van");
    home = getcwd(NULL, 0);
    Prompt="Van";

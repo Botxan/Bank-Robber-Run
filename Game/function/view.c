@@ -11,7 +11,7 @@
 #include <sys/stat.h>
 
 #include "view.h"
-#include "cd.h"
+//#include "cd.h"
 
 
 
