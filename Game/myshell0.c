@@ -1,3 +1,4 @@
+
 // myShell0
 //////////////////////////////////////////////////
 
@@ -13,7 +14,7 @@
 #define MAXARGS 20
 ///////ROOMS
 #define VAN 0
-#define MAIN_ENTRANCE 1
+#define ENTRANCE 1
 #define HALL 2
 #define LANDF 3
 #define ELECPANEL 4
@@ -30,10 +31,10 @@
 #include "./function/view.h"
 #include "./function/cd.h"
 
-typedef struct { char *key; int val; } t_symstruct;
+typedef struct { char *name; int id; } idStruct;
 
-static t_symstruct lookuptable[] = {
-    { "Van", VAN }, { "Main entrance", MAIN_ENTRANCE }, { "Main banking hall", HALL }, { "Lost and found", LANDF }
+static idStruct lookuptable[] = {
+    { "Van", VAN }, { "MainEntrance", ENTRANCE }, { "MainBankingHall", HALL }, { "LostAndFound", LANDF }
 };
 
 char * Prompt;
@@ -89,39 +90,50 @@ int read_args(int* argcp, char* args[], int max, int* eofp)
    *argcp= i;
    return 1;
 }
-
-///////////////////////////////////////
-
+////////////////////////////////////////////////////
+//function for room ids
+int idFromName(char *newRoom)
+{
+    int i;
+    idStruct room;
+    for (i=0; i < NKEYS; i++) {
+        room = lookuptable[i];
+        if (strcmp(room.name, newRoom) == 0)
+		return room.id;
+    }
+    return 0;
+}
+//////////////////////////////////////////////
 int execute(int argc, char *argv[])
-{	
-	
+{
+
 	if(strcmp(argv[0], "view") == 0 || strcmp(argv[0], "ls") == 0)
 	{
-		
 		view(argc,argv);
-		
+
 	}
 	if(strcmp(argv[0], "access") == 0 || strcmp(argv[0], "cd") == 0)
 	{
-		if(cd(argc,argv,home)==1)
+	char *roomText;
+		if(cd(argc,argv,home,0)==1)
 		{
 		 	Prompt=argv[1];
-			id=keyfromstring(argv[1]);
+			id=idFromName(argv[1]);
+			roomText="";
+			switch(id)
+			{
+			case VAN :
+			break;
+			case ENTRANCE :
+			roomText="nice bank!\n";
+			break;
+			}
+			write(0,roomText,strlen(roomText));
 		}
+
+
 	}
 	return 1;
-}
-////////////////////////////////////////////////////
-//function for room ids
-int keyfromstring(char *key)
-{
-    int i;
-    for (i=0; i < NKEYS; i++) {
-        t_symstruct *sym = lookuptable[i];
-        if (strcmp(sym->key, key) == 0)
-            return sym->val;
-    }
-    return 0;
 }
 /////////////////////////////////////////////////
 int main ()
@@ -129,8 +141,9 @@ int main ()
    int eof= 0;
    int argc;
    char *args[MAXARGS];
+   chdir("Directories/Van");
    home = getcwd(NULL, 0);
-   Prompt="Game"; 
+   Prompt="Van";
    while (1) {
 
       write(0,Prompt, strlen(Prompt));
