@@ -109,7 +109,10 @@ int execute(int argc, char *argv[])
 
 	if(strcmp(argv[0], "view") == 0 || strcmp(argv[0], "ls") == 0)
 	{
-		view(argc,argv);
+		if(fork()==0)
+		{
+			execl("view",*argv);
+		}
 
 	}
 	if(strcmp(argv[0], "access") == 0 || strcmp(argv[0], "cd") == 0)

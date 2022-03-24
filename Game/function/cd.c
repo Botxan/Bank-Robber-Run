@@ -33,8 +33,16 @@ int verif2(char argv[],char home[])
 	return 0;
 }
 
-
+#ifdef FUNCTION
 int cd(int argc,char *argv[],char home[],int verif){
+#else
+int main(int argc,char *argv[])
+{
+int verif=1;
+char home[]="";
+
+	
+#endif
 	
 	if (argc > 2) {
 			printf("%s: Too many operands \nUsage: %s <pathname>\n", (char *) argv[0], (char *) argv[0]);

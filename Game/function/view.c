@@ -13,6 +13,9 @@
 #include "view.h"
 #include "cd.h"
 
+
+
+
 int verif(char argv[])
 {
 	char test[2]="/.";
@@ -59,8 +62,14 @@ void deletextension(char argv[])
 	*pDot = '\0';
 }
 
-void view(int argc,char *argv[])
+
+#ifdef FUNCTION
+int view(int argc,char *argv[])
+#else
+int main(int argc,char *argv[])
+#endif
 {
+	
 	struct dirent *dir; 
 	struct stat *buf = malloc(sizeof(struct stat));
 	char room[100]="Room:\n";
@@ -368,6 +377,7 @@ void view(int argc,char *argv[])
 		break;
 	}
 	free(buf);
+	return 0;
 	
 }
 

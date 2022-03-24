@@ -1,20 +1,38 @@
 # Makefile
 
-CC=gcc -rdynamic 
-CPPFLAGS= -MMD
-CFLAGS= -Wall -Werror -Wextra -std=c99 -g
+CC=gcc -DFUNCTION -rdynamic 
+CC1=gcc -rdynamic
+CPPFLAGS= -MMD 
+CFLAGS= -Wall -Werror -Wextra -std=c99 -g 
 
-SRC= myshell0.c  function/view.c function/cd.c
+SRC= myshell0.c  function/cd.c function/view.c
 OBJ= ${SRC:.c=.o}
 DEP= ${SRC:.c=.d}
 
-all: myshell0 
+SRC1= function/view.c
+OBJ1= ${SRC1:.c=.o}
+DEP1= ${SRC1:.c=.d}
+
+SRC2= function/cd.c
+OBJ2= ${SRC2:.c=.o}
+DEP2= ${SRC2:.c=.d}
+
+all:view myshell0 cd
+
+-include ${DEP1}
+
+view:${SRC1}
+	$(CC1) -o $@ $^ $(CFLAGS)
 
 -include ${DEP}
-
 myshell0 : ${OBJ}
+		$(CC) -o $@ $^ $(CFLAGS)
+		
+-include ${DEP2}
+cd : ${SRC2}
+		$(CC1) -o $@ $^ $(CFLAGS)
 
 clean:
-	rm -f ${OBJ} ${DEP} myshell0
+	rm -f ${OBJ} ${DEP} myshell0 ${DEP1} ${OBJ1} view  ${DEP2} ${OBJ2} cd
 
 # END
