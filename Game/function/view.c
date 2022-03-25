@@ -11,7 +11,7 @@
 #include <sys/stat.h>
 
 #include "view.h"
-//#include "cd.h"
+#include "cd.h"
 
 
 
@@ -53,6 +53,23 @@ int extension(char argv[])
 		}
 	}
 	return 0;
+}
+
+int verifcd(char argv[])
+{
+	if(strcmp(argv,"..")==0)
+	{
+		char *home1=getcwd(NULL, 0);
+		chdir("Directories/Van");
+		char *main1=getcwd(NULL, 0);
+		chdir(home1);
+		if(strcoll(home1,main1)>=0)
+		{
+			return 1;
+		}
+	}
+	return 0;
+	
 }
 
 void deletextension(char argv[])
@@ -156,10 +173,8 @@ int main(int argc,char *argv[])
 			closedir(d);
 		}
 		else
-		{
-
-			
-			if(verif(argv[1]))
+		{	
+			if(verifcd(argv[1])||verif(argv[1]))
 			{
 				DIR *d =opendir(argv[1]);
 				const char* home = getcwd(NULL, 0);
@@ -229,15 +244,15 @@ int main(int argc,char *argv[])
 				}
 			}
 			
-			
 		}
+		
 		break;
 	case 3:;
-		if(verif(argv[1]) && verif(argv[2]))
-		{
-			if(strcmp(argv[1],"-r")==0 || strcmp(argv[1],"-room")==0)
-			{					
-				
+		
+		if(strcmp(argv[1],"-r")==0 || strcmp(argv[1],"-room")==0)
+		{					
+			if(verifcd(argv[1]) || verif(argv[1]))
+			{
 				const char* home = getcwd(NULL, 0);
 				DIR *d =opendir(argv[2]);
 				if(d)
@@ -268,7 +283,10 @@ int main(int argc,char *argv[])
 					write(1,"this room doesn't exist\n", strlen("this room doesn't exist\n"));
 				}
 			}
-			else if (strcmp(argv[2],"-r")==0 || strcmp(argv[2],"-room")==0)
+		}
+		else if (strcmp(argv[2],"-r")==0 || strcmp(argv[2],"-room")==0)
+		{
+			if(verifcd(argv[1]) || verif(argv[1]))
 			{
 				const char* home = getcwd(NULL, 0);
 				DIR *d =opendir(argv[1]);
@@ -303,7 +321,10 @@ int main(int argc,char *argv[])
 					write(1,"this room doesn't exist\n", strlen("this room doesn't exist\n"));
 				}
 			}
-			else
+		}
+		else
+		{
+			if(verifcd(argv[1]) || verif(argv[1]))
 			{
 				DIR *d =opendir(argv[1]);
 				const char* home = getcwd(NULL, 0);
@@ -371,9 +392,10 @@ int main(int argc,char *argv[])
 					write(1,"this room doesn't exist\n", strlen("this room doesn't exist\n"));
 				}
 			}
-			
-			
 		}
+		
+		
+		
 		break;
 	}
 	free(buf);
