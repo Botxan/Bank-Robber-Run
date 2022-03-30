@@ -18,10 +18,10 @@ OBJ2= ${SRC2:.c=.o}
 DEP2= ${SRC2:.c=.d}
 
 SRC3= function/inv.c
-OBJ3= ${SRC3: .c=.o}
-DEP3= ${SRC3: .c=.d}
+OBJ3= ${SRC3:.c=.o}
+DEP3= ${SRC3:.c=.d}
 
-SRC4= function/leave.c
+SRC4= function/Leave.c
 OBJ4= ${SRC4:.c=.o}
 DEP4= ${SRC4:.c=.d}
 
