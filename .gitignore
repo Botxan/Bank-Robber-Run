@@ -1,0 +1,6 @@
+*.d
+*.o
+./Game/inv
+./Game/Leave
+./Game/myshell0
+./Game/view
