@@ -37,6 +37,9 @@
 
 #include "./function/view.h"
 #include "./function/cd.h"
+#include "./function/Leave.h"
+
+int eof;
 
 typedef struct { char *name; int id; } idStruct;
 
@@ -51,6 +54,7 @@ int id;
 char *function;
 
 /////////// reading commands:
+
 
 int read_args(int* argcp, char* args[], int max, int* eofp)
 {
@@ -122,7 +126,6 @@ int execute(int argc, char *argv[])
 			write(0,"\n", strlen("\n"));
 			char *path=strcat(function,"/view");
 			execl(path,*argv,argv[1],argv[2]);
-			
 			if (errno != 0)
 			{
             			printf("Error launching child process: %s\n", strerror(errno));
@@ -154,12 +157,35 @@ int execute(int argc, char *argv[])
 
 
 	}
+	if(strcmp(argv[0], "Pause") == 0 || strcmp(argv[0], "P") == 0|| strcmp(argv[0], "quit") == 0|| strcmp(argv[0], "q") == 0)
+	{
+		
+		
+			int t =Leave();
+			if(t==1)
+			{
+				eof=1;
+			}
+			if(t==0)
+			{
+				eof=0;
+			}
+			if(t==2)
+			{
+				//save don't implement for the moment
+				eof=1;
+			}
+		
+		
+	}
+	
+	
 	return 1;
 }
 /////////////////////////////////////////////////
 int main ()
 {
-   int eof= 0;
+   eof=0;
    int argc;
    char *args[MAXARGS];
    function = getcwd(NULL, 0);
