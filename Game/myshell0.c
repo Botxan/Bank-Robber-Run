@@ -37,6 +37,7 @@
 
 #include "./function/view.h"
 #include "./function/cd.h"
+#include "./function/inv.h"
 
 typedef struct { char *name; int id; } idStruct;
 
@@ -154,6 +155,12 @@ int execute(int argc, char *argv[])
 
 
 	}
+
+	if(strcmp(argv[0], "inv") == 0 || strcmp(argv[0], "inventory") == 0)
+	{
+		return inv();
+	}
+
 	return 1;
 }
 /////////////////////////////////////////////////
