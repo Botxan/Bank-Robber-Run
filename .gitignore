@@ -1,6 +1,8 @@
 *.d
 *.o
-./Game/inv
-./Game/Leave
-./Game/myshell0
-./Game/view
+/Game/inv
+/Game/leave
+/Game/myshell0
+/Game/view
+/Game/cd
+
