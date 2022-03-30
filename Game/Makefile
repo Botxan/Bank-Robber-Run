@@ -5,7 +5,7 @@ CC1=gcc -rdynamic
 CPPFLAGS= -MMD 
 CFLAGS= -Wall -Werror -Wextra -std=c99 -g 
 
-SRC= myshell0.c  function/cd.c function/view.c function/Leave.c
+SRC= myshell0.c  function/cd.c function/view.c function/inv.c function/Leave.c
 OBJ= ${SRC:.c=.o}
 DEP= ${SRC:.c=.d}
 
@@ -17,11 +17,15 @@ SRC2= function/cd.c
 OBJ2= ${SRC2:.c=.o}
 DEP2= ${SRC2:.c=.d}
 
+SRC3= function/inv.c
+OBJ3= ${SRC3: .c=.o}
+DEP3= ${SRC3: .c=.d}
+
 SRC4= function/leave.c
 OBJ4= ${SRC4:.c=.o}
 DEP4= ${SRC4:.c=.d}
 
-all:view myshell0 cd leave
+all:view myshell0 cd inv leave
 
 -include ${DEP1}
 
@@ -35,12 +39,16 @@ myshell0 : ${OBJ}
 -include ${DEP2}
 cd : ${SRC2}
 		$(CC1) -o $@ $^ $(CFLAGS)
+
+-include ${DEP3}
+inv : ${SRC3}
+		$(CC1) -o $@ $^ $(CFLAGS)
 		
 -include ${DEP4}		
-leave: ${SRC4}
+leave : ${SRC4}
 		$(CC1) -o $@ $^ $(CFLAGS)
 
 clean:
-	rm -f ${OBJ} ${DEP} myshell0 ${DEP1} ${OBJ1} view  ${DEP2} ${OBJ2} cd ${DEP4} ${OBJ4} Leave
+	rm -f ${OBJ} ${DEP} myshell0 ${DEP1} ${OBJ1} view  ${DEP2} ${OBJ2} cd ${DEP3} ${OBJ3} inv ${DEP4} ${OBJ4} Leave
 
 # END

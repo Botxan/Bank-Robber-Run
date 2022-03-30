@@ -37,9 +37,7 @@
 
 #include "./function/view.h"
 #include "./function/cd.h"
-<<<<<<< HEAD
 #include "./function/inv.h"
-=======
 #include "./function/Leave.h"
 
 int eof;
