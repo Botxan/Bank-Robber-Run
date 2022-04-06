@@ -174,14 +174,19 @@ int main(int argc,char *argv[])
 		}
 		else
 		{	
+			int result=1;
 			if(verifcd(argv[1])||verif(argv[1]))
 			{
 				DIR *d =opendir(argv[1]);
-				const char* home = getcwd(NULL, 0);
-				if(d)
+				char* home = getcwd(NULL, 0);
+				char *part1=strcat(strcat(home,"/"),argv[1]);
+				
+				result = access (part1, R_OK);
+				
+				if(d && result==0 ) 
 				{
-					chdir(argv[1]);
-					
+					chdir(argv[1]);	
+				
 					while((dir =readdir(d)) !=NULL)
 					{
 						stat(dir->d_name,buf);
@@ -233,14 +238,23 @@ int main(int argc,char *argv[])
 					write(0,"\n", strlen("\n\n"));
 					write(0,npc, strlen(npc));
 					write(0,"\n", strlen("\n\n"));
-					
 					chdir(home);
 					closedir(d);
+					
+				
 				}
 				else
 				{
+					if(result!=0)
+					{
+						write(1,"You need to use some object to open this door\n", strlen("You need to use some object to open this door\n"));
+					}
+					else
+					{
+						write(1,"this room doesn't exist\n", strlen("this room doesn't exist\n"));
+					}
 					
-					write(1,"this room doesn't exist\n", strlen("this room doesn't exist\n"));
+					
 				}
 			}
 			
@@ -324,13 +338,22 @@ int main(int argc,char *argv[])
 		}
 		else
 		{
+			int result=1;
 			if(verifcd(argv[1]) || verif(argv[1]))
 			{
 				DIR *d =opendir(argv[1]);
-				const char* home = getcwd(NULL, 0);
-				if(d)
+				char* home = getcwd(NULL, 0);
+				char *part1=strcat(strcat(home,"/"),argv[1]);
+				
+				result = access (part1, R_OK);
+				
+				
+				if(d && result ==0)
 				{
 					chdir(argv[1]);
+					
+			
+				
 					while((dir =readdir(d)) !=NULL)
 					{
 						stat(dir->d_name,buf);
@@ -385,11 +408,20 @@ int main(int argc,char *argv[])
 					
 					chdir(home);
 					closedir(d);
+	
+					
 				}
 				else
 				{
 					
-					write(1,"this room doesn't exist\n", strlen("this room doesn't exist\n"));
+					if(result!=0)
+					{
+						write(1,"You need to use some object to open this door\n", strlen("You need to use some object to open this door\n"));
+					}
+					else
+					{
+						write(1,"this room doesn't exist\n", strlen("this room doesn't exist\n"));
+					}
 				}
 			}
 		}

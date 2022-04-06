@@ -66,7 +66,11 @@ char home[]="";
 			return 0;
 		}
 		else{
+			#ifdef FUNCTION
 			printf("Room changed\n");
+			#else
+			printf("PATH=%s",home1);
+			#endif
 			//printf("home = %s\n", home1);
 			//printf("%d\n",strcmp(home,home1));
 			return 1;
