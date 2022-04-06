@@ -39,7 +39,7 @@
 #include "./function/cd.h"
 #include "./function/inv.h"
 #include "./function/Leave.h"
-
+#include "./function/pickUp.h"
 int eof;
 
 typedef struct { char *name; int id; } idStruct;
@@ -53,6 +53,7 @@ int dress;
 char *home;
 int id;
 char *function;
+char *root;
 
 /////////// reading commands:
 
@@ -161,9 +162,17 @@ int execute(int argc, char *argv[])
 
 	if(strcmp(argv[0], "inv") == 0 || strcmp(argv[0], "inventory") == 0)
 	{
-		return inv();
+		inv();
 	}
+	if(strcmp(argv[0], "pickUp") == 0 || strcmp(argv[0], "pu") == 0)
+	{
+		if(strcmp(argv[1],"")!=0)
+		{
+			if(pickUp(root,argv[1])==1)
+			write(0,"The object doesn't exist\n",strlen("The object doesn't exist\n"));
+		}
 
+	}
 	if(strcmp(argv[0], "Pause") == 0 || strcmp(argv[0], "P") == 0|| strcmp(argv[0], "quit") == 0|| strcmp(argv[0], "q") == 0)
 	{
 		
@@ -197,7 +206,9 @@ int main ()
    int argc;
    char *args[MAXARGS];
    function = getcwd(NULL, 0);
-   chdir("Directories/Van");
+   chdir("Directories");
+   root = getcwd(NULL, 0);
+   chdir("Van");
    home = getcwd(NULL, 0);
    Prompt="Van";
    while (1) {

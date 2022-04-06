@@ -18,6 +18,12 @@
 
 char current[200];
 
+void deletextensionTool(char argv[])
+{
+	char *pDot = strchr(argv, '.');
+	if(pDot!=NULL)
+	*pDot = '\0';
+}
 
 #ifdef FUNCTION
 int inv(char* home){
@@ -28,7 +34,7 @@ int main(int argc,char* argv[]) {
 if (argc!=1||strcmp(argv[0],"inv")) return 1;
 strcpy(current,getcwd(current,200));
 chdir("..");
-char home[]="Directories";
+char home[]="Directories/Van";
 #endif
 struct dirent *dir;
 struct stat *buf = malloc(sizeof(struct stat));
@@ -45,6 +51,7 @@ DIR *d=opendir(".");
 		{
 			empty=0;
 			strcat(tool,"  ");
+			deletextensionTool(dir->d_name);
 			strcat(tool,dir->d_name);
 			strcat(tool,"\n");	
 		}
