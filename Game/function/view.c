@@ -134,6 +134,11 @@ int main(int argc,char *argv[])
 						strcat(npc,dir->d_name);
 						strcat(npc,"\n");
 						break;
+					default:
+						strcat(room,"  ");
+						strcat(room,dir->d_name);
+						strcat(room,"\n");
+						break;
 					}
 					
 					
@@ -222,6 +227,11 @@ int main(int argc,char *argv[])
 									strcat(npc,"  ");
 									strcat(npc,dir->d_name);
 									strcat(npc,"\n");
+									break;
+								default:
+									strcat(room,"  ");
+									strcat(room,dir->d_name);
+									strcat(room,"\n");
 									break;
 								}
 								
@@ -409,6 +419,11 @@ int main(int argc,char *argv[])
 									strcat(npc,"  ");
 									strcat(npc,dir->d_name);
 									strcat(npc,"\n");
+									break;
+								default:
+									strcat(room,"  ");
+									strcat(room,dir->d_name);
+									strcat(room,"\n");
 									break;
 								}
 								
