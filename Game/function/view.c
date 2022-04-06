@@ -262,14 +262,17 @@ int main(int argc,char *argv[])
 		
 		break;
 	case 3:;
-		
+		int result=1;
 		if(strcmp(argv[1],"-r")==0 || strcmp(argv[1],"-room")==0)
-		{					
+		{			
 			if(verifcd(argv[1]) || verif(argv[1]))
-			{
-				const char* home = getcwd(NULL, 0);
+			{		
+				char* home = getcwd(NULL, 0);
 				DIR *d =opendir(argv[2]);
-				if(d)
+				char *part1=strcat(strcat(home,"/"),argv[2]);
+				result = access (part1, R_OK);
+				
+				if(d && result ==0)
 				{
 					chdir(argv[2]);
 					while((dir =readdir(d)) !=NULL)
@@ -294,7 +297,14 @@ int main(int argc,char *argv[])
 				else
 				{
 
-					write(1,"this room doesn't exist\n", strlen("this room doesn't exist\n"));
+					if(result!=0)
+					{
+						write(1,"You need to use some object to open this door\n", strlen("You need to use some object to open this door\n"));
+					}
+					else
+					{
+						write(1,"this room doesn't exist\n", strlen("this room doesn't exist\n"));
+					}
 				}
 			}
 		}
@@ -302,9 +312,12 @@ int main(int argc,char *argv[])
 		{
 			if(verifcd(argv[1]) || verif(argv[1]))
 			{
-				const char* home = getcwd(NULL, 0);
+				char* home = getcwd(NULL, 0);
 				DIR *d =opendir(argv[1]);
-				if(d)
+				char *part1=strcat(strcat(home,"/"),argv[1]);
+				result = access (part1, R_OK);
+				
+				if(d&& result ==0)
 				{
 					chdir(argv[1]);
 					while((dir =readdir(d)) !=NULL)
@@ -332,7 +345,14 @@ int main(int argc,char *argv[])
 				}
 				else
 				{
-					write(1,"this room doesn't exist\n", strlen("this room doesn't exist\n"));
+					if(result!=0)
+					{
+						write(1,"You need to use some object to open this door\n", strlen("You need to use some object to open this door\n"));
+					}
+					else
+					{
+						write(1,"this room doesn't exist\n", strlen("this room doesn't exist\n"));
+					}
 				}
 			}
 		}
@@ -431,6 +451,9 @@ int main(int argc,char *argv[])
 		break;
 	}
 	free(buf);
+	
+	write(1,"You need press enter to continue\n", strlen("You need press enter to continue\n"));
+	
 	return 0;
 
 	
