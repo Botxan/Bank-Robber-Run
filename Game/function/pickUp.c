@@ -60,11 +60,15 @@ int main(int argc,char* argv[]) {
 	if(stat(invPath,&file)==0)
 	{
 		//read file and search for amount keyword
-		int fd=open(invPath,O_RDONLY);
-		if(fd==-1) return 1;
+		int fd=open(invPath,O_RDWR);
+		if(fd==-1)
+		{
+		errno=1;
+		return 1;
+		}
 		int pos=searchAmount("amount:",fd);
 		int toff=lseek(fd,pos,SEEK_CUR);
-		char amount='0';
+		char amount;
 		read(fd,&amount,1);
 		char newAmount= amount + 1;
 		lseek(fd,toff,SEEK_SET);
@@ -78,8 +82,8 @@ int main(int argc,char* argv[]) {
 	else
 	{
 		link(current,invPath);
-		unlink(current);
 	}
+		unlink(current);
 
 return 0;
 }

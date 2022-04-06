@@ -133,7 +133,7 @@ int execute(int argc, char *argv[])
             			printf("Error launching child process: %s\n", strerror(errno));
             			return 1;
 			}
-		
+
 		}
 
 	}
@@ -142,7 +142,7 @@ int execute(int argc, char *argv[])
 		char *roomText;
 		if(cd(argc,argv,home,0)==1)
 		{
-			
+
 		 	Prompt=strrchr(getcwd(NULL, 0),'/')+1;
 			id=idFromName(argv[1]);
 			roomText="";
@@ -166,10 +166,12 @@ int execute(int argc, char *argv[])
 	}
 	if(strcmp(argv[0], "pickUp") == 0 || strcmp(argv[0], "pu") == 0)
 	{
-		if(strcmp(argv[1],"")!=0)
+		if(argc==2)
 		{
-			if(pickUp(root,argv[1])==1)
-			write(0,"The object doesn't exist\n",strlen("The object doesn't exist\n"));
+			if(pickUp(root,argv[1])==1){
+				if(errno==1) write(0,"Unknown error\n",strlen("Unknown error\n"));
+				else write(0,"The object doesn't exist\n",strlen("The object doesn't exist\n"));
+			}
 		}
 
 	}
