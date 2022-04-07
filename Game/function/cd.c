@@ -55,15 +55,34 @@ char home[]="";
 		if((verif==1) ||verif1(argv[1]))
 		{
 		int i = chdir(argv[1]);
-	
+		
 		char* home1 = getcwd(NULL, 0);
 		if((verif==1) || verif2(home1,home) )
 		{
 		
 		if(i < 0)
 		{
-			printf("Room couldn't be changed\n");
-			return 0;
+			FILE *fp;
+			char format[100]="";
+			char *part2=strcat(strcat(homemain,"/"),argv[1]);
+			
+			fp = fopen(part2, "r");
+			
+			if(fp==NULL)
+			{
+				printf("Room couldn't be changed\n");
+				return 0;
+			}
+			else
+			{
+				fgets(format,100,fp);
+				chdir(format);
+				printf("Room changed\n");
+				fclose(fp);
+				return 1;
+			}
+				
+			
 		}
 		else{
 			#ifdef FUNCTION
