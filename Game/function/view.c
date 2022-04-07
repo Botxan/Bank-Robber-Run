@@ -467,7 +467,6 @@ int main(int argc,char *argv[])
 	}
 	free(buf);
 	
-	write(1,"You need press enter to continue\n", strlen("You need press enter to continue\n"));
 
 	return 0;
 
