@@ -70,7 +70,8 @@ char home[]="";
 			
 			if(fp==NULL)
 			{
-				printf("Room couldn't be changed\n");
+				
+				printf("You need to use object for open this door\n");
 				return 0;
 			}
 			else

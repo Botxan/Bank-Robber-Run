@@ -127,7 +127,6 @@ int execute(int argc, char *argv[])
 		int child1=fork();
 		if(child1==0)
 		{
-			write(0,"\n", strlen("\n"));
 			char *path=strcat(function,"/view");
 			execl(path,*argv,argv[1],argv[2]);
 			if (errno != 0)
