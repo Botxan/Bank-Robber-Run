@@ -128,7 +128,7 @@ int execute(int argc, char *argv[])
 		if(child1==0)
 		{
 			char *path=strcat(function,"/view");
-			execl(path,*argv,argv[1],argv[2]);
+			execlp(path,*argv,argv[1],argv[2]);
 			if (errno != 0)
 			{
             			printf("Error launching child process: %s\n", strerror(errno));
