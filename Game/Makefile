@@ -5,7 +5,7 @@ CC1=gcc -rdynamic
 CPPFLAGS= -MMD 
 CFLAGS= -Wall -Werror -Wextra -std=c99 -g 
 
-SRC= myshell0.c  function/cd.c function/view.c function/inv.c function/Leave.c
+SRC= myshell0.c  function/cd.c function/view.c function/inv.c function/Leave.c function/pickUp.c function/talk.c
 OBJ= ${SRC:.c=.o}
 DEP= ${SRC:.c=.d}
 
@@ -25,7 +25,15 @@ SRC4= function/Leave.c
 OBJ4= ${SRC4:.c=.o}
 DEP4= ${SRC4:.c=.d}
 
-all:view myshell0 cd inv leave
+SRC5= function/pickUp.c
+OBJ5= ${SRC5:.c=.o}
+DEP5= ${SRC5:.c=.d}
+
+SRC6= function/talk.c
+OBJ6= ${SRC6:.c=.o}
+DEP6= ${SRC6:.c=.d}
+
+all:view myshell0 cd inv leave pickUp talk
 
 -include ${DEP1}
 
@@ -48,7 +56,15 @@ inv : ${SRC3}
 leave : ${SRC4}
 		$(CC1) -o $@ $^ $(CFLAGS)
 
+-include ${DEP5}
+pickUp : ${SRC5}
+		$(CC1) -o $@ $^ $(CFLAGS)
+
+-include ${DEP6}
+talk : ${SRC6}
+		$(CC1) -o $@ $^ $(CFLAGS)
+
 clean:
-	rm -f ${OBJ} ${DEP} myshell0 ${DEP1} ${OBJ1} view  ${DEP2} ${OBJ2} cd ${DEP3} ${OBJ3} inv ${DEP4} ${OBJ4} Leave
+	rm -f ${OBJ} ${DEP} myshell0 ${DEP1} ${OBJ1} view  ${DEP2} ${OBJ2} cd ${DEP3} ${OBJ3} inv ${DEP4} ${OBJ4} Leave ${DEP5} ${OBJ5} pickUp ${DEP6} ${OBJ6} talk
 
 # END

@@ -12,6 +12,7 @@
 
 
 
+
 #include "inv.h"
 
 
@@ -26,27 +27,32 @@ void deletextensionTool(char argv[])
 }
 
 #ifdef FUNCTION
-int inv(char* home){
-strcpy(current,getcwd(current,200));
+int inv(int argc,char* argv[]) {
 #else
-
 int main(int argc,char* argv[]) {
-if (argc!=1||strcmp(argv[0],"inv")) return 1;
-strcpy(current,getcwd(current,200));
-chdir("..");
-char home[]="Directories/Van";
 #endif
-struct dirent *dir;
-struct stat *buf = malloc(sizeof(struct stat));
-char tool[100]="\nThis are the things on your inventory:\n";
-int empty=1;
-chdir(home);
-chdir("..");
-chdir("Inv");
-DIR *d=opendir(".");
+
+	if (argc!=4||strcmp(argv[0],"inv"))
+	{
+	 	return 1;
+	}
+	char *root=argv[1];
+	strcpy(current,getcwd(current,200));
+	struct dirent *dir;
+	struct stat *buf = malloc(sizeof(struct stat));
+	char tool[100]="\nThis are the things on your inventory:\n";
+	int empty=1;
+	int chdirError=0;
+	chdirError+=chdir(root);
+	chdirError+=chdir("Inv");
+	if(chdirError<0)
+	{
+		return 1;
+	}
+	DIR *d=opendir(".");
 	while((dir =readdir(d))!=NULL)
 	{
-		stat(dir->d_name,buf);
+	 	stat(dir->d_name,buf);
 		if(!S_ISDIR(buf->st_mode))
 		{
 			empty=0;
@@ -56,9 +62,13 @@ DIR *d=opendir(".");
 			strcat(tool,"\n");	
 		}
 	}
-	if(empty==1) write(0,"\nYour inventory is empty!\n",strlen("\nYour inventory is empty!\n"));
+	if(empty==1)
+	{
+		write(0,"Inventory empty!",strlen("Inventory empty!"));
+		
+
+	}
 	else write(0,tool,strlen(tool));
 	chdir(current);
-	
 return 0;
 }

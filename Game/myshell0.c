@@ -13,7 +13,7 @@
 #include <dirent.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-
+#include <sys/wait.h>
 
 
 #define error(a) {perror(a); exit(1);};
@@ -40,6 +40,7 @@
 #include "./function/inv.h"
 #include "./function/Leave.h"
 #include "./function/pickUp.h"
+#include "./function/talk.h"
 int eof;
 
 typedef struct { char *name; int id; } idStruct;
@@ -162,7 +163,18 @@ int execute(int argc, char *argv[])
 
 	if(strcmp(argv[0], "inv") == 0 || strcmp(argv[0], "inventory") == 0)
 	{
-		inv();
+		int child=fork();
+		if(child==0)
+		{
+			write(0, "\n", strlen("\n"));
+			char *path=strcat(function,"/inv");
+			execl(path,argv[0],root);
+		} 
+		if(child>0)
+		{
+			if (errno!=0) 
+			write(0, "Unknown error", strlen("Unknown error"));
+		}
 	}
 	if(strcmp(argv[0], "pickUp") == 0 || strcmp(argv[0], "pu") == 0)
 	{
@@ -174,6 +186,12 @@ int execute(int argc, char *argv[])
 			}
 		}
 
+	}
+	if(strcmp(argv[0], "talk") == 0)
+	{
+	talk(argv[1]);
+	
+	
 	}
 	if(strcmp(argv[0], "Pause") == 0 || strcmp(argv[0], "P") == 0|| strcmp(argv[0], "quit") == 0|| strcmp(argv[0], "q") == 0)
 	{
