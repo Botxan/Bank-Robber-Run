@@ -124,17 +124,21 @@ int execute(int argc, char *argv[])
 
 	if(strcmp(argv[0], "view") == 0 || strcmp(argv[0], "ls") == 0)
 	{
-		if(fork()==0)
+		int child1=fork();
+		if(child1==0)
 		{
-			write(0,"\n", strlen("\n"));
 			char *path=strcat(function,"/view");
-			execl(path,*argv,argv[1],argv[2]);
+			execlp(path,*argv,argv[1],argv[2]);
 			if (errno != 0)
 			{
             			printf("Error launching child process: %s\n", strerror(errno));
             			return 1;
 			}
 
+		}
+		if(child1>0)
+		{
+			wait(NULL);
 		}
 
 	}

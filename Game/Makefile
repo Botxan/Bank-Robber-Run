@@ -29,12 +29,12 @@ SRC5= function/pickUp.c
 OBJ5= ${SRC5:.c=.o}
 DEP5= ${SRC5:.c=.d}
 
+
 SRC6= function/talk.c
 OBJ6= ${SRC6:.c=.o}
 DEP6= ${SRC6:.c=.d}
 
 all:view myshell0 cd inv leave pickUp talk
-
 -include ${DEP1}
 
 view:${SRC1}
@@ -55,6 +55,12 @@ inv : ${SRC3}
 -include ${DEP4}		
 leave : ${SRC4}
 		$(CC1) -o $@ $^ $(CFLAGS)
+		
+-include ${DEP5}		
+pickUp : ${SRC5}
+		$(CC1) -o $@ $^ $(CFLAGS)
+		
+		
 
 -include ${DEP5}
 pickUp : ${SRC5}
