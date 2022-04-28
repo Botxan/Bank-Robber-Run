@@ -15,64 +15,81 @@
 
 #include "talk.h"
 
-int searchText(char *word , int file){
-   char line[4] ;
-   int i = 4; int e = 0;
-while(e == 0){
-   while(read(file,line,4) > 0){
-    if(strcmp(line, word)){
-     e = 1;
-     return i;
-    }
-   memset(line,0,strlen(line));
-   i = i+4;
+int searchTalk(char *word , int file){
+   char c;
+   int i = 1;
+   int readed;
+   readed=read(file,&c,1);
+   while(readed==1){
+	if(c==word[0]){
+		readed=read(file,&c,1);
+		if(c==word[1]) return i+2;
+	} else{
+		readed=read(file,&c,1);
+		i++;
+	}
+
    }
-  return i;
- }
- return i;
+   return -1;
 }
 
-char current[200];
+	char *current;
+	struct stat file;
+	int i=0;
+	char var='A';
+	char branch[2]="  ";
+	int end=0;
+	char text[200];
+	int readChars=0;
+	char continues;
 
 
 #ifdef FUNCTION
 int talk(char* npc){
 #else
 int main(int argc,char* argv[]) {
-	if (argc!=2||strcmp(argv[0],"pickUp")) return 1;
+	if (argc!=2||strcmp(argv[0],"talk")) return 1;
 	char *npc=argv[1];
 #endif
+	end=0;
+	var='A';
+	readChars=0;
+	continues='1';
+	current=getcwd(NULL,200);
 	strcat(current,"/");
 	strcat(current,npc);
 	strcat(current,".npc");
-	struct stat file;
 	if(stat(current,&file)==-1) return 1;
-		//read file and search for amount keyword
-		int fd=open(current,O_RDWR);
-		if(fd==-1)
-		{
-		return 1;
+	int fd=open(current,O_RDWR);
+	if(fd==-1) return 1;
+	lseek(fd,0,SEEK_SET);
+	if(i!=0){
+		write(0,"\nWe have nothing else to talk about\n",strlen("\nWe have nothing else to talk about\n"));
+		return 0;
+	}
+	while(continues=='1'){
+		write(0,npc,strlen(npc));
+		write(0,":\n",strlen(":\n"));
+            	branch[0]=i+'0';
+		branch[1]=var;
+		lseek(fd,0,SEEK_SET);
+		searchTalk(branch,fd);
+		end=searchTalk("--",fd)-4;
+		read(fd,&continues,1);
+		lseek(fd,-end-3,SEEK_CUR);
+		read(fd,&text,end);
+		write(0,text,end);
+ 		text[0]='\0';
+		if(continues=='1'){
+			write(0,"\n-----Choose one-----\n",strlen("\n-----Choose one-----\n"));
+			readChars=scanf(" %[^\n]%*c", &var);
 		}
-		int interactions;
-		read(fd,interactions,1):
-		int pos;
-		char[] i="0";
-		char[] var="";
-		char[] branch;
-		int end;
-		char[] text;
-		while(i<interactions){
-		branch="";
-		strcat(branch,i);
-		strcat(branch,var);
-		pos=searchText(branch,fd);
-		lseek(fd,pos,SEEK_CUR);
-		end=searchText("--",fd);
-		read(fd,&text,end-pos-2);
-		write(0,text,strlen(text));
-		while(scanf("%[^\n]", var)=!1) write(0,"\nThere was an error, please choose an option again",strlen("\nThere was an error, please choose an option again"));
+		while(readChars!=1){
+			write(0,"\nThere was an error, please choose an option again\n",strlen("\nThere was an error, please choose an option again\n"));
+               		readChars=scanf(" %[^\n]%*c", &var);
+		}
 		i++;
-
-		}
+	}
+write(0,"\n",strlen("\n"));
 return 0;
 }
