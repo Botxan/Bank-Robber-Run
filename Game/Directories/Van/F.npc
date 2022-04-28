@@ -18,12 +18,15 @@ B:what about you?
 1C
 Cheer up man
 
-A:Thanks!
-B:It's difficult...
+C:Thanks!
+D:It's difficult...
 --1
 2A
 Hope you get better! 
 --0
 2B
 I'm good thanks!
+--0
+2D
+I know
 --0
