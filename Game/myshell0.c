@@ -15,26 +15,7 @@
 #include <sys/stat.h>
 #include <sys/wait.h>
 
-
-#define error(a) {perror(a); exit(1);};
-#define MAXLINE 200
-#define MAXARGS 20
-///////ROOMS
-#define VAN 0
-#define ENTRANCE 1
-#define HALL 2
-#define LANDF 3
-#define ELECPANEL 4
-#define CORRIDOR 5
-#define OFF1 6
-#define OFF2 7
-#define SEC 8
-
-#define NKEYS 4
-///////DRESS
-#define SUIT 0
-#define ELEC 1
-
+#include "defines.h"
 #include "./function/view.h"
 #include "./function/cd.h"
 #include "./function/inv.h"
@@ -42,8 +23,6 @@
 #include "./function/pickUp.h"
 #include "./function/talk.h"
 int eof;
-
-typedef struct { char *name; int id; } idStruct;
 
 static idStruct lookuptable[] = {
     { "Van", VAN }, { "MainEntrance", ENTRANCE }, { "MainBankingHall", HALL }, { "LostAndFound", LANDF }
