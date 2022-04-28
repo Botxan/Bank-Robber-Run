@@ -173,7 +173,29 @@ int main(int argc,char *argv[])
 					}
 					
 				}
-				
+				else
+				{
+					if (dir->d_name[0] != '.' && dir->d_name[strlen(dir->d_name)-1] != '~'){
+						int info=extension(dir->d_name);
+						switch(info)
+						{
+						case 1:
+							
+							break;
+						case 2:
+							
+							break;
+						case 3:
+							
+							break;
+						default:
+							write(0,dir->d_name, strlen(dir->d_name));
+							write(0,"\n", strlen("\n"));
+							break;
+						}
+						
+					}
+				}
 			}
 			closedir(d);
 		}
@@ -182,16 +204,104 @@ int main(int argc,char *argv[])
 			int result=1;
 			if(verifcd(argv[1])||verif(argv[1]))
 			{
+				
+				
 				DIR *d =opendir(argv[1]);
+				
 				char* home = getcwd(NULL, 0);
-				char *part1=strcat(strcat(home,"/"),argv[1]);
+				
+				char *part1=strcpy(strcat(home,"/"),argv[1]);
 				
 				result = access (part1, R_OK);
 				
-				if(d && result==0 ) 
+				if(!d && result==0)
+				{
+					
+					FILE *fp;
+					char format[100]="";
+					
+					
+					fp = fopen(part1, "r");
+					
+					if(fp==NULL)
+					{
+						
+						printf("It's not a directory\n");
+						return 0;
+					}
+					else
+					{
+						fgets(format,100,fp);
+						chdir(format);
+						DIR *d =opendir(".");
+						fclose(fp);
+						while((dir =readdir(d)) !=NULL)
+						{
+							stat(dir->d_name,buf);
+							if (S_ISDIR(buf->st_mode))
+							{
+								if (dir->d_name[0] != '.' && dir->d_name[strlen(dir->d_name)-1] != '~')
+								{
+									strcat(room,"  ");
+									strcat(room,dir->d_name);
+									strcat(room,"\n");
+								}
+							}
+							else
+							{
+								if (dir->d_name[0] != '.' && dir->d_name[strlen(dir->d_name)-1] != '~'){
+									int info=extension(dir->d_name);
+									switch(info)
+									{
+									case 1:
+										deletextension(dir->d_name);
+										strcat(tool,"  ");
+										strcat(tool,dir->d_name);
+										strcat(tool,"\n");
+										break;
+									case 2:
+										deletextension(dir->d_name);
+										strcat(object,"  ");
+										strcat(object,dir->d_name);
+										strcat(object,"\n");
+										break;
+									case 3:
+										deletextension(dir->d_name);
+										strcat(npc,"  ");
+										strcat(npc,dir->d_name);
+										strcat(npc,"\n");
+										break;
+									default:
+										strcat(room,"  ");
+										strcat(room,dir->d_name);
+										strcat(room,"\n");
+										break;
+									}
+									
+									
+								}
+							}
+							
+						}
+						write(0,room, strlen(room));
+						write(0,"\n", strlen("\n\n"));
+						write(0,tool, strlen(tool));
+						write(0,"\n", strlen("\n\n"));
+						write(0,object, strlen(object));
+						write(0,"\n", strlen("\n\n"));
+						write(0,npc, strlen(npc));
+						write(0,"\n", strlen("\n\n"));
+						chdir(home);
+						closedir(d);
+						
+						
+					}
+					
+				}
+				else if(d && result==0 ) 
 				{
 					chdir(argv[1]);	
-				
+					
 					while((dir =readdir(d)) !=NULL)
 					{
 						stat(dir->d_name,buf);
@@ -251,19 +361,12 @@ int main(int argc,char *argv[])
 					chdir(home);
 					closedir(d);
 					
-				
+					
 				}
 				else
 				{
-					if(result!=0)
-					{
-						write(1,"You need to use some object to open this door\n", strlen("You need to use some object to open this door\n"));
-					}
-					else
-					{
-						write(1,"this room doesn't exist\n", strlen("this room doesn't exist\n"));
-					}
 					
+					write(1,"You need to use some object to open this door or this room doesn't exist \n", strlen("You need to use some object to open this door or this room doesn't exist \n\n"));
 					
 				}
 			}
@@ -279,10 +382,74 @@ int main(int argc,char *argv[])
 			{		
 				char* home = getcwd(NULL, 0);
 				DIR *d =opendir(argv[2]);
-				char *part1=strcat(strcat(home,"/"),argv[2]);
+				char *part1=strcpy(strcat(home,"/"),argv[2]);
 				result = access (part1, R_OK);
 				
-				if(d && result ==0)
+				if(!d && result==0)
+				{
+					FILE *fp;
+					char format[100]="";
+					
+					fp = fopen(part1, "r");
+					
+					if(fp==NULL)
+					{
+						
+						printf("It's not a directory\n");
+						return 0;
+					}
+					else
+					{
+						fgets(format,100,fp);
+						chdir(format);
+						DIR *d =opendir(".");
+						fclose(fp);
+						while((dir =readdir(d)) !=NULL)
+						{
+							stat(dir->d_name,buf);
+							if(S_ISREG(buf->st_mode))
+							{
+								if (dir->d_name[0] != '.' && dir->d_name[strlen(dir->d_name)-1] != '~'){
+									int info=extension(dir->d_name);
+									switch(info)
+									{
+									case 1:
+										
+										break;
+									case 2:
+										
+										break;
+									case 3:
+										
+										break;
+									default:
+										write(0,dir->d_name, strlen(dir->d_name));
+										write(0,"\n", strlen("\n"));
+										break;
+									}
+									
+								}
+							}
+							if (S_ISDIR(buf->st_mode))
+							{
+								
+								if (dir->d_name[0] != '.' && dir->d_name[strlen(dir->d_name)-1] != '~')
+								{
+									write(0,dir->d_name, strlen(dir->d_name));
+									write(0,"\n", strlen("\n"));
+								}
+								
+								
+							}
+						}
+						chdir(home);
+						closedir(d);
+						
+						
+					}
+					
+				}
+				else if(d && result ==0)
 				{
 					chdir(argv[2]);
 					while((dir =readdir(d)) !=NULL)
@@ -307,14 +474,7 @@ int main(int argc,char *argv[])
 				else
 				{
 
-					if(result!=0)
-					{
-						write(1,"You need to use some object to open this door\n", strlen("You need to use some object to open this door\n"));
-					}
-					else
-					{
-						write(1,"this room doesn't exist\n", strlen("this room doesn't exist\n"));
-					}
+					write(1,"You need to use some object to open this door or this room doesn't exist \n", strlen("You need to use some object to open this door or this room doesn't exist \n\n"));
 				}
 			}
 		}
@@ -324,10 +484,75 @@ int main(int argc,char *argv[])
 			{
 				char* home = getcwd(NULL, 0);
 				DIR *d =opendir(argv[1]);
-				char *part1=strcat(strcat(home,"/"),argv[1]);
+				char *part1=strcpy(strcat(home,"/"),argv[1]);
 				result = access (part1, R_OK);
 				
-				if(d&& result ==0)
+				if(!d && result==0)
+				{
+					FILE *fp;
+					char format[100]="";
+					
+					fp = fopen(part1, "r");
+					
+					if(fp==NULL)
+					{
+						
+						printf("It's not a directory\n");
+						return 0;
+					}
+					else
+					{
+						fgets(format,100,fp);
+						chdir(format);
+						DIR *d =opendir(".");
+						fclose(fp);
+						while((dir =readdir(d)) !=NULL)
+						{
+							stat(dir->d_name,buf);
+							if(S_ISREG(buf->st_mode))
+							{
+								if (dir->d_name[0] != '.' && dir->d_name[strlen(dir->d_name)-1] != '~'){
+									int info=extension(dir->d_name);
+									switch(info)
+									{
+									case 1:
+										
+										break;
+									case 2:
+										
+										break;
+									case 3:
+										
+										break;
+									default:
+										write(0,dir->d_name, strlen(dir->d_name));
+										write(0,"\n", strlen("\n"));
+										break;
+									}
+									
+								}
+							}
+							if (S_ISDIR(buf->st_mode))
+							{
+								
+								if (dir->d_name[0] != '.' && dir->d_name[strlen(dir->d_name)-1] != '~')
+								{
+									write(0,dir->d_name, strlen(dir->d_name));
+									write(0,"\n", strlen("\n"));
+								}
+								
+								
+							}
+							
+							chdir(home);
+							closedir(d);
+							
+							
+						}
+						
+					}
+				}
+				else if(d && result ==0)
 				{
 					chdir(argv[1]);
 					while((dir =readdir(d)) !=NULL)
@@ -355,14 +580,7 @@ int main(int argc,char *argv[])
 				}
 				else
 				{
-					if(result!=0)
-					{
-						write(1,"You need to use some object to open this door\n", strlen("You need to use some object to open this door\n"));
-					}
-					else
-					{
-						write(1,"this room doesn't exist\n", strlen("this room doesn't exist\n"));
-					}
+					write(1,"You need to use some object to open this door or this room doesn't exist \n", strlen("You need to use some object to open this door or this room doesn't exist \n\n"));
 				}
 			}
 		}
@@ -373,17 +591,99 @@ int main(int argc,char *argv[])
 			{
 				DIR *d =opendir(argv[1]);
 				char* home = getcwd(NULL, 0);
-				char *part1=strcat(strcat(home,"/"),argv[1]);
+				char *part1=strcpy(strcat(home,"/"),argv[1]);
 				
 				result = access (part1, R_OK);
 				
 				
-				if(d && result ==0)
+				if(!d && result==0)
+				{
+					FILE *fp;
+					char format[100]="";
+					
+					fp = fopen(part1, "r");
+					
+					if(fp==NULL)
+					{
+						
+						printf("It's not a directory\n");
+						return 0;
+					}
+					else
+					{
+						fgets(format,100,fp);
+						chdir(format);
+						DIR *d =opendir(".");
+						fclose(fp);
+						while((dir =readdir(d)) !=NULL)
+						{
+							stat(dir->d_name,buf);
+							if (S_ISDIR(buf->st_mode))
+							{
+								if (dir->d_name[0] != '.' && dir->d_name[strlen(dir->d_name)-1] != '~')
+								{
+									strcat(room,"  ");
+									strcat(room,dir->d_name);
+									strcat(room,"\n");
+								}
+							}
+							else
+							{
+								if (dir->d_name[0] != '.' && dir->d_name[strlen(dir->d_name)-1] != '~'){
+									int info=extension(dir->d_name);
+									switch(info)
+									{
+									case 1:
+										deletextension(dir->d_name);
+										strcat(tool,"  ");
+										strcat(tool,dir->d_name);
+										strcat(tool,"\n");
+										break;
+									case 2:
+										deletextension(dir->d_name);
+										strcat(object,"  ");
+										strcat(object,dir->d_name);
+										strcat(object,"\n");
+										break;
+									case 3:
+										deletextension(dir->d_name);
+										strcat(npc,"  ");
+										strcat(npc,dir->d_name);
+										strcat(npc,"\n");
+										break;
+									default:
+										strcat(room,"  ");
+										strcat(room,dir->d_name);
+										strcat(room,"\n");
+										break;
+									}
+									
+									
+								}
+							}
+							
+						}
+						write(0,room, strlen(room));
+						write(0,"\n", strlen("\n\n"));
+						write(0,tool, strlen(tool));
+						write(0,"\n", strlen("\n\n"));
+						write(0,object, strlen(object));
+						write(0,"\n", strlen("\n\n"));
+						write(0,npc, strlen(npc));
+						write(0,"\n", strlen("\n\n"));
+						chdir(home);
+						closedir(d);
+						
+						
+					}
+					
+				}
+				else if(d && result ==0)
 				{
 					chdir(argv[1]);
 					
-			
-				
+					
+					
 					while((dir =readdir(d)) !=NULL)
 					{
 						stat(dir->d_name,buf);
@@ -443,20 +743,13 @@ int main(int argc,char *argv[])
 					
 					chdir(home);
 					closedir(d);
-	
+					
 					
 				}
 				else
 				{
 					
-					if(result!=0)
-					{
-						write(1,"You need to use some object to open this door\n", strlen("You need to use some object to open this door\n"));
-					}
-					else
-					{
-						write(1,"this room doesn't exist\n", strlen("this room doesn't exist\n"));
-					}
+					write(1,"You need to use some object to open this door or this room doesn't exist \n", strlen("You need to use some object to open this door or this room doesn't exist \n\n"));
 				}
 			}
 		}
