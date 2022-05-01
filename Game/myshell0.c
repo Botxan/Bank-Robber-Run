@@ -28,7 +28,7 @@ static idStruct lookuptable[] = {
     { "Van", VAN }, { "MainEntrance", ENTRANCE }, { "MainBankingHall", HALL }, { "LostAndFound", LANDF }
 };
 
-char * Prompt;
+char *prompt;
 int dress;
 char *home;
 int id;
@@ -36,53 +36,58 @@ char *function;
 char *root;
 
 /////////// reading commands:
+int read_args(int* argcp, char* args[], int max, int* eofp) {
+	static char cmd[MAXLINE];
+	char* cmdp;
+   	int ret, i = 0;
 
+   	*argcp = 0;
+   	*eofp = 0;
 
-int read_args(int* argcp, char* args[], int max, int* eofp)
-{
-   static char cmd[MAXLINE];
-   char* cmdp;
-   int ret,i;
+	// Read stdin byte by byte until line break or exceed MAXLINE
+   	while ((ret=read(0,cmd+i,1)) == 1) {
+      		if (cmd[i]=='\n') break;  // correct line
+      		i++;
+      		if (i>=MAXLINE) { // line too long
+         		ret=-2;
+         		break;
+      		}
+   	}
 
-   *argcp = 0;
-   *eofp = 0;
-   i=0;
-   while ((ret=read(0,cmd+i,1)) == 1) {
-      if (cmd[i]=='\n') break;  // correct line
-      i++;
-      if (i>=MAXLINE) {
-         ret=-2;        // line too long
-         break;
-      }
-   }
-   switch (ret)
-   {
-     case 1 : cmd[i+1]='\0';    // correct reading 
-              break;
-     case 0 : *eofp = 1;        // end of file
-              return 0;
-              break;
-     case -1 : *argcp = -1;     // reading failure
-              fprintf(stderr,"Reading failure \n");
-              return 0;
-              break;
-     case -2 : *argcp = -1;     // line too long
-              fprintf(stderr,"Line too long -- removed command\n");
-              return 0;
-              break;
-   }
-   // Analyzing the line
-   cmdp= cmd;
-   for (i=0; i<max; i++) {  /* to show every argument */
-      if ((args[i]= strtok(cmdp, " \t\n")) == (char*)NULL) break;
-      cmdp= NULL;
-   }
-   if (i >= max) {
-      fprintf(stderr,"Too many arguments -- removed command\n");
-      return 0;
-   }
-   *argcp= i;
-   return 1;
+   	switch (ret) {
+     		case 1: // correct reading
+			cmd[i+1]='\0';
+        		break;
+
+     		case 0: // end of file
+			*eofp = 1;
+              		return 0;
+
+     		case -1: // reading failure
+			*argcp = -1;
+			fprintf(stderr,"Reading failure \n");
+              		return 0;
+
+     		case -2 : // line too long
+			*argcp = -1;
+			fprintf(stderr,"Line too long -- removed command\n");
+              		return 0;
+	}
+
+	// Analyzing the line
+	cmdp = cmd;
+	for (i=0; i<max; i++) {  /* to show every argument */
+      		if ((args[i]= strtok(cmdp, " \t\n")) == (char*)NULL) break;
+      		cmdp= NULL;
+   	}
+
+   	if (i >= max) {
+      		fprintf(stderr,"Too many arguments -- removed command\n");
+      		return 0;
+   	}
+
+   	*argcp= i;
+   	return 1;
 }
 ////////////////////////////////////////////////////
 //function for room ids
@@ -127,7 +132,7 @@ int execute(int argc, char *argv[])
 		if(cd(argc,argv,home,0)==1)
 		{
 
-		 	Prompt=strrchr(getcwd(NULL, 0),'/')+1;
+		 	prompt=strrchr(getcwd(NULL, 0),'/')+1;
 			id=idFromName(argv[1]);
 			roomText="";
 			switch(id)
@@ -194,34 +199,122 @@ int execute(int argc, char *argv[])
 				//save don't implement for the moment
 				eof=1;
 			}
-		
-		
+
+
 	}
-	
-	
 
 	return 1;
 }
+
+/*
+ * Function: show_main_menu
+ * ------------------------
+ * Displays the main menu of the game
+ * returns: the option selected by the player, -1 in case of error
+ */
+int show_main_menu() {
+	system("clear");
+	int fd = open(MAINMENU, O_RDONLY, 0);
+	if (fd == -1) {
+		write(2, "Unable to open the file ", 24);
+		write(2, MAINMENU, strlen(MAINMENU));
+		write(2, "\n", 1);
+		return -1;
+	}
+
+	// Print the menu
+	char data[2048];
+	read(fd, data, 2048);
+	close(fd);
+	write(0, data, strlen(data));
+
+
+	// User selection
+	char opt[MAXLINE];
+	int i = 0;
+
+	// Loop until valid option is selected, and directly return
+	while(1) {
+		write(0, "Select an option [1|2|3|4]: ", 29);
+
+		while (read(0, opt+i, 1)) {
+			if (opt[i] == '\n') break; // end of user input
+			i++;
+		}
+
+		// If only one character has been introduced
+		if (i == 1)
+		        switch (opt[0]) {
+				case '1': // New game
+				case '2': // Load game (not implemented yet)
+				case '3': // Options (not implemented yet)
+			               	return (int)opt[0] - '0'; // convert to int
+				case '4': // Quit
+					exit(0);
+	                	default: // Invalid option
+	                                write(0, "Invalid option\n", 16);
+                	}
+		// If more than one character, invalid
+		else write(0, "Invalid option\n", 16);
+
+		i = 0;
+	}
+
+	return -1;
+}
+
 /////////////////////////////////////////////////
-int main ()
-{
-   eof=0;
-   int argc;
-   char *args[MAXARGS];
-   function = getcwd(NULL, 0);
-   chdir("Directories");
-   root = getcwd(NULL, 0);
-   chdir("Van");
-   home = getcwd(NULL, 0);
-   Prompt="Van";
-   while (1) {
+int main() {
+	// Load the main menu
+        int opt = show_main_menu();
+  	eof=0;
+   	int argc;
+	char *args[MAXARGS];
 
-      write(0,Prompt, strlen(Prompt));
-      write(0,">",strlen(">"));
-      if (read_args(&argc, args, MAXARGS, &eof) && argc > 0) {
-         execute(argc, args);
-      }
-      if (eof) exit(0);
-   }
+	// Perform the corresponding actiond depending on user selection
+	switch(opt) {
+		case NEW_GAME:
+			system("clear");
+			write(2, "Starting new game...\n\n", 22);
+			function = getcwd(NULL, 0);
+	                chdir("Directories");
+	                root = getcwd(NULL, 0);
+	                chdir("Van");
+	                home = getcwd(NULL, 0);
+	                prompt="Van";
 
+        	        while (1) {
+                	        write(0, prompt, strlen(prompt));
+                        	write(0, ">", 1);
+	                        if (read_args(&argc, args, MAXARGS, &eof) && argc > 0)
+	                                execute(argc, args);
+	                        if (eof) exit(0);
+	                }
+			break;
+		case LOAD_GAME:
+			write(1, "Not implemented yet\n", 20);
+			break;
+		case OPTIONS:
+			write(1, "Not implemented yet\n", 20);
+			break;
+		default:
+			exit(1);
+	}
+	// If the user decides to start the game
+	if (opt == 1) {
+	   	function = getcwd(NULL, 0);
+	   	chdir("Directories");
+	   	root = getcwd(NULL, 0);
+	   	chdir("Van");
+	  	home = getcwd(NULL, 0);
+	   	prompt="Van";
+
+	   	while (1) {
+	      		write(0, prompt, strlen(prompt));
+	      		write(0, ">", 1);
+	      		if (read_args(&argc, args, MAXARGS, &eof) && argc > 0)
+				execute(argc, args);
+	      		if (eof) exit(0);
+	   	}
+	}
 }

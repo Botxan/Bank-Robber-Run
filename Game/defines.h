@@ -2,6 +2,16 @@
  * defines.h
  **********************************************************/
 
+/* ------------ Files ------------ */
+#define MAINMENU "main-menu.txt"
+
+
+/* ---------- Main menu ---------- */
+#define NEW_GAME 1
+#define LOAD_GAME 2
+#define OPTIONS 3
+#define QUIT 4
+
 /* ------------ Rooms ------------ */
 #define VAN 0
 #define ENTRANCE 1 	// Main entrance
