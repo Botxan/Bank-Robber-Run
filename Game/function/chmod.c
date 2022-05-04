@@ -11,20 +11,19 @@
 
 
 #ifdef FUNCTION
-int chmod(int argc,char *argv[]){
+#include "chmod.h"
+int chmodfunction(int argc,char *argv[])
 #else
 int main(int argc,char *argv[])
-{
 #endif
-
+{
 if(argc <3 && argc>4)
 {
 	write(1,"You need to use three argument (path of the file,permission)\n", strlen("You need to use three argument (path of the file,permission)\n"));
 }else{
 	//const char *perm = "rwxrwxrwx";
 	char *ptr;
-	long ret;
-	ret =strtol(argv[2],&ptr, 10);
+	strtol(argv[2],&ptr, 10);
 	if (strlen(ptr)==0)
 	{
 		
@@ -62,5 +61,5 @@ if(argc <3 && argc>4)
 	
 }
 
-
+return 1;
 }

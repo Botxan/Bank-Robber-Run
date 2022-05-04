@@ -5,7 +5,7 @@ CC1 = gcc -rdynamic
 CPPFLAGS = -MMD 
 CFLAGS = -Wall -Werror -Wextra -std=c99 -g 
 
-SRC = myshell0.c  function/cd.c function/view.c function/inv.c function/Leave.c function/pickUp.c function/talk.c
+SRC = myshell0.c  function/cd.c function/view.c function/inv.c function/Leave.c function/pickUp.c function/talk.c function/chmod.c
 OBJ = ${SRC:.c=.o}
 DEP = ${SRC:.c=.d}
 
@@ -34,7 +34,7 @@ SRC6 = function/talk.c
 OBJ6 = ${SRC6:.c=.o}
 DEP6 = ${SRC6:.c=.d}
 
-all: view myshell0 cd inv leave pickUp talk
+all: view myshell0 cd inv leave pickUp talk 
 -include ${DEP1}
 
 view: ${SRC1}
