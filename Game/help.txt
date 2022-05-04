@@ -1,0 +1,7 @@
+These can be your following actions:
+- inv , this command while tell what items are available in your inventory
+- LastMoves, your last 10 moves while be enlisted and show to you
+- Leave, you while go to the last room you been
+- pickUp ****, you while add an item to your inventory you need to tell witch item you want to pick
+- use **** **** ****, you while use an item with up to three arguments 
+- view, you while receive a brief resume of the room you're in
