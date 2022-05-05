@@ -105,13 +105,16 @@ int idFromName(char *newRoom)
 //////////////////////////////////////////////
 int execute(int argc, char *argv[])
 {
-
+	char path[100];
+	int child;
+	strcpy(path,function);
 	if(strcmp(argv[0], "view") == 0 || strcmp(argv[0], "ls") == 0)
 	{
-		int child1=fork();
-		if(child1==0)
+		child=fork();
+		if(child==0)
 		{
-			char *path=strcat(function,"/view");
+			strcat(path,"/view");
+			write(0,path,strlen(path));
 			execlp(path,*argv,argv[1],argv[2]);
 			if (errno != 0)
 			{
@@ -120,7 +123,7 @@ int execute(int argc, char *argv[])
 			}
 
 		}
-		if(child1>0)
+		if(child>0)
 		{
 			wait(NULL);
 		}
@@ -151,40 +154,59 @@ int execute(int argc, char *argv[])
 
 	if(strcmp(argv[0], "inv") == 0 || strcmp(argv[0], "inventory") == 0)
 	{
-		int child=fork();
+		child=fork();
 		if(child==0)
 		{
 			write(0, "\n", strlen("\n"));
-			char *path=strcat(function,"/inv");
+			strcat(path,"/inv");
 			execl(path,argv[0],root);
-		} 
+			if (errno!=0) write(0, "Unknown error", strlen("Unknown error"));
+		}
 		if(child>0)
 		{
-			if (errno!=0) 
-			write(0, "Unknown error", strlen("Unknown error"));
+			wait(NULL);
 		}
 	}
 	if(strcmp(argv[0], "pickUp") == 0 || strcmp(argv[0], "pu") == 0)
 	{
 		if(argc==2)
 		{
-			if(pickUp(root,argv[1])==1){
-				if(errno==1) write(0,"Unknown error\n",strlen("Unknown error\n"));
+			child=fork();
+			if(child==0)
+			{
+				write(0, "\n", strlen("\n"));
+                        	strcat(path,"/pickUp");
+                        	execl(path,root,argv[0]);
+				if(errno!=1) write(0,"Unknown error\n",strlen("Unknown error\n"));
 				else write(0,"The object doesn't exist\n",strlen("The object doesn't exist\n"));
-			}
-		}
 
+			}
+			if(child>0)
+			{
+				wait(NULL);
+			}
+		} else write(0,"You can only take an object at a time",strlen("You can only take an object at a time"));
 	}
 	if(strcmp(argv[0], "talk") == 0)
 	{
-	talk(argv[1]);
-	
-	
+		if(argc==2)
+		{
+			child=fork();
+			if(child==0)
+			{
+				write(0, "talk\n", strlen("talk\n"));
+				strcat(path,"/talk");
+				execl(path,argv[1]);
+			}
+			if(child>0)
+			{
+				wait(NULL);
+			}
+		} else write(0,"You can only talk to a person at a time",strlen("You can only talk to a person at a time"));
+
 	}
 	if(strcmp(argv[0], "Pause") == 0 || strcmp(argv[0], "P") == 0|| strcmp(argv[0], "quit") == 0|| strcmp(argv[0], "q") == 0)
 	{
-		
-		
 			int t =Leave();
 			if(t==1)
 			{

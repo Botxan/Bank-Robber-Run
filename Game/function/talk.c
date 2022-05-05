@@ -48,8 +48,10 @@ int searchTalk(char *word , int file){
 int talk(char* npc){
 #else
 int main(int argc,char* argv[]) {
-	if (argc!=2||strcmp(argv[0],"talk")) return 1;
-	char *npc=argv[1];
+	printf("Hello\n");
+
+	if (argc<1 && argc>5)return -1;
+	char *npc=argv[0];
 #endif
 	end=0;
 	var='A';

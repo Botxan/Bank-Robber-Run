@@ -10,7 +10,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>*
 #include "NewGame.h"
-#inclide "Chmod.h"
+#include "Chmod.h"
 
 
 
