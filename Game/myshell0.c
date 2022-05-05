@@ -115,7 +115,7 @@ int execute(int argc, char *argv[])
 		if(child==0)
 		{
 			strcat(path,"/view");
-			write(0,path,strlen(path));
+			//write(0,path,strlen(path));
 			execlp(path,*argv,argv[1],argv[2]);
 			if (errno != 0)
 			{
