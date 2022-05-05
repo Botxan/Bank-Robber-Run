@@ -23,12 +23,8 @@
 #include "./function/pickUp.h"
 #include "./function/talk.h"
 #include "./function/NewGame.h"
+
 int eof;
-
-static idStruct lookuptable[] = {
-    { "Van", VAN }, { "MainEntrance", ENTRANCE }, { "MainBankingHall", HALL }, { "LostAndFound", LANDF }
-};
-
 char *prompt;
 int dress;
 char *home;
@@ -36,7 +32,37 @@ int id;
 char *function;
 char *root;
 
-/////////// reading commands:
+idStruct lookuptable[19] = {
+        {"Van", VAN},
+        {"MainEntrance", ENTRANCE},
+        {"MainBanking Hll", HALL},
+        {"LostAndFound", LANDF},
+        {"ElectricalPanelRoom", ELECPANEL},
+        {"Corridor", CORRIDOR},
+        {"Office1", OFF1},
+        {"Office2", OFF2},
+        {"SecurityRoom", SEC},
+        {"WC", WC},
+        {"VentilationDucts", VENT},
+        {"JanitorsRoom", JANITOR},
+        {"BossOffice", BOSS},
+        {"Roof", ROOF},
+        {"Parking", PARKING},
+        {"Basement", BASEMENT},
+        {"VaultCorridor", VAULTC},
+        {"VaultRoom", VAULTR},
+        {"Vault", VAULT}
+};
+
+/*
+ * Function: read_args
+ * ------------------------
+ * Reads player's input from stdin.
+ * @param argcp (out): number of arguments introduced by the user.
+ * @param args (out): pointer to the first char of the arguments introduced by the user.
+ * @param max (in): maximum number of parameters allowed.
+ * @param eofp (out): End of file pointer.
+ */
 int read_args(int* argcp, char* args[], int max, int* eofp) {
 	static char cmd[MAXLINE];
 	char* cmdp;
@@ -55,6 +81,7 @@ int read_args(int* argcp, char* args[], int max, int* eofp) {
       		}
    	}
 
+	// check if introduced input is valid
    	switch (ret) {
      		case 1: // correct reading
 			cmd[i+1]='\0';
@@ -246,10 +273,26 @@ int execute(int argc, char *argv[])
 		{
 			wait(NULL);
 		}
-	}		
+	}
+	else if (strcmp(argv[0], "use") == 0)
+	{
+                int child = fork();
+                if (child == 0) {
+                        char *path=strcat(function,"/use");
+                        execlp(path, root, getcwd(NULL, 0), argv[0], argv[1], argv[2], argv[3], NULL);
+
+                        if (errno != 0) {
+                                printf("Error launching child process: %s\n", strerror(errno));
+                                return 1;
+                        }
+                }
+
+                // Wait until child process has finished
+                if (child > 0) wait(NULL);
+        }
 	else
 	{
-		write(1, "this function doesn't exit\n", strlen("this function doesn't exit\n"));
+		write(1, "this function doesn't exist\n", strlen("this function doesn't exist\n"));
 	}
 	
 	
@@ -314,7 +357,12 @@ int show_main_menu() {
 	return -1;
 }
 
-/////////////////////////////////////////////////
+/*
+ * Function: main
+ * --------------
+ * Displays the main menu and executes the action selected by the user
+ */
+
 int main() {
 	// Load the main menu
         int opt = show_main_menu();
@@ -351,23 +399,5 @@ int main() {
 			break;
 		default:
 			exit(1);
-	}
-	// If the user decides to start the game
-	if (opt == 1) {
-		NewGame();
-	   	function = getcwd(NULL, 0);
-	   	chdir("Directories");
-	   	root = getcwd(NULL, 0);
-	   	chdir("Van");
-	  	home = getcwd(NULL, 0);
-	   	prompt="Van";
-
-	   	while (1) {
-	      		write(0, prompt, strlen(prompt));
-	      		write(0, ">", 1);
-	      		if (read_args(&argc, args, MAXARGS, &eof) && argc > 0)
-				execute(argc, args);
-	      		if (eof) exit(0);
-	   	}
 	}
 }
