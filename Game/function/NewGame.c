@@ -8,13 +8,23 @@
 #include <string.h>
 #include <dirent.h>
 #include <sys/types.h>
-#include <sys/stat.h>*
+#include <sys/stat.h>
+#include <sys/wait.h>
 #include "NewGame.h"
-#include "Chmod.h"
+#inclide "Chmod.h"
 
 
 
 void NewGame()
 {
-
+	int chmod1=fork();
+	if(chmod1==0)
+	{
+		execlp("./chmod","./chmod","./Directories/Van/MainEntrance/Parking","0066");
+	}
+	else
+	{
+		wait(NULL);
+	}
+	
 }

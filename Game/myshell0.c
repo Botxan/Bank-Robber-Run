@@ -22,6 +22,7 @@
 #include "./function/Leave.h"
 #include "./function/pickUp.h"
 #include "./function/talk.h"
+#include "./function/NewGame.h"
 int eof;
 
 static idStruct lookuptable[] = {
@@ -127,9 +128,10 @@ int execute(int argc, char *argv[])
 		{
 			wait(NULL);
 		}
+		return 1;
 
 	}
-	 else if(strcmp(argv[0], "access") == 0 || strcmp(argv[0], "cd") == 0)
+	else if(strcmp(argv[0], "access") == 0 || strcmp(argv[0], "cd") == 0)
 	{
 		char *roomText;
 		if(cd(argc,argv,home,0)==1)
@@ -148,7 +150,7 @@ int execute(int argc, char *argv[])
 			}
 			write(0,roomText,strlen(roomText));
 		}
-
+		return 1;
 
 	}
 
@@ -324,6 +326,7 @@ int main() {
 	switch(opt) {
 		case NEW_GAME:
 			system("clear");
+			NewGame();
 			write(2, "Starting new game...\n\n", 22);
 			function = getcwd(NULL, 0);
 	                chdir("Directories");
@@ -351,6 +354,7 @@ int main() {
 	}
 	// If the user decides to start the game
 	if (opt == 1) {
+		NewGame();
 	   	function = getcwd(NULL, 0);
 	   	chdir("Directories");
 	   	root = getcwd(NULL, 0);
