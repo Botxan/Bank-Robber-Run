@@ -18,18 +18,20 @@
 #define HALL 2 		// Main banking hall
 #define LANDF 3 	// Lost and Found department
 #define ELECPANEL 4 	// Electrical panel room
-#define CORRIDOR 5
-#define OFF1 6 		// Office 1
-#define OFF2 7 		// Office 2
-#define SEC 8 		// Security room
-#define WC 9
-#define JANITOR 10 	// Janitor's room
-#define BOSS 11 	// Boss office
-#define ROOF 12
-#define PARKING 13
-#define BASEMENT 14
-#define VAULTR 15	// Vault room
-#define VAULT 16
+#define VENT 5		// Ventilation ducts
+#define CORRIDOR 6
+#define OFF1 7 		// Office 1
+#define OFF2 8 		// Office 2
+#define SEC 9 		// Security room
+#define WC 10
+#define JANITOR 11 	// Janitor's room
+#define BOSS 12 	// Boss office
+#define ROOF 13
+#define PARKING 14
+#define BASEMENT 15
+#define VAULTR 16	// Vault room
+#define VAULTC 17	// Vault corridor
+#define VAULT 18
 
 
 /* ------------ Skins ------------ */
