@@ -160,6 +160,7 @@ int execute(int argc, char *argv[])
 		} 
 		if(child>0)
 		{
+			wait(NULL);
 			if (errno!=0) 
 			write(0, "Unknown error", strlen("Unknown error"));
 		}
@@ -202,6 +203,25 @@ int execute(int argc, char *argv[])
 
 
 	}
+	else if (strcmp(argv[0], "Pwd") == 0 || strcmp(argv[0], "pwd") == 0 || strcmp(argv[0], "Room") == 0 || strcmp(argv[0], "r") == 0|| strcmp(argv[0], "R") == 0 || strcmp(argv[0], "room") == 0 )
+	{
+		int child4=fork();
+		if(child4==0)
+		{
+			char *path=strcat(function,"/pwd");
+			execlp(path,*argv,NULL);
+			if (errno != 0)
+			{
+            			printf("Error launching child process: %s\n", strerror(errno));
+            			return 1;
+			}
+
+		}
+		if(child4>0)
+		{
+			wait(NULL);
+		}
+	}		
 	else
 	{
 		write(1, "this function doesn't exit\n", strlen("this function doesn't exit\n"));
