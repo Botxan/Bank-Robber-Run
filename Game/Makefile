@@ -29,12 +29,19 @@ SRC5 = function/pickUp.c
 OBJ5 = ${SRC5:.c=.o}
 DEP5 = ${SRC5:.c=.d}
 
-
 SRC6 = function/talk.c
 OBJ6 = ${SRC6:.c=.o}
 DEP6 = ${SRC6:.c=.d}
 
-all: view myshell0 cd inv leave pickUp talk 
+SRC7 = function/pwd.c
+OBJ7 = ${SRC7:.c=.o}
+DEP7 = ${SRC7:.c=.d}
+
+SRC8= function/chmod.c
+OBJ8 = ${SRC8:.c=.o}
+DEP8 = ${SRC8:.c=.d}
+
+all: view myshell0 cd inv leave pickUp talk pwd chmod
 -include ${DEP1}
 
 view: ${SRC1}
@@ -63,7 +70,16 @@ pickUp: ${SRC5}
 -include ${DEP6}
 talk: ${SRC6}
 	$(CC1) -o $@ $^ $(CFLAGS)
+	
+-include ${DEP7}
+pwd: ${SRC7}
+	$(CC1) -o $@ $^ $(CFLAGS)
+	
+-include ${DEP8}
+chmod: ${SRC8}
+	$(CC1) -o $@ $^ $(CFLAGS)
+
 
 clean:
-	@rm -f ${OBJ} ${DEP} myshell0 ${DEP1} ${OBJ1} view  ${DEP2} ${OBJ2} cd ${DEP3} ${OBJ3} inv ${DEP4} ${OBJ4} Leave ${DEP5} ${OBJ5} pickUp ${DEP6} ${OBJ6} talk
+	@rm -f ${OBJ} ${DEP} myshell0 ${DEP1} ${OBJ1} view  ${DEP2} ${OBJ2} cd ${DEP3} ${OBJ3} inv ${DEP4} ${OBJ4} Leave ${DEP5} ${OBJ5} pickUp ${DEP6} ${OBJ6} talk ${DEP7} ${OBJ7} pwd ${DEP8} ${OBJ8} chmod
 # END

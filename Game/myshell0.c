@@ -129,7 +129,7 @@ int execute(int argc, char *argv[])
 		}
 
 	}
-	if(strcmp(argv[0], "access") == 0 || strcmp(argv[0], "cd") == 0)
+	 else if(strcmp(argv[0], "access") == 0 || strcmp(argv[0], "cd") == 0)
 	{
 		char *roomText;
 		if(cd(argc,argv,home,0)==1)
@@ -152,7 +152,7 @@ int execute(int argc, char *argv[])
 
 	}
 
-	if(strcmp(argv[0], "inv") == 0 || strcmp(argv[0], "inventory") == 0)
+	else if(strcmp(argv[0], "inv") == 0 || strcmp(argv[0], "inventory") == 0)
 	{
 		child=fork();
 		if(child==0)
@@ -160,11 +160,13 @@ int execute(int argc, char *argv[])
 			write(0, "\n", strlen("\n"));
 			strcat(path,"/inv");
 			execl(path,argv[0],root);
-			if (errno!=0) write(0, "Unknown error", strlen("Unknown error"));
+			if (errno!=0) write(0, "Unknown error\n", strlen("Unknown error\n"));
 		}
 		if(child>0)
 		{
 			wait(NULL);
+			if (errno!=0) 
+			write(0, "Unknown error", strlen("Unknown error"));
 		}
 	}
 	if(strcmp(argv[0], "pickUp") == 0 || strcmp(argv[0], "pu") == 0)
@@ -187,7 +189,7 @@ int execute(int argc, char *argv[])
 			}
 		} else write(0,"You can only take an object at a time",strlen("You can only take an object at a time"));
 	}
-	if(strcmp(argv[0], "talk") == 0)
+	else if(strcmp(argv[0], "talk") == 0)
 	{
 		if(argc==2)
 		{
@@ -205,7 +207,7 @@ int execute(int argc, char *argv[])
 		} else write(0,"You can only talk to a person at a time",strlen("You can only talk to a person at a time"));
 
 	}
-	if(strcmp(argv[0], "Pause") == 0 || strcmp(argv[0], "P") == 0|| strcmp(argv[0], "quit") == 0|| strcmp(argv[0], "q") == 0)
+	else if(strcmp(argv[0], "Pause") == 0 || strcmp(argv[0], "P") == 0|| strcmp(argv[0], "quit") == 0|| strcmp(argv[0], "q") == 0)
 	{
 			int t =Leave();
 			if(t==1)
@@ -224,7 +226,32 @@ int execute(int argc, char *argv[])
 
 
 	}
+	else if (strcmp(argv[0], "Pwd") == 0 || strcmp(argv[0], "pwd") == 0 || strcmp(argv[0], "Room") == 0 || strcmp(argv[0], "r") == 0|| strcmp(argv[0], "R") == 0 || strcmp(argv[0], "room") == 0 )
+	{
+		int child4=fork();
+		if(child4==0)
+		{
+			char *path=strcat(function,"/pwd");
+			execlp(path,*argv,NULL);
+			if (errno != 0)
+			{
+            			printf("Error launching child process: %s\n", strerror(errno));
+            			return 1;
+			}
 
+		}
+		if(child4>0)
+		{
+			wait(NULL);
+		}
+	}		
+	else
+	{
+		write(1, "this function doesn't exit\n", strlen("this function doesn't exit\n"));
+	}
+	
+	
+	
 	return 1;
 }
 
