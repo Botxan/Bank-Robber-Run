@@ -126,7 +126,7 @@ int execute(int argc, char *argv[])
 		}
 
 	}
-	if(strcmp(argv[0], "access") == 0 || strcmp(argv[0], "cd") == 0)
+	 else if(strcmp(argv[0], "access") == 0 || strcmp(argv[0], "cd") == 0)
 	{
 		char *roomText;
 		if(cd(argc,argv,home,0)==1)
@@ -149,7 +149,7 @@ int execute(int argc, char *argv[])
 
 	}
 
-	if(strcmp(argv[0], "inv") == 0 || strcmp(argv[0], "inventory") == 0)
+	else if(strcmp(argv[0], "inv") == 0 || strcmp(argv[0], "inventory") == 0)
 	{
 		int child=fork();
 		if(child==0)
@@ -175,13 +175,13 @@ int execute(int argc, char *argv[])
 		}
 
 	}
-	if(strcmp(argv[0], "talk") == 0)
+	else if(strcmp(argv[0], "talk") == 0)
 	{
 	talk(argv[1]);
 	
 	
 	}
-	if(strcmp(argv[0], "Pause") == 0 || strcmp(argv[0], "P") == 0|| strcmp(argv[0], "quit") == 0|| strcmp(argv[0], "q") == 0)
+	else if(strcmp(argv[0], "Pause") == 0 || strcmp(argv[0], "P") == 0|| strcmp(argv[0], "quit") == 0|| strcmp(argv[0], "q") == 0)
 	{
 		
 		
@@ -202,7 +202,13 @@ int execute(int argc, char *argv[])
 
 
 	}
-
+	else
+	{
+		write(1, "this function doesn't exit\n", strlen("this function doesn't exit\n"));
+	}
+	
+	
+	
 	return 1;
 }
 
