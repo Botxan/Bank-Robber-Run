@@ -11,7 +11,7 @@
 #include <sys/stat.h>
 #include <sys/wait.h>
 #include "NewGame.h"
-#inclide "Chmod.h"
+
 
 
 
