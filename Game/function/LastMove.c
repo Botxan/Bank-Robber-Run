@@ -15,4 +15,5 @@ int main(int argc, char* argv[]){
   exit(1);
  }
 execlp("/bin/tail","tail","moves.txt",NULL);
+fprintf(stdout,"\n");
 }
