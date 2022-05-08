@@ -3,7 +3,7 @@
 //////////////////////////////////////////////////
 
 
-#include <sys/syscall.h> 
+#include <sys/syscall.h>
 #include <fcntl.h>
 #include <errno.h>
 #include <unistd.h>
@@ -280,7 +280,6 @@ int execute(int argc, char *argv[])
                 if (child == 0) {
                         char *path=strcat(function,"/use");
                         execlp(path, root, getcwd(NULL, 0), argv[0], argv[1], argv[2], argv[3], NULL);
-
                         if (errno != 0) {
                                 printf("Error launching child process: %s\n", strerror(errno));
                                 return 1;
@@ -382,7 +381,6 @@ int main() {
 	                chdir("Van");
 	                home = getcwd(NULL, 0);
 	                prompt="Van";
-
         	        while (1) {
                 	        write(0, prompt, strlen(prompt));
                         	write(0, ">", 1);

@@ -3,7 +3,7 @@
 CC = gcc -DFUNCTION -rdynamic 
 CC1 = gcc -rdynamic
 CPPFLAGS = -MMD 
-CFLAGS = -Wall -Werror -Wextra -std=c99 -g 
+CFLAGS = -Wall -Wextra -std=c99 -g 
 
 SRC = myshell0.c  function/cd.c function/view.c function/inv.c function/Leave.c function/pickUp.c function/talk.c function/chmod.c function/NewGame.c
 OBJ = ${SRC:.c=.o}
@@ -41,7 +41,11 @@ SRC8= function/chmod.c
 OBJ8 = ${SRC8:.c=.o}
 DEP8 = ${SRC8:.c=.d}
 
-all: view myshell0 cd inv leave pickUp talk pwd chmod
+SRC9= function/use.c
+OBJ9 = ${SRC9:.c=.o}
+DEP9 = ${SRC9:.c=.d}
+
+all: view myshell0 cd inv leave pickUp talk pwd chmod use
 -include ${DEP1}
 
 view: ${SRC1}
@@ -79,7 +83,10 @@ pwd: ${SRC7}
 chmod: ${SRC8}
 	$(CC1) -o $@ $^ $(CFLAGS)
 
+-include ${DEP9}
+use: ${SRC9}
+	$(CC1) -o $@ $^ $(CFLAGS) -D_BSD_SOURCE
 
 clean:
-	@rm -f ${OBJ} ${DEP} myshell0 ${DEP1} ${OBJ1} view  ${DEP2} ${OBJ2} cd ${DEP3} ${OBJ3} inv ${DEP4} ${OBJ4} Leave ${DEP5} ${OBJ5} pickUp ${DEP6} ${OBJ6} talk ${DEP7} ${OBJ7} pwd ${DEP8} ${OBJ8} chmod
+	@rm -f ${OBJ} ${DEP} myshell0 ${DEP1} ${OBJ1} view  ${DEP2} ${OBJ2} cd ${DEP3} ${OBJ3} inv ${DEP4} ${OBJ4} Leave ${DEP5} ${OBJ5} pickUp ${DEP6} ${OBJ6} talk ${DEP7} ${OBJ7} pwd ${DEP8} ${OBJ8} chmod ${DEP9} ${OBJ9} use
 # END

@@ -1,24 +1,24 @@
 ladder.tool
 VentilationDucts
 
-office1-card.tool
+office1-card.key
 Office1
 
-office2-card.tool
+office2-card.key
 Office2
 
-security-card.tool
+security-card.key
 SecurityRoom
 
-janitor-card.tool
+janitor-card.key
 JanitorsRoom
 
-boss-card.tool
+boss-card.key
 BossOffice
 
-boss-card.tool
+boss-card.key
 Basement
 
-boss-card.tool
+boss-card.key
 VaultRoom
 

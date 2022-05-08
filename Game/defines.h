@@ -44,6 +44,7 @@
 #define MAXLINE 200
 #define MAXARGS 20
 #define NKEYS 4
+#define KEY_DOORS_SIZE 8
 
 
 /* ------ Types and structs ------ */
@@ -53,4 +54,7 @@ typedef struct {
 } idStruct;
 
 
-
+typedef struct {
+	char key[20];
+	char door[20];
+} keyDoor;
