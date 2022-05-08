@@ -45,6 +45,7 @@
 #define MAXARGS 20
 #define NKEYS 4
 #define KEY_DOORS_SIZE 8
+#define PATH_MAX 4096
 
 
 /* ------ Types and structs ------ */

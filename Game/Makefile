@@ -46,8 +46,8 @@ OBJ9 = ${SRC9:.c=.o}
 DEP9 = ${SRC9:.c=.d}
 
 all: view myshell0 cd inv leave pickUp talk pwd chmod use
--include ${DEP1}
 
+-include ${DEP1}
 view: ${SRC1}
 	$(CC1) -o $@ $^ $(CFLAGS)
 

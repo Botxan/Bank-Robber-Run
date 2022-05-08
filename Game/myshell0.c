@@ -2,18 +2,19 @@
 // myShell0
 //////////////////////////////////////////////////
 
-
+#include <limits.h>
 #include <sys/syscall.h>
 #include <fcntl.h>
 #include <errno.h>
 #include <unistd.h>
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <dirent.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/wait.h>
+
 
 #include "defines.h"
 #include "./function/view.h"
@@ -31,6 +32,7 @@ char *home;
 int id;
 char *function;
 char *root;
+char mapPath[PATH_MAX];
 
 idStruct lookuptable[19] = {
         {"Van", VAN},
@@ -276,7 +278,7 @@ int execute(int argc, char *argv[])
 	}
 	else if (strcmp(argv[0], "use") == 0)
 	{
-                int child = fork();
+                child = fork();
                 if (child == 0) {
                         char *path=strcat(function,"/use");
                         execlp(path, root, getcwd(NULL, 0), argv[0], argv[1], argv[2], argv[3], NULL);
@@ -284,18 +286,21 @@ int execute(int argc, char *argv[])
                                 printf("Error launching child process: %s\n", strerror(errno));
                                 return 1;
                         }
-                }
-
-                // Wait until child process has finished
-                if (child > 0) wait(NULL);
+                } else wait(NULL);
         }
+	else if (strcmp(argv[0], "map") == 0)
+	{
+		child = fork();
+		if (child == 0) {
+			execlp("/bin/cat", "/bin/cat", mapPath, (char *) NULL);
+		} else wait(NULL);
+	}
 	else
 	{
 		write(1, "this function doesn't exist\n", strlen("this function doesn't exist\n"));
 	}
-	
-	
-	
+
+
 	return 1;
 }
 
@@ -368,14 +373,21 @@ int main() {
   	eof=0;
    	int argc;
 	char *args[MAXARGS];
+	function = getcwd(NULL, 0);
+
+	// Obtain map file path
+	strncpy(mapPath, function, PATH_MAX);
+	strncat(mapPath, "/assets/map.txt", PATH_MAX);
+
+
 
 	// Perform the corresponding actiond depending on user selection
 	switch(opt) {
 		case NEW_GAME:
 			system("clear");
 			NewGame();
+			printf("function: %s\n", mapPath);
 			write(2, "Starting new game...\n\n", 22);
-			function = getcwd(NULL, 0);
 	                chdir("Directories");
 	                root = getcwd(NULL, 0);
 	                chdir("Van");
