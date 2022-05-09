@@ -190,17 +190,12 @@ int execute(int argc, char *argv[])
 		{
 			write(0, "\n", strlen("\n"));
 			strcat(path,"/inv");
-			execl(path,argv[0],root);
+			execl(path,argv[0],root,NULL);
 			if (errno!=0) write(0, "Unknown error\n", strlen("Unknown error\n"));
 		}
-		if(child>0)
-		{
-			wait(NULL);
-			if (errno!=0) 
-			write(0, "Unknown error", strlen("Unknown error"));
-		}
+		wait(NULL);
 	}
-	if(strcmp(argv[0], "pickUp") == 0 || strcmp(argv[0], "pu") == 0)
+	else if(strcmp(argv[0], "pickUp") == 0 || strcmp(argv[0], "pu") == 0)
 	{
 		if(argc==2)
 		{
@@ -209,15 +204,12 @@ int execute(int argc, char *argv[])
 			{
 				write(0, "\n", strlen("\n"));
                         	strcat(path,"/pickUp");
-                        	execl(path,root,argv[0]);
+                        	execl(path,argv[0],argv[1],root,NULL);
 				if(errno!=1) write(0,"Unknown error\n",strlen("Unknown error\n"));
 				else write(0,"The object doesn't exist\n",strlen("The object doesn't exist\n"));
 
 			}
-			if(child>0)
-			{
-				wait(NULL);
-			}
+			wait(NULL);
 		} else write(0,"You can only take an object at a time",strlen("You can only take an object at a time"));
 	}
 	else if(strcmp(argv[0], "talk") == 0)
@@ -229,7 +221,7 @@ int execute(int argc, char *argv[])
 			{
 				write(0, "talk\n", strlen("talk\n"));
 				strcat(path,"/talk");
-				execl(path,argv[1], NULL);
+				execl(path,argv[0],argv[1], NULL);
 				if (errno != 0) printf("Error on talk function: %s\n", strerror(errno));
 			}
 			if(child>0)
@@ -296,10 +288,8 @@ int execute(int argc, char *argv[])
 			execlp("/bin/cat", "/bin/cat", mapPath, (char *) NULL);
 		} else wait(NULL);
 	}
-	else
-	{
-		write(1, "this function doesn't exist\n", strlen("this function doesn't exist\n"));
-	}
+	else write(1, "this function doesn't exist\n", strlen("this function doesn't exist\n"));
+
 
 
 	return 1;
