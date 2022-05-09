@@ -257,7 +257,7 @@ int execute(int argc, char *argv[])
 			{
 				wait(NULL);
 			}
-		} else write(0,"You can only talk to a person at a time",strlen("You can only talk to a person at a time"));
+		} else write(0,"You can only talk to a person at a time\n",strlen("You can only talk to a person at a time\n"));
 
 	}
 	else if(strcmp(argv[0], "Pause") == 0 || strcmp(argv[0], "P") == 0|| strcmp(argv[0], "quit") == 0|| strcmp(argv[0], "q") == 0)
