@@ -7,6 +7,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#define DEFAULT_SOURCE
+
 extern int search(char *word, int file);
 extern char* blank(char* input);
 

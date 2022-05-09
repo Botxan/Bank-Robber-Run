@@ -377,7 +377,7 @@ int main() {
 
 	// Obtain map file path
 	strncpy(mapPath, function, PATH_MAX);
-	strncat(mapPath, "/assets/map.txt", PATH_MAX);
+	strncat(mapPath, "/assets/map.txt", PATH_MAX-100);
 
 
 

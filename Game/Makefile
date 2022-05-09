@@ -3,7 +3,7 @@
 CC = gcc -DFUNCTION -rdynamic 
 CC1 = gcc -rdynamic
 CPPFLAGS = -MMD 
-CFLAGS = -Wall -Wextra -std=c99 -g 
+CFLAGS = -Wall -Wextra  -std=c99 -g 
 
 SRC = myshell0.c  function/cd.c function/view.c function/inv.c function/Leave.c function/pickUp.c function/talk.c function/chmod.c function/NewGame.c
 OBJ = ${SRC:.c=.o}
@@ -85,7 +85,7 @@ chmod: ${SRC8}
 
 -include ${DEP9}
 use: ${SRC9}
-	$(CC1) -o $@ $^ $(CFLAGS) -D_BSD_SOURCE
+	$(CC1) -o $@ $^ $(CFLAGS) -D_DEFAULT_SOURCE  
 
 clean:
 	@rm -f ${OBJ} ${DEP} myshell0 ${DEP1} ${OBJ1} view  ${DEP2} ${OBJ2} cd ${DEP3} ${OBJ3} inv ${DEP4} ${OBJ4} Leave ${DEP5} ${OBJ5} pickUp ${DEP6} ${OBJ6} talk ${DEP7} ${OBJ7} pwd ${DEP8} ${OBJ8} chmod ${DEP9} ${OBJ9} use
