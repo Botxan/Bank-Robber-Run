@@ -73,15 +73,21 @@ char home[]="";
 					
 				printf("You need to use object for open this door or This room doen't exist\n");	
 				
-				
-				
 				return 0;
 			}
 			else
 			{
 				fgets(format,100,fp);
-				chdir(format);
-				printf("Room changed\n");
+				int t=chdir(format);
+				if(t>=0)
+				{
+					printf("Room changed\n");
+				}
+				else
+				{
+					write(1,"You need to use object for open this door\n",strlen("You need to use object for open this door\n"));
+				}
+				
 				fclose(fp);
 				return 1;
 			}

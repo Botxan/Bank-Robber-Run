@@ -1,0 +1,7 @@
+Robert: Leader of the gang
+Matt: Manager, welcomes you in the main banking hall and accompanies you to the electrical panel room
+Ramon: Guard in the main banking hall
+Francis: Officer 1
+Stefanie: Officer 2
+Javier: Guard in security room
+Veronica: Receptionist in lost and found department
