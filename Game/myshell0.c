@@ -229,7 +229,8 @@ int execute(int argc, char *argv[])
 			{
 				write(0, "talk\n", strlen("talk\n"));
 				strcat(path,"/talk");
-				execl(path,argv[1]);
+				execl(path,argv[1], NULL);
+				if (errno != 0) printf("Error on talk function: %s\n", strerror(errno));
 			}
 			if(child>0)
 			{
