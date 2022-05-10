@@ -2,6 +2,6 @@
 # define NEWGAME_H
 
 
-void NewGame();
+void newGame();
 
 # endif

@@ -6,9 +6,9 @@
 #include <sys/syscall.h>
 #include <fcntl.h>
 #include <errno.h>
-#include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include <string.h>
 #include <dirent.h>
 #include <sys/types.h>
@@ -23,7 +23,7 @@
 #include "./function/Leave.h"
 #include "./function/pickUp.h"
 #include "./function/talk.h"
-#include "./function/NewGame.h"
+#include "./function/newGame.h"
 
 int eof;
 char *prompt;
@@ -387,19 +387,15 @@ int main() {
 	int argc;
 	char *args[MAXARGS];
 	function = getcwd(NULL, 0);
-
 	// Obtain map file path
 	strncpy(mapPath, function, PATH_MAX);
 	strncat(mapPath, "/assets/map.txt", PATH_MAX-100);
-
-
 
 	// Perform the corresponding actiond depending on user selection
 	switch(opt) {
 	case NEW_GAME:
 		system("clear");
-		NewGame();
-		printf("function: %s\n", mapPath);
+		newGame();
 		write(2, "Starting new game...\n\n", 22);
 		chdir("Directories");
 		root = getcwd(NULL, 0);
