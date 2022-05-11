@@ -16,20 +16,24 @@ C:Come on, let me in, I'll just be a minute.
 B1 C1
 As I have already told you, entry is only allowed to internal employees. No te lo volveré a repetir.
 
+
 D:I understand.
 E:I don't care, I'm going in.
+--1
 
+D
+I hope so
+--0
 
-// GAME OVER
 *Ramon has knocked you out*.
 1E
-
+--0
 
 
 // Default talk when wearing executive skin
 2
 ...
-He seems to be very focused
+*He seems to be very focused*
 --0
 
 

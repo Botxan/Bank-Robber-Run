@@ -1,16 +1,77 @@
 0
 
 // First encounter
-0
+#0
 Hello... you... I don't know your face... you don't work here, do you?
+
 
 A:I'm the electrician, here to check the bank's wiring.
 B:I'm the director's brother, I'd rather you didn't bother me. Thank you.
 C:I'm working, leave me alone.
-D: *Knock out employee*
---1
+--y
 
 
 1A
+I thought that only internal employees were allowed in, did they let you in?
+
+A:Yes, I have told the guard that I need to check the sockets coming down from the ceiling.
+B:Yes, and if you don't want to feel 150K volts coursing through your body you'd better leave me alone.
+--y
+
+1B
+Are you the one who used to work at the IRS? Or the one who used to be the IT guy?
+
+C:The one who worked for the IRS.
+D:The chad IT computer scientist.
+E:None of your business.
+--y
 
 
+1C
+Hey man, I don't know you, either you tell me who you are or I'll have to call security.
+
+F:I'm the electrician, here to check the bank's wiring.
+G:I won't tell you again, either you let me pass, or I will pass over you.
+--y
+
+
+2A
+Ah yes, Ignacio, the boss, has already told us that the light in the basement stopped working a few days ago. I'm leaving, good luck... I guess.
+*The officer goes to the WC and leaves his office door open.*
+--1
+
+
+2B
+Hey, take it easy, man (you can't even say good morning anymore...).
+*The officer goes to the WC and leaves his office door open.*
+--1
+
+
+2C
+*The officer goes to the WC and leaves his office door open*.
+Oh, so it's you! You're nothing alike... except that you've both found a way to make a lot of dough! Anyway, next time you talk to him, put in a good word for me, please, maybe I'll get a raise. Well, I'll be on my way, good luck.... I guess.
+--1
+
+
+2D
+*The officer goes to the WC and leaves his office door open*.
+Oh, so it's you! You're nothing alike... anyway, next time you talk to him, put in a good word for me, please, maybe I'll get a raise. Well, I'll be on my way, good luck.... I guess.
+--1
+
+
+2E
+I hope you are the IT guy! Those of us who know about computers, people look at us as if we were magicians. I would too if I wasn't so good at using Excel. Anyway, next time you talk to him, put in a good word for me, please, maybe I'l get a raise. Well, I'll be on my way, good luck...I guess.
+*The officer goes to the WC and leaves his office door open*.
+--1
+
+
+2F
+Ah yes, Ignacio, the boss, has already told us that the light in the basement stopped working a few days ago. I'm leaving, good luck... I guess.
+*The officer goes to the WC and leaves his office door open*.
+--1
+
+
+2G
+SECURITYYYY!!!!!
+*The guards have incapacitated you.*
+--2

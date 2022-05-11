@@ -1,0 +1,78 @@
+0
+
+// If information of missing card hasn't been found in office2
+// And default conversation after obtaining the office key card
+#0
+Hi, what can I do for you?
+
+A:Hi, the anchor you have at the back of the room, I should have left it the last time I came to withdraw money, could I get it back?
+--y
+
+1A
+There must have been a misunderstanding, sir, we’ve already been called asking for the anchor, I’m afraid you won’t be able to take it away for now.
+--0
+
+
+// If information of missing card has been found
+// If wearing electrician skin
+#1
+Hi, what can I do for you?
+
+A:Hi, the anchor you have at the back of the room, I should have left it the last time I came to withdraw money, could I get it back?
+B:Hello, it seems that you have found the card that I lost, would it be possible to recover it?
+--y
+
+
+1A
+There must have been a misunderstanding, sir, we’ve already been called asking for the anchor, I’m afraid you won’t be able to take it away for now.
+--0
+
+
+1B
+I’m sorry, I don’t know how you found out about that information, but the card belongs to an internal employee, and you don’t look like a bank employee.
+--0
+
+
+// If information of msissing card hasn't been found in office
+// If wearing executive skin
+#1
+Hi, what can I do for you?
+
+A:Hi, the anchor you have at the back of the room, I should have left it the last time I came to withdraw money, could I get it back?
+B:Hello, it seems that you have found the card that I lost, would it be possible to recover it?
+--y
+
+
+1A
+There must have been a misunderstanding, sir, we’ve already been called asking for the anchor, I’m afraid you won’t be able to take it away for now.
+--0
+
+
+1B
+Of course, sir, tell me your ID.
+--0
+
+
+// 1st attempt: incorrect ID
+#2
+The ID is not correct sir, you have other two opportunities.
+--0
+
+
+// 2nd attempt: incorrect ID 
+#3
+The ID is not correct sir, you have one more opportunity.
+--0
+
+
+// 3rd attempt: incorrect ID
+#4
+The ID is incorrect, sir, I’m afraid we won’t be able to give you the card.
+--2
+
+
+// Correct ID
+#5
+Right, here’s your card, sir. Have a good day.
+--0
+
