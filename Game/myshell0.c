@@ -237,10 +237,14 @@ int execute(int argc, char *argv[])
 		{
 			write(0, "\n", strlen("\n"));
 			strcat(path,"/inv");
-			execl(path,argv[0],root,NULL);
+			execlp(path,"",root,argv[1],NULL);
 			if (errno!=0) write(0, "Unknown error\n", strlen("Unknown error\n"));
 		}
-		wait(NULL);
+		else
+		{
+			wait(NULL);
+		}
+	
 	}
 	else if(strcmp(argv[0], "pickUp") == 0 || strcmp(argv[0], "pu") == 0)
 	{

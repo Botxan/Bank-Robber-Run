@@ -32,21 +32,23 @@ int inv(int argc,char* argv[]) {
 int main(int argc,char* argv[]) {
 #endif
 
-	if (argc!=4||strcmp(argv[0],"inv"))
+	if (argc>2)
 	{
+		write(0,"We don't need argument for this function!\n\n",strlen("We don't need argument for this function!\n\n"));
 	 	return 1;
 	}
 	char *root=argv[1];
 	strcpy(current,getcwd(current,200));
 	struct dirent *dir;
 	struct stat *buf = malloc(sizeof(struct stat));
-	char tool[100]="\nThis are the things on your inventory:\n";
+	char tool[100]="This are the things on your inventory:\n";
 	int empty=1;
 	int chdirError=0;
 	chdirError+=chdir(root);
 	chdirError+=chdir("Inv");
 	if(chdirError<0)
 	{
+		
 		return 1;
 	}
 	DIR *d=opendir(".");
@@ -55,20 +57,28 @@ int main(int argc,char* argv[]) {
 	 	stat(dir->d_name,buf);
 		if(!S_ISDIR(buf->st_mode))
 		{
-			empty=0;
-			strcat(tool,"  ");
-			deletextensionTool(dir->d_name);
-			strcat(tool,dir->d_name);
-			strcat(tool,"\n");	
+			
+			if(strcmp(strrchr(dir->d_name, '.'),".tool")==0)
+			{
+				empty=0;
+				strcat(tool,"  ");
+				deletextensionTool(dir->d_name);
+				strcat(tool,dir->d_name);
+				strcat(tool,"\n");	
+			
+			}
+			
 		}
 	}
+	strcat(tool,"\n");	
 	if(empty==1)
 	{
 		write(0,"Inventory empty!",strlen("Inventory empty!"));
 		
-
 	}
-	else write(0,tool,strlen(tool));
+	else {
+		write(0,tool,strlen(tool));
+	}
 	chdir(current);
 return 0;
 }
