@@ -55,6 +55,9 @@ void newGame()
 	symlink("../../../../../../assets/roomDescription/BossOfficeDescription.txt", "Directories/Van/MainEntrance/MainBankingHall/Corridor/BossOffice/.description.txt");
 	symlink("../../../../../../assets/roomDescription/JanitorRoomDescription.txt", "Directories/Van/MainEntrance/MainBankingHall/Corridor/JanitorRoom/.description.txt");
 	symlink("../../../../../../assets/roomDescription/RooftopDescription.txt", "Directories/Van/MainEntrance/MainBankingHall/Corridor/Rooftop/.description.txt");
+	// Prevent GitHub from removing Inv directory by adding a dummy .description file
+	symlink("../../assets/roomDescription/InvDescription.txt", "Directories/Inv/.description.txt");
+
 
 
 
