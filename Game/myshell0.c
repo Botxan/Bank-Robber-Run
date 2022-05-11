@@ -33,6 +33,7 @@ int id;
 char *function;
 char *root;
 char mapPath[PATH_MAX];
+int table[100];
 
 idStruct lookuptable[19] = {
 	{"Van", VAN},
@@ -132,6 +133,7 @@ int idFromName(char *newRoom)
 	}
 	return 0;
 }
+
 //////////////////////////////////////////////
 int execute(int argc, char *argv[])
 {
@@ -140,14 +142,16 @@ int execute(int argc, char *argv[])
 	int child;
 	strcpy(path,function);
 	strcpy(path2,function);
+	
+	
 	if(strcmp(argv[0], "view") == 0 || strcmp(argv[0], "ls") == 0)
 	{
 		child=fork();
 		if(child==0)
 		{
 			strcat(path,"/view");
-			//write(0,path,strlen(path));
-			execlp(path,*argv,argv[1],argv[2]);
+			
+			execlp(path,"",argv[1],argv[2]);
 			if (errno != 0)
 			{
 				printf("Error launching child process: %s\n", strerror(errno));
@@ -166,24 +170,46 @@ int execute(int argc, char *argv[])
 	{
 		char *roomText;
 		prompt=strrchr(getcwd(NULL, 0),'/')+1;
-		if(strcmp(prompt, "ElectricalPanelRoom") == 0)
+		if(strcmp(prompt, "VentilationDucts") == 0)
 		{
-		
-			if(strcmp(argv[1], "SecurityRoom") == 0 || strcmp(argv[2], "SecurityRoom") == 0)
-			{
-				strcat(path,"/chmod");
-				strcat(path2,"/Directories/Van/MainEntrance/MainBankingHall/Corridor/SecurityRoom");
-				int chmod7=fork();
-				if(chmod7==0)
+			if(argv[2] !=NULL)
+			{				
+				if(strcmp(argv[1], "SecurityRoom") == 0 || strcmp(argv[2], "SecurityRoom") == 0)
 				{
-					execlp(path,"./chmod",path2,"rwxrwxrwx");
-				}
-				else
-				{
-					wait(NULL);
+					
+					strcat(path,"/chmod");
+					strcat(path2,"/Directories/Van/MainEntrance/MainBankingHall/Corridor/SecurityRoom");
+					int chmod7=fork();
+					if(chmod7==0)
+					{
+						execlp(path,"./chmod",path2,"rwxrwxrwx");
+					}
+					else
+					{
+						wait(NULL);
+					}
 				}
 			}
+			else
+			{
+				if(strcmp(argv[1], "SecurityRoom") == 0)
+				{
+					strcat(path,"/chmod");
+					strcat(path2,"/Directories/Van/MainEntrance/MainBankingHall/Corridor/SecurityRoom");
+					int chmod7=fork();
+					if(chmod7==0)
+					{
+						execlp(path,"./chmod",path2,"rwxrwxrwx");
+					}
+					else
+					{
+						wait(NULL);
+					}
+				}
+			}
+			
 		}
+
 		
 		if(cd(argc,argv,home,0)==1)
 		{
@@ -224,8 +250,8 @@ int execute(int argc, char *argv[])
 			if(child==0)
 			{
 				write(0, "\n", strlen("\n"));
-                        	strcat(path,"/pickUp");
-                        	execl(path,argv[0],argv[1],root,NULL);
+				strcat(path,"/pickUp");
+				execl(path,argv[0],argv[1],root,NULL);
 				if(errno!=1) write(0,"Unknown error\n",strlen("Unknown error\n"));
 				else write(0,"The object doesn't exist\n",strlen("The object doesn't exist\n"));
 
@@ -317,6 +343,77 @@ int execute(int argc, char *argv[])
 	return 1;
 }
 
+
+int countpipe(int argc,char *argv[],char *test[])
+{
+
+	int i=1;
+	int result=0;
+	int t=0;
+	while(t !=100)
+	{
+		table[t]=0;
+		t++;
+	}
+	
+	while(argv[i] !=NULL)
+	{
+		
+		if(strcmp(argv[i], "||") == 0)
+		{
+			table[result]=i;
+			result++;
+			
+		}
+		i++;
+	}
+
+	int compare=0;
+	if(result==0)
+	{
+		execute(argc, test);
+	}
+	else
+	{
+		int number=0;
+		table[result]=i;
+		while(result+1 != compare)
+		{
+			char *save[100];
+			int j=0;
+			while(j !=100)
+			{
+				save[j]=NULL;
+				j++;
+			}
+			int p=0;	
+			while(table[compare] != number)
+			{
+				
+				save[p]=argv[number];
+				number++;
+				p++;
+			}
+			compare++;
+			number++;
+			execute(p, save);
+			write(0,"\n",strlen("\n"));
+			
+		}	
+		
+	}
+	
+	
+	
+	return 1;
+}
+
+
+
+
+
+
+
 /*
 * Function: show_main_menu
 * ------------------------
@@ -406,7 +503,10 @@ int main() {
 			write(0, prompt, strlen(prompt));
 			write(0, ">", 1);
 			if (read_args(&argc, args, MAXARGS, &eof) && argc > 0)
-			execute(argc, args);
+			{
+				countpipe(argc,args,args);
+				//execute(argc, args);
+			}
 			if (eof) exit(0);
 		}
 		break;
