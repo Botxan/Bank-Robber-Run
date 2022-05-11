@@ -48,7 +48,7 @@ idStruct lookuptable[19] = {
 	{"VentilationDucts", VENT},
 	{"JanitorsRoom", JANITOR},
 	{"BossOffice", BOSS},
-	{"Roof", ROOF},
+	{"Rooftop", ROOF},
 	{"Parking", PARKING},
 	{"Basement", BASEMENT},
 	{"VaultCorridor", VAULTC},

@@ -1,0 +1,28 @@
+0
+
+
+
+// First encounter at MainEntrance
+0
+The electrician? At these hours? We were supposed to meet in two hours.
+
+
+A. We had a last minute cancellation, so we preferred to come earlier to finish the day earlier.
+B. There must have been a misunderstanding, the agreed time was just now.
+C. What? I thought the scheduled time was now...
+--1
+
+
+
+1A 1B 1C
+Well... anyway, let's go inside, I'll take you to the electrical panel room.
+
+--0
+
+
+
+// You arrive to electrical panel room with
+1
+There you have the electrical panel, the differentials and all the other things that you will know better than me. I'm leaving, I have to keep working. When you finish the work, let reception know before you leave.
+--0
+

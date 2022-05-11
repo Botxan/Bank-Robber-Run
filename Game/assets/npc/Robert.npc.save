@@ -1,0 +1,95 @@
+0
+
+0
+I hope you have in mind what we agreed. You enter the vault room, take the fucking money and leave, I'll see you on the way out.
+
+Remember the plan, the electrician will arrive at the bank in a couple of hours, so you'll have to impersonate him so the receptionist will let you in. Once inside, he will take you to the electrical panel room. Find a way to sneak into the corridor from the Main Banking Hall. The basement leading to the vault room is located there, but you will need the oficcer's key card to enter the basement.
+
+Be sure to bring the necessary tools:
+ - The decoder, for decrypting potentially valuable files.
+ - The camera inhibitor. It is important that you disable the security cameras as soon as possible, but first focus on getting the fucking card.
+ - The radio. When you don't know how to continue, use it to contact me, I will give you indications on how to act and on the time we have left. Not all places are safe to talk, so it's best to use it in the electrical panel room, WC or the janitor's room.
+
+Oh, and take this lock pick with you too, it will be useful to open a door with a simple lock. Keep in mind that it will break with use, so take good care of it.
+
+The map will also be useful, make use of it with the map command.
+Before we start, let's review everything we have learned these months, I don't want any surprises:
+ - To move between places, use go place
+ - Analyze your environment or the particular objects in each place with view [object].
+ - If you find something useful, pick it up with pickup
+ - You can use your objects with use [door | person | object].
+ - If you need to talk to someone in there, use talk person.
+ - Visit your last movements with log.
+
+And as I want everything to go well, if you have any doubt, I have prepared a manual with all these utilities, although I hope you don't need them too much after all these months of practice. Use it with man <command>.
+
+So, when you are ready, cross the main entrance, the bank manager should accompany you to the electrical panel room. That's where you come in, find a way to sneak into the corridor.
+--0
+
+
+// Using the radio in electrical panel when Ramon is the MainBankingHall
+1
+Is everything okay?
+
+A: Yes, all under control
+B: 
+
+
+// Using radio in any place which is not WC or Janitor's room
+2
+This place is not safe for radio use.
+--0
+
+
+
+// Repeating dialogue until office key card is obtained
+3
+Find the office card. Look for an office where the clerk has left the door open. If there is no other option, you can try to knock one out. But avoid it if possible, we have to try to go unnoticed.
+--0
+
+
+
+// Robert is distracting guard to allow you to sneak into the corridor. Repetitive until office key card found
+4
+...
+...
+-There is no one on the other side-.
+--0
+
+
+
+// If Robert has been distracting the guard, pre-main dialog after obtaining office key card
+5
+That fucking guard chased me by car for 10 fucking blocks! Luckily I managed to avoid him, sorry I didn't pick up the radio sooner.
+
+GOTO 5
+--0
+
+
+
+6
+So you managed to get the key card. Good, but remember, it's our first priority to disable the cameras no matter what. The door to the security room is usually locked, so you'll have to find some other way to access it. When you manage to deactivate the cameras we'll keep talking, maybe the fucking gorilla will come back out to fuck around.
+--0
+
+
+
+// Repeating dialogue until security cameras are deactivated and boss key has been obtained
+7
+Find a way to sneak into the security room.
+--0
+
+
+
+// Security cameras are deactivated and director card has been obtained
+8
+Lucky you got the director's card, I think the atmosphere is starting to get really tense there. Before going down to the basement, make sure you have found the code to the safe inside vault room and that you have some tool to help you avoid the security infrared lasers in the basement corridor. Otherwise, it will be impossible to access the vault room.
+
+When you have what we are looking for, come back here. Come on, there is not much time left!
+--0
+
+
+
+// Repeating dialogue until the end
+9
+Look for the code to the safe and something to bypass the infrared lasers in the basement corridor.
+--0

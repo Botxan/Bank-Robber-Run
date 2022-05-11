@@ -1,10 +1,10 @@
 ladder.tool
 VentilationDucts
 
-office1-card.tool
+office-card.tool
 Office1
 
-office2-card.tool
+office-card.tool
 Office2
 
 security-card.tool
@@ -21,4 +21,7 @@ Basement
 
 boss-card.tool
 VaultRoom
+
+ladder.tool
+VentilationDucts
 

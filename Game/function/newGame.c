@@ -28,11 +28,58 @@ void newGame()
         // Clear map
         if (fork() == 0)
         {
-                execlp("find", "find", "./Directories", "-type", "l", "-delete", NULL);
+                execlp("find", "find", "./Directories", "-type", "l", "!", "-iname", "*description.txt", "-delete", NULL);
                 printf("Error emptying directories: %s\n", strerror(errno));
                 exit(0);
         }
         else wait(NULL);
+
+
+	// Add room descriptions (they are not deleted from scenario, but just in case)
+	symlink("../../assets/roomDescription/VanDescription.txt", "Directories/Van/.description.txt");
+	symlink("../../../assets/roomDescription/MainEntranceDescription.txt", "Directories/Van/MainEntrance/.description.txt");
+	symlink("../../../../assets/roomDescription/ParkingDescription.txt", "Directories/Van/MainEntrance/Parking/.description.txt");
+	symlink("../../../../../assets/roomDescription/BasementDescription.txt", "Directories/Van/MainEntrance/Parking/Basement/.description.txt");
+	symlink("../../../../../../assets/roomDescription/VaultCorridorDescription.txt", "Directories/Van/MainEntrance/Parking/Basement/VaultCorridor/.description.txt");
+	symlink("../../../../../../../assets/roomDescription/VaultRoomDescription.txt", "Directories/Van/MainEntrance/Parking/Basement/VaultCorridor/VaultRoom/.description.txt");
+	symlink("../../../../../../../../assets/roomDescription/VaultDescription.txt", "Directories/Van/MainEntrance/Parking/Basement/VaultCorridor/VaultRoom/Vault/.description.txt");
+	symlink("../../../../assets/roomDescription/MainBankingHallDescription.txt", "Directories/Van/MainEntrance/MainBankingHall/.description.txt");
+	symlink("../../../../../assets/roomDescription/ElectricalPanelRoomDescription.txt", "Directories/Van/MainEntrance/MainBankingHall/ElectricalPanelRoom/.description.txt");
+	symlink("../../../../../assets/roomDescription/LostAndFoundDescription.txt", "Directories/Van/MainEntrance/MainBankingHall/LostAndFound/.description.txt");
+	symlink("../../../../../assets/roomDescription/CorridorDescription.txt", "Directories/Van/MainEntrance/MainBankingHall/Corridor/.description.txt");
+	symlink("../../../../../../assets/roomDescription/Office1Description.txt", "Directories/Van/MainEntrance/MainBankingHall/Corridor/Office1/.description.txt");
+	symlink("../../../../../../assets/roomDescription/Office2Description.txt", "Directories/Van/MainEntrance/MainBankingHall/Corridor/Office2/.description.txt");
+	symlink("../../../../../../assets/roomDescription/WCDescription.txt", "Directories/Van/MainEntrance/MainBankingHall/Corridor/WC/.description.txt");
+	symlink("../../../../../../../assets/roomDescription/VentilationDuctsDescription.txt", "Directories/Van/MainEntrance/MainBankingHall/Corridor/WC/VentilationDucts/.description.txt");
+	symlink("../../../../../../assets/roomDescription/SecurityRoomDescription.txt", "Directories/Van/MainEntrance/MainBankingHall/Corridor/SecurityRoom/.description.txt");
+	symlink("../../../../../../assets/roomDescription/BossOfficeDescription.txt", "Directories/Van/MainEntrance/MainBankingHall/Corridor/BossOffice/.description.txt");
+	symlink("../../../../../../assets/roomDescription/JanitorRoomDescription.txt", "Directories/Van/MainEntrance/MainBankingHall/Corridor/JanitorRoom/.description.txt");
+	symlink("../../../../../../assets/roomDescription/RooftopDescription.txt", "Directories/Van/MainEntrance/MainBankingHall/Corridor/Rooftop/.description.txt");
+
+
+
+	// Add symlinks to previous room and shortcuts from ventilation room and from corridor to basement
+	symlink("..", "Directories/Van/MainEntrance/Van");
+	symlink("..", "Directories/Van/MainEntrance/Parking/MainEntrance");
+	symlink("..", "Directories/Van/MainEntrance/Parking/Basement/Parking");
+	symlink("..", "Directories/Van/MainEntrance/Parking/Basement/VaultCorridor/Basement");
+	symlink("..", "Directories/Van/MainEntrance/Parking/Basement/VaultCorridor/VaultRoom/VaultCorridor");
+	symlink("..", "Directories/Van/MainEntrance/Parking/Basement/VaultCorridor/VaultRoom/Vault/VaultRoom");
+	symlink("..", "Directories/Van/MainEntrance/MainBankingHall/MainEntrance");
+	symlink("..", "Directories/Van/MainEntrance/MainBankingHall/ElectricalPanelRoom/MainBankingHall");
+	symlink("..", "Directories/Van/MainEntrance/MainBankingHall/LostAndFound/MainBankingHall");
+	symlink("..", "Directories/Van/MainEntrance/MainBankingHall/Corridor/MainBankingHall");
+	symlink("..", "Directories/Van/MainEntrance/MainBankingHall/Corridor/Office1/Corridor");
+	symlink("..", "Directories/Van/MainEntrance/MainBankingHall/Corridor/Office2/Corridor");
+	symlink("..", "Directories/Van/MainEntrance/MainBankingHall/Corridor/WC/Corridor");
+	symlink("..", "Directories/Van/MainEntrance/MainBankingHall/Corridor/SecurityRoom/Corridor");
+	symlink("..", "Directories/Van/MainEntrance/MainBankingHall/Corridor/BossOffice/Corridor");
+	symlink("..", "Directories/Van/MainEntrance/MainBankingHall/Corridor/Rooftop/Corridor");
+
+	symlink("..", "Directories/Van/MainEntrance/MainBankingHall/Corridor/WC/VentilationDucts/WC");
+	symlink("../../../ElectricalPanelRoom", "Directories/Van/MainEntrance/MainBankingHall/Corridor/WC/VentilationDucts/ElectricalPanelRoom");
+	symlink("../../SecurityRoom", "Directories/Van/MainEntrance/MainBankingHall/Corridor/WC/VentilationDucts/SecurityRoom");
+	symlink("../../Parking/Basement", "Directories/Van/MainEntrance/MainBankingHall/Corridor/Basement");
 
 
 	// Add all the .obj to the map

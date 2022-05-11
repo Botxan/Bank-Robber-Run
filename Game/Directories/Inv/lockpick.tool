@@ -1,1 +1,0 @@
-../../assets/tool/lockpick.tool

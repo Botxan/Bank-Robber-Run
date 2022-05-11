@@ -44,7 +44,7 @@
 #define MAXLINE 200
 #define MAXARGS 20
 #define NKEYS 4
-#define KEY_DOORS_SIZE 8
+#define KEY_DOORS_SIZE 9
 #define PATH_MAX 4096
 
 

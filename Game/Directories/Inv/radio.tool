@@ -1,1 +1,0 @@
-../../assets/tool/radio.tool
