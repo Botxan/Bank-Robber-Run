@@ -1,0 +1,38 @@
+1
+0#
+0A
+Hello!
+How are you?
+
+A:I'm okay, what about you?
+B:Not really well
+C:Could be better
+--y
+1A
+I'm good, great to see you!
+--1
+1B
+Sorry to hear that
+
+A:not to worry!
+B:what about you? 
+--y
+1C
+Cheer up man
+
+C:Thanks!
+D:It's difficult...
+--y
+2A
+Hope you get better! 
+--1
+2B
+I'm good thanks!
+--1
+2D
+I know
+--1
+1#
+0A
+Leave me alone
+--1
