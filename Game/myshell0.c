@@ -170,14 +170,13 @@ int execute(int argc, char *argv[])
 	{
 		char *roomText;
 		prompt=strrchr(getcwd(NULL, 0),'/')+1;
-		if(strcmp(prompt, "ElectricalPanelRoom") == 0)
+		if(strcmp(prompt, "VentilationDucts") == 0)
 		{
-			write(1,"tu3\n\n", strlen("tu\n\n"));
 			if(argv[2] !=NULL)
 			{				
 				if(strcmp(argv[1], "SecurityRoom") == 0 || strcmp(argv[2], "SecurityRoom") == 0)
 				{
-					write(1,"tu4\n\n", strlen("tu\n\n"));
+					
 					strcat(path,"/chmod");
 					strcat(path2,"/Directories/Van/MainEntrance/MainBankingHall/Corridor/SecurityRoom");
 					int chmod7=fork();
@@ -195,7 +194,6 @@ int execute(int argc, char *argv[])
 			{
 				if(strcmp(argv[1], "SecurityRoom") == 0)
 				{
-					write(1,"tu4\n\n", strlen("tu\n\n"));
 					strcat(path,"/chmod");
 					strcat(path2,"/Directories/Van/MainEntrance/MainBankingHall/Corridor/SecurityRoom");
 					int chmod7=fork();
