@@ -1,0 +1,1 @@
+It appears to turn on and off any light in the building from the electrical panel. It could be useful for me to move people around.
