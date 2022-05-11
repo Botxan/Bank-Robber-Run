@@ -172,21 +172,44 @@ int execute(int argc, char *argv[])
 		prompt=strrchr(getcwd(NULL, 0),'/')+1;
 		if(strcmp(prompt, "ElectricalPanelRoom") == 0)
 		{
-		
-			if(strcmp(argv[1], "SecurityRoom") == 0 || strcmp(argv[2], "SecurityRoom") == 0)
-			{
-				strcat(path,"/chmod");
-				strcat(path2,"/Directories/Van/MainEntrance/MainBankingHall/Corridor/SecurityRoom");
-				int chmod7=fork();
-				if(chmod7==0)
+			write(1,"tu3\n\n", strlen("tu\n\n"));
+			if(argv[2] !=NULL)
+			{				
+				if(strcmp(argv[1], "SecurityRoom") == 0 || strcmp(argv[2], "SecurityRoom") == 0)
 				{
-					execlp(path,"./chmod",path2,"rwxrwxrwx");
-				}
-				else
-				{
-					wait(NULL);
+					write(1,"tu4\n\n", strlen("tu\n\n"));
+					strcat(path,"/chmod");
+					strcat(path2,"/Directories/Van/MainEntrance/MainBankingHall/Corridor/SecurityRoom");
+					int chmod7=fork();
+					if(chmod7==0)
+					{
+						execlp(path,"./chmod",path2,"rwxrwxrwx");
+					}
+					else
+					{
+						wait(NULL);
+					}
 				}
 			}
+			else
+			{
+				if(strcmp(argv[1], "SecurityRoom") == 0)
+				{
+					write(1,"tu4\n\n", strlen("tu\n\n"));
+					strcat(path,"/chmod");
+					strcat(path2,"/Directories/Van/MainEntrance/MainBankingHall/Corridor/SecurityRoom");
+					int chmod7=fork();
+					if(chmod7==0)
+					{
+						execlp(path,"./chmod",path2,"rwxrwxrwx");
+					}
+					else
+					{
+						wait(NULL);
+					}
+				}
+			}
+			
 		}
 
 		
@@ -229,8 +252,8 @@ int execute(int argc, char *argv[])
 			if(child==0)
 			{
 				write(0, "\n", strlen("\n"));
-                        	strcat(path,"/pickUp");
-                        	execl(path,argv[0],argv[1],root,NULL);
+				strcat(path,"/pickUp");
+				execl(path,argv[0],argv[1],root,NULL);
 				if(errno!=1) write(0,"Unknown error\n",strlen("Unknown error\n"));
 				else write(0,"The object doesn't exist\n",strlen("The object doesn't exist\n"));
 
@@ -337,7 +360,7 @@ int countpipe(int argc,char *argv[],char *test[])
 	
 	while(argv[i] !=NULL)
 	{
-	
+		
 		if(strcmp(argv[i], "||") == 0)
 		{
 			table[result]=i;
@@ -379,7 +402,7 @@ int countpipe(int argc,char *argv[],char *test[])
 			write(0,"\n",strlen("\n"));
 			
 		}	
-	
+		
 	}
 	
 	

@@ -218,7 +218,7 @@ int main(int argc,char *argv[])
 				{
 					
 					FILE *fp;
-					char format[100]="";
+					char format[200]="";
 					
 					
 					fp = fopen(part1, "r");
@@ -231,7 +231,7 @@ int main(int argc,char *argv[])
 					}
 					else
 					{
-						fgets(format,100,fp);
+						fgets(format,200,fp);
 						chdir(format);
 						DIR *d =opendir(".");
 						fclose(fp);
@@ -388,7 +388,7 @@ int main(int argc,char *argv[])
 				if(!d && result==0)
 				{
 					FILE *fp;
-					char format[100]="";
+					char format[200]="";
 					
 					fp = fopen(part1, "r");
 					
@@ -400,7 +400,7 @@ int main(int argc,char *argv[])
 					}
 					else
 					{
-						fgets(format,100,fp);
+						fgets(format,200,fp);
 						chdir(format);
 						DIR *d =opendir(".");
 						fclose(fp);
@@ -490,7 +490,7 @@ int main(int argc,char *argv[])
 				if(!d && result==0)
 				{
 					FILE *fp;
-					char format[100]="";
+					char format[200]="";
 					
 					fp = fopen(part1, "r");
 					
@@ -502,7 +502,7 @@ int main(int argc,char *argv[])
 					}
 					else
 					{
-						fgets(format,100,fp);
+						fgets(format,200,fp);
 						chdir(format);
 						DIR *d =opendir(".");
 						fclose(fp);
