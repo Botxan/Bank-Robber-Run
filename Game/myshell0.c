@@ -14,6 +14,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/wait.h>
+#include <time.h>
 
 
 #include "defines.h"
@@ -34,6 +35,14 @@ char *function;
 char *root;
 char mapPath[PATH_MAX];
 int table[100];
+
+//time
+unsigned int hours=0;
+unsigned int minutes=0;
+unsigned int seconds=0;
+unsigned int milliseconds=0;
+unsigned int totaltime=0,count_down_time_in_secs=0,time_left=0;
+clock_t countTime;
 
 idStruct lookuptable[19] = {
 	{"Van", VAN},
@@ -120,6 +129,9 @@ int read_args(int* argcp, char* args[], int max, int* eofp) {
 	*argcp= i;
 	return 1;
 }
+
+
+
 ////////////////////////////////////////////////////
 //function for room ids
 int idFromName(char *newRoom)
@@ -244,7 +256,7 @@ int execute(int argc, char *argv[])
 		{
 			wait(NULL);
 		}
-	
+		
 	}
 	else if(strcmp(argv[0], "pickUp") == 0 || strcmp(argv[0], "pu") == 0)
 	{
@@ -475,6 +487,30 @@ int show_main_menu() {
 	return -1;
 }
 
+
+void Time(clock_t startTime){
+	
+				countTime=clock(); 
+				milliseconds=countTime-startTime;
+				seconds=(milliseconds/(CLOCKS_PER_SEC))-(minutes*60);
+				minutes=(milliseconds/(CLOCKS_PER_SEC))/60;
+				hours=minutes/60;
+				time_left=count_down_time_in_secs-seconds;
+				char millisecond[5];
+				char second[5];
+				char Minute[5];
+				char Hour[5];
+				sprintf(millisecond, "%d", milliseconds);
+				sprintf(second, "%d", seconds);
+				sprintf(Minute, "%d", minutes);
+				sprintf(Hour, "%d", hours);
+				char time[100]="Time :";
+				strcat(time,Hour),strcat(time,":"),strcat(time,Minute),strcat(time,":"),strcat(time,second),strcat(time,"\n");
+				write(0, time, strlen(time));
+	
+}
+
+
 /*
 * Function: main
 * --------------
@@ -503,15 +539,28 @@ int main() {
 		chdir("Van");
 		home = getcwd(NULL, 0);
 		prompt="Van";
+		clock_t startTime;
+		count_down_time_in_secs=1;  // 1 minute is 60, 1 hour is 3600
+
+
+		startTime=clock();  // start clock
+		time_left=count_down_time_in_secs-seconds;   // update timer
+
 		while (1) {
-			write(0, prompt, strlen(prompt));
-			write(0, ">", 1);
-			if (read_args(&argc, args, MAXARGS, &eof) && argc > 0)
-			{
-				countpipe(argc,args,args);
-				//execute(argc, args);
-			}
-			if (eof) exit(0);
+				Time(startTime);
+				write(0, prompt, strlen(prompt));
+				write(0, ">", 1);
+				if (read_args(&argc, args, MAXARGS, &eof) && argc > 0)
+				{
+					countpipe(argc,args,args);
+					//execute(argc, args);
+				}
+				if (eof) exit(0);
+				if(time_left <=0)
+				{
+					write(0, "Game Over", strlen("Game Over"));
+					exit(0);
+				}
 		}
 		break;
 	case LOAD_GAME:
