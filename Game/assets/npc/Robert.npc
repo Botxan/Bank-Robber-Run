@@ -1,6 +1,6 @@
-0
-
-0
+0 
+0#
+0A
 I hope you have in mind what we agreed. You enter the vault room, take the fucking money and leave, I'll see you on the way out.
 
 Remember the plan, the electrician will arrive at the bank in a couple of hours, so you'll have to impersonate him so the receptionist will let you in. Once inside, he will take you to the electrical panel room. Find a way to sneak into the corridor from the Main Banking Hall. The basement leading to the vault room is located there, but you will need the oficcer's key card to enter the basement.
@@ -24,71 +24,98 @@ Before we start, let's review everything we have learned these months, I don't w
 And as I want everything to go well, if you have any doubt, I have prepared a manual with all these utilities, although I hope you don't need them too much after all these months of practice. Use it with man <command>.
 
 So, when you are ready, cross the main entrance, the bank manager should accompany you to the electrical panel room. That's where you come in, find a way to sneak into the corridor.
---0
+--1
 
 
 // Using the radio in electrical panel when Ramon is the MainBankingHall
-1
+1#
+0A
 Is everything okay?
 
 A: Yes, all under control
-B: 
+B: No, I don't know how to get in 
+--y
+1A
+Smart boy!
+--1
+1B
+Okay, do you want me to distract the securyty guard so you can acces the corridor? 
 
-
+A:That would be awesome but how will you do that?
+B:No I can work all by myself
+--y
+2A
+A good magician never reaveals it's tricks my friend. 
+--4
+2B
+You sure about that?
+A: To be honest... No
+--y
+3A
+I'm gonna distract him
+--4
 // Using radio in any place which is not WC or Janitor's room
-2
+2#
+0A
 This place is not safe for radio use.
---0
+--2
 
 
 
 // Repeating dialogue until office key card is obtained
-3
+3#
+0A
 Find the office card. Look for an office where the clerk has left the door open. If there is no other option, you can try to knock one out. But avoid it if possible, we have to try to go unnoticed.
---0
+--3
 
 
 
 // Robert is distracting guard to allow you to sneak into the corridor. Repetitive until office key card found
-4
+4#
+0A
+
+...
 ...
 ...
 -There is no one on the other side-.
---0
+--4
 
 
 
 // If Robert has been distracting the guard, pre-main dialog after obtaining office key card
-5
+5#
+0A
 That fucking guard chased me by car for 10 fucking blocks! Luckily I managed to avoid him, sorry I didn't pick up the radio sooner.
-
-GOTO 5
---0
+--5
 
 
 
-6
+6#
+0A
 So you managed to get the key card. Good, but remember, it's our first priority to disable the cameras no matter what. The door to the security room is usually locked, so you'll have to find some other way to access it. When you manage to deactivate the cameras we'll keep talking, maybe the fucking gorilla will come back out to fuck around.
---0
+--6
 
 
 
 // Repeating dialogue until security cameras are deactivated and boss key has been obtained
-7
+7#
+0A
 Find a way to sneak into the security room.
---0
+--7
 
 
 
 // Security cameras are deactivated and director card has been obtained
-8
+8#
+0A
 Lucky you got the director's card, I think the atmosphere is starting to get really tense there. Be sure to find some tools to see clearly down there in the basement, as the electrical problem with the bench resides precisely there. It seems that the light in the basement stopped working 3 days ago.
 
 When you have what we are looking for, come back here. Come on, there is not much time left!
---0
-
+--8
 
 
 // Repeating dialogue until the end
-9
+9#
 Look for the code to the safe and something to see clearly down there in the basement.
+--9
+
