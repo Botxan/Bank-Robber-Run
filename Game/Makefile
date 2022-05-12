@@ -53,7 +53,7 @@ view: ${SRC1}
 
 -include ${DEP}
 myshell0: ${OBJ}
-	$(CC) -o $@ $^ $(CFLAGS)
+	$(CC) -o $@ $^ $(CFLAGS) -pthread -lpthread -fPIE
 		
 -include ${DEP2}
 cd: ${SRC2}
