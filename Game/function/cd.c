@@ -1,9 +1,12 @@
 #include <unistd.h>
 #include <errno.h>
 #include <stdio.h>
+#include <fcntl.h>
 #include <stdlib.h>
 #include <string.h>
 #include "cd.h"
+
+
 
 int verif1(char argv[])
 {
@@ -82,7 +85,8 @@ char home[]="";
 				int t=chdir(format);
 				if(t>=0)
 				{
-					printf("Room changed\n");
+					printf("Room has changed\n");
+				
 				}
 				else
 				{
@@ -99,6 +103,12 @@ char home[]="";
 		else{
 			#ifdef FUNCTION
 			printf("Room changed\n");
+			int fd=open(".description.txt",O_RDONLY);
+                        char desc[1024];
+                        int readChars=read(fd,&desc,1024);
+			desc[readChars]='\0';
+                        write(1,desc,readChars);
+			write(1,"\n",1);
 			#else
 			printf("PATH=%s",home1);
 			#endif

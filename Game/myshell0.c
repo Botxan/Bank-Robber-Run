@@ -221,7 +221,7 @@ int execute(int argc, char *argv[])
 			case VAN :
 				break;
 			case ENTRANCE :
-				roomText="nice bank!\n";
+				//roomText="nice bank!\n";
 				break;
 			}
 			write(0,roomText,strlen(roomText));
