@@ -45,6 +45,7 @@ int searchTalk(char *word , int file){
 	char state[2];
 	char initialState;
 	int error;
+	char returnV;
 
 #ifdef FUNCTION
 int talk(char* npc){
@@ -96,12 +97,14 @@ int main(int argc,char* argv[]) {
 			i++;
 		} else{ 
 			error=1;
-			printf("The answer given wasn't an option restart conversation");
+			printf("The answer given wasn't an option restart conversation\n");
 			}
 	}
+lseek(fd,3,SEEK_CUR);
+read(fd,&returnV,1);
 lseek(fd,0,SEEK_SET);
 if(error==0) write(fd,&continues,1);
 else write(fd,&initialState,1);
 write(0,"\n",strlen("\n"));
-return 0;
+return returnV+0;
 }
