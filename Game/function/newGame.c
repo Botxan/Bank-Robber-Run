@@ -4,6 +4,8 @@
 #include <string.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#include <dirent.h>
+#include <fcntl.h>
 
 #include "newGame.h"
 
@@ -34,7 +36,6 @@ void newGame()
         }
         else wait(NULL);
 
-
 	// Add room descriptions (they are not deleted from scenario, but just in case)
 	symlink("../../assets/roomDescription/VanDescription.txt", "Directories/Van/.description.txt");
 	symlink("../../../assets/roomDescription/MainEntranceDescription.txt", "Directories/Van/MainEntrance/.description.txt");
@@ -57,8 +58,6 @@ void newGame()
 	symlink("../../../../../../assets/roomDescription/RooftopDescription.txt", "Directories/Van/MainEntrance/MainBankingHall/Corridor/Rooftop/.description.txt");
 	// Prevent GitHub from removing Inv directory by adding a dummy .description file
 	symlink("../../assets/roomDescription/InvDescription.txt", "Directories/Inv/.description.txt");
-
-
 
 
 	// Add symlinks to previous room and shortcuts from ventilation room and from corridor to basement
@@ -116,12 +115,33 @@ void newGame()
 	symlink("../../../../../../assets/npc/Jade.npc", "Directories/Van/MainEntrance/MainBankingHall/Corridor/Office2/Jade.npc");
 	symlink("../../../../../../assets/npc/Javier.npc", "Directories/Van/MainEntrance/MainBankingHall/Corridor/SecurityRoom/Javier.npc");
 	symlink("../../../../../assets/npc/Veronica.npc", "Directories/Van/MainEntrance/MainBankingHall/LostAndFound/Veronica.npc");
-	symlink("../../../../../../assets/npc/Julian.npc", "Directories/Van/MainEntrance/MainBankingHall/Corridor/BossOffice/Julian.npc");
+	symlink("../../../../../../assets/npc/Julian.npc", "Directories/Van/MainEntrance/MainBankingHall/Corridor/BossOffice/Ignacio.npc");
 
 
 	// If ventilation ducts have been discovered in previous game, remove symlink
         unlink("./Directories/Van/MainEntrance/MainBankingHall/ElectricalPanelRoom/VentilationDucts");
 
+
+	// Set npc's default status to 0
+	DIR *d = opendir("assets/npc/");
+	struct dirent *dir;
+	int fd;
+	char filePath[30]; // asets/npc/xxxxxxx.npc
+
+	if (!d) {
+		write(1, "Directory assets/npc/ not found.\n", strlen("Directory assets/npc/ not found.\n"));
+		exit(1);
+	}
+	while ((dir = readdir(d)) != NULL) {
+		if (strcmp(dir->d_name, ".") != 0 && strcmp(dir->d_name, "..") != 0) {
+			strncpy(filePath, "assets/npc/", 30);
+			strncat(filePath, dir->d_name, 30);
+			fd = open(filePath, O_WRONLY);
+			write(fd, "0", 1);
+			printf("%s\n", filePath);
+			filePath[0] = '\0';
+		}
+	}
 
 	// Set readonly permissions for player to those directories that need a key or tool to be opened
 	if (fork() == 0)

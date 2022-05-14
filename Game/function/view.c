@@ -20,38 +20,20 @@ int verif(char argv[])
 {
 	char test[2]="/.";
 	for(size_t i=0;i<strlen(argv);i++)
-	{
 		for(size_t t=0;t<strlen(test);t++)
-		{
 			if(argv[i]==test[t])
 			{
-				write(1,"You can't use this atribut.\n\n", strlen("You can't use this atribut\n\n"));
+				write(1,"You can't use '/'.\n\n", strlen("You can't use '/'.\n\n"));
 				return 0;
 			}
-		}
-	}
 	return 1;
 }
 
 int extension(char argv[])
 {
-	if (!strrchr(argv, '.')) {
-		return 0;
-	} else {
-		if(strcmp(strrchr(argv, '.'),".tool")==0)
-		{
-			
-			return 1;
-		}
-		if(strcmp(strrchr(argv, '.'),".obj")==0)
-		{
-			return 2;
-		}
-		if(strcmp(strrchr(argv, '.'),".npc")==0)
-		{
-			return 3;
-		}
-	}
+	if(strcmp(strrchr(argv, '.'),".tool")==0) return 1;
+	if(strcmp(strrchr(argv, '.'),".obj")==0) return 2;
+	if(strcmp(strrchr(argv, '.'),".npc")==0) return 3;
 	return 0;
 }
 
@@ -69,7 +51,6 @@ int verifcd(char argv[])
 		}
 	}
 	return 0;
-	
 }
 
 void deletextension(char argv[])
@@ -86,17 +67,17 @@ int view(int argc,char *argv[])
 int main(int argc,char *argv[])
 #endif
 {
-	
-	struct dirent *dir; 
+	struct dirent *dir;
 	struct stat *buf = malloc(sizeof(struct stat));
-	char room[100]="Room:\n";
-	char tool[100]="tool:\n";
-	char object[100]="object:\n";
-	char npc[100]="npc:\n";
+	char room[100]="Places:\n";
+	char tool[100]="Tools:\n";
+	char object[100]="Objects:\n";
+	char npc[100]="People:\n";
 
 	switch(argc)
 	{
-	case 1:;
+	case 1:
+	{
 		DIR *d =opendir(".");
 		while((dir =readdir(d)) !=NULL)
 		{
@@ -116,35 +97,32 @@ int main(int argc,char *argv[])
 					int info=extension(dir->d_name);
 					switch(info)
 					{
-					case 1:
-						deletextension(dir->d_name);
-						strcat(tool,"  ");
-						strcat(tool,dir->d_name);
-						strcat(tool,"\n");
-						break;
-					case 2:
-						deletextension(dir->d_name);
-						strcat(object,"  ");
-						strcat(object,dir->d_name);
-						strcat(object,"\n");
-						break;
-					case 3:
-						deletextension(dir->d_name);
-						strcat(npc,"  ");
-						strcat(npc,dir->d_name);
-						strcat(npc,"\n");
-						break;
-					default:
-						strcat(room,"  ");
-						strcat(room,dir->d_name);
-						strcat(room,"\n");
-						break;
+						case 1:
+							deletextension(dir->d_name);
+							strcat(tool,"  ");
+							strcat(tool,dir->d_name);
+							strcat(tool,"\n");
+							break;
+						case 2:
+							deletextension(dir->d_name);
+							strcat(object,"  ");
+							strcat(object,dir->d_name);
+							strcat(object,"\n");
+							break;
+						case 3:
+							deletextension(dir->d_name);
+							strcat(npc,"  ");
+							strcat(npc,dir->d_name);
+							strcat(npc,"\n");
+							break;
+						default:
+							strcat(room,"  ");
+							strcat(room,dir->d_name);
+							strcat(room,"\n");
+							break;
 					}
-					
-					
 				}
 			}
-			
 		}
 		write(0,room, strlen(room));
 		write(0,"\n", strlen("\n\n"));
@@ -156,7 +134,9 @@ int main(int argc,char *argv[])
 		write(0,"\n", strlen("\n\n"));
 		closedir(d);
 		break;
-	case 2:;
+	}
+	case 2:
+	{
 		if(strcmp(argv[1],"-r")==0 || strcmp(argv[1],"-room")==0)
 		{
 			DIR *d =opendir(".");
@@ -169,9 +149,7 @@ int main(int argc,char *argv[])
 					{
 						write(0,dir->d_name, strlen(dir->d_name));
 						write(0,"\n", strlen("\n"));
-						
 					}
-					
 				}
 				else
 				{
@@ -180,52 +158,39 @@ int main(int argc,char *argv[])
 						switch(info)
 						{
 						case 1:
-							
 							break;
 						case 2:
-							
 							break;
 						case 3:
-							
 							break;
 						default:
 							write(0,dir->d_name, strlen(dir->d_name));
 							write(0,"\n", strlen("\n"));
 							break;
 						}
-						
 					}
 				}
 			}
 			closedir(d);
 		}
 		else
-		{	
+		{
 			int result=1;
 			if(verifcd(argv[1])||verif(argv[1]))
 			{
-				
-				
 				DIR *d =opendir(argv[1]);
-				
 				char* home = getcwd(NULL, 0);
-				
 				char *part1=strcpy(strcat(home,"/"),argv[1]);
-				
 				result = access (part1, R_OK);
-				
+
 				if(!d && result==0)
 				{
-					
 					FILE *fp;
 					char format[200]="";
-					
-					
 					fp = fopen(part1, "r");
-					
+
 					if(fp==NULL)
 					{
-						
 						printf("It's not a directory\n");
 						return 0;
 					}
@@ -252,36 +217,33 @@ int main(int argc,char *argv[])
 								if (dir->d_name[0] != '.' && dir->d_name[strlen(dir->d_name)-1] != '~'){
 									int info=extension(dir->d_name);
 									switch(info)
-									{
-									case 1:
-										deletextension(dir->d_name);
-										strcat(tool,"  ");
-										strcat(tool,dir->d_name);
-										strcat(tool,"\n");
-										break;
-									case 2:
-										deletextension(dir->d_name);
-										strcat(object,"  ");
-										strcat(object,dir->d_name);
-										strcat(object,"\n");
-										break;
-									case 3:
-										deletextension(dir->d_name);
-										strcat(npc,"  ");
-										strcat(npc,dir->d_name);
-										strcat(npc,"\n");
-										break;
-									default:
-										strcat(room,"  ");
-										strcat(room,dir->d_name);
-										strcat(room,"\n");
-										break;
+										{
+										case 1:
+											deletextension(dir->d_name);
+											strcat(tool,"  ");
+											strcat(tool,dir->d_name);
+											strcat(tool,"\n");
+											break;
+										case 2:
+											deletextension(dir->d_name);
+											strcat(object,"  ");
+											strcat(object,dir->d_name);
+											strcat(object,"\n");
+											break;
+										case 3:
+											deletextension(dir->d_name);
+											strcat(npc,"  ");
+											strcat(npc,dir->d_name);
+											strcat(npc,"\n");
+											break;
+										default:
+											strcat(room,"  ");
+											strcat(room,dir->d_name);
+											strcat(room,"\n");
+											break;
 									}
-									
-									
 								}
 							}
-							
 						}
 						write(0,room, strlen(room));
 						write(0,"\n", strlen("\n\n"));
@@ -293,15 +255,11 @@ int main(int argc,char *argv[])
 						write(0,"\n", strlen("\n\n"));
 						chdir(home);
 						closedir(d);
-						
-						
 					}
-					
 				}
-				else if(d && result==0 ) 
+				else if(d && result==0 )
 				{
-					chdir(argv[1]);	
-					
+					chdir(argv[1]);
 					while((dir =readdir(d)) !=NULL)
 					{
 						stat(dir->d_name,buf);
@@ -344,11 +302,8 @@ int main(int argc,char *argv[])
 									strcat(room,"\n");
 									break;
 								}
-								
-								
 							}
 						}
-						
 					}
 					write(0,room, strlen(room));
 					write(0,"\n", strlen("\n\n"));
@@ -360,41 +315,35 @@ int main(int argc,char *argv[])
 					write(0,"\n", strlen("\n\n"));
 					chdir(home);
 					closedir(d);
-					
-					
 				}
 				else
 				{
-					
 					write(1,"You need to use some object to open this door or this room doesn't exist \n", strlen("You need to use some object to open this door or this room doesn't exist \n\n"));
-					
 				}
 			}
-			
 		}
-		
 		break;
-	case 3:;
+	}
+	case 3:
+	{
 		int result=1;
 		if(strcmp(argv[1],"-r")==0 || strcmp(argv[1],"-room")==0)
-		{			
+		{
 			if(verifcd(argv[1]) || verif(argv[1]))
-			{		
+			{
 				char* home = getcwd(NULL, 0);
 				DIR *d =opendir(argv[2]);
 				char *part1=strcpy(strcat(home,"/"),argv[2]);
 				result = access (part1, R_OK);
-				
+
 				if(!d && result==0)
 				{
 					FILE *fp;
 					char format[200]="";
-					
 					fp = fopen(part1, "r");
-					
+
 					if(fp==NULL)
 					{
-						
 						printf("It's not a directory\n");
 						return 0;
 					}
@@ -412,42 +361,32 @@ int main(int argc,char *argv[])
 								if (dir->d_name[0] != '.' && dir->d_name[strlen(dir->d_name)-1] != '~'){
 									int info=extension(dir->d_name);
 									switch(info)
-									{
-									case 1:
-										
-										break;
-									case 2:
-										
-										break;
-									case 3:
-										
-										break;
-									default:
-										write(0,dir->d_name, strlen(dir->d_name));
-										write(0,"\n", strlen("\n"));
-										break;
+										{
+										case 1:
+											break;
+										case 2:
+											break;
+										case 3:
+											break;
+										default:
+											write(0,dir->d_name, strlen(dir->d_name));
+											write(0,"\n", strlen("\n"));
+											break;
 									}
-									
 								}
 							}
 							if (S_ISDIR(buf->st_mode))
 							{
-								
 								if (dir->d_name[0] != '.' && dir->d_name[strlen(dir->d_name)-1] != '~')
 								{
 									write(0,dir->d_name, strlen(dir->d_name));
 									write(0,"\n", strlen("\n"));
 								}
-								
-								
 							}
 						}
 						chdir(home);
 						closedir(d);
-						
-						
 					}
-					
 				}
 				else if(d && result ==0)
 				{
@@ -457,23 +396,18 @@ int main(int argc,char *argv[])
 						stat(dir->d_name,buf);
 						if (S_ISDIR(buf->st_mode))
 						{
-							
 							if (dir->d_name[0] != '.' && dir->d_name[strlen(dir->d_name)-1] != '~')
 							{
 								write(0,dir->d_name, strlen(dir->d_name));
 								write(0,"\n", strlen("\n"));
 							}
-							
-							
 						}
 					}
 					chdir(home);
 					closedir(d);
-					
 				}
 				else
 				{
-
 					write(1,"You need to use some object to open this door or this room doesn't exist \n", strlen("You need to use some object to open this door or this room doesn't exist \n\n"));
 				}
 			}
@@ -486,17 +420,13 @@ int main(int argc,char *argv[])
 				DIR *d =opendir(argv[1]);
 				char *part1=strcpy(strcat(home,"/"),argv[1]);
 				result = access (part1, R_OK);
-				
 				if(!d && result==0)
 				{
 					FILE *fp;
 					char format[200]="";
-					
 					fp = fopen(part1, "r");
-					
 					if(fp==NULL)
 					{
-						
 						printf("It's not a directory\n");
 						return 0;
 					}
@@ -515,41 +445,30 @@ int main(int argc,char *argv[])
 									int info=extension(dir->d_name);
 									switch(info)
 									{
-									case 1:
-										
-										break;
-									case 2:
-										
-										break;
-									case 3:
-										
-										break;
-									default:
-										write(0,dir->d_name, strlen(dir->d_name));
-										write(0,"\n", strlen("\n"));
-										break;
+										case 1:
+											break;
+										case 2:
+											break;
+										case 3:
+											break;
+										default:
+											write(0,dir->d_name, strlen(dir->d_name));
+											write(0,"\n", strlen("\n"));
+											break;
 									}
-									
 								}
 							}
 							if (S_ISDIR(buf->st_mode))
 							{
-								
 								if (dir->d_name[0] != '.' && dir->d_name[strlen(dir->d_name)-1] != '~')
 								{
 									write(0,dir->d_name, strlen(dir->d_name));
 									write(0,"\n", strlen("\n"));
 								}
-								
-								
 							}
-							
 							chdir(home);
 							closedir(d);
-							
-							
 						}
-						
 					}
 				}
 				else if(d && result ==0)
@@ -564,19 +483,15 @@ int main(int argc,char *argv[])
 						}
 						else if (S_ISDIR(buf->st_mode))
 						{
-							
 							if (dir->d_name[0] != '.' && dir->d_name[strlen(dir->d_name)-1] != '~')
 							{
 								write(0,dir->d_name, strlen(dir->d_name));
 								write(0,"\n", strlen("\n"));
 							}
-							
-							
 						}
 					}
 					chdir(home);
 					closedir(d);
-					
 				}
 				else
 				{
@@ -592,20 +507,16 @@ int main(int argc,char *argv[])
 				DIR *d =opendir(argv[1]);
 				char* home = getcwd(NULL, 0);
 				char *part1=strcpy(strcat(home,"/"),argv[1]);
-				
 				result = access (part1, R_OK);
-				
-				
+
 				if(!d && result==0)
 				{
 					FILE *fp;
 					char format[100]="";
-					
 					fp = fopen(part1, "r");
-					
+
 					if(fp==NULL)
 					{
-						
 						printf("It's not a directory\n");
 						return 0;
 					}
@@ -657,11 +568,8 @@ int main(int argc,char *argv[])
 										strcat(room,"\n");
 										break;
 									}
-									
-									
 								}
 							}
-							
 						}
 						write(0,room, strlen(room));
 						write(0,"\n", strlen("\n\n"));
@@ -673,17 +581,11 @@ int main(int argc,char *argv[])
 						write(0,"\n", strlen("\n\n"));
 						chdir(home);
 						closedir(d);
-						
-						
 					}
-					
 				}
 				else if(d && result ==0)
 				{
 					chdir(argv[1]);
-					
-					
-					
 					while((dir =readdir(d)) !=NULL)
 					{
 						stat(dir->d_name,buf);
@@ -726,11 +628,8 @@ int main(int argc,char *argv[])
 									strcat(room,"\n");
 									break;
 								}
-								
-								
 							}
 						}
-						
 					}
 					write(0,room, strlen(room));
 					write(0,"\n", strlen("\n\n"));
@@ -740,30 +639,17 @@ int main(int argc,char *argv[])
 					write(0,"\n", strlen("\n\n"));
 					write(0,npc, strlen(npc));
 					write(0,"\n", strlen("\n\n"));
-					
 					chdir(home);
 					closedir(d);
-					
-					
-				}
-				else
-				{
-					
-					write(1,"You need to use some object to open this door or this room doesn't exist \n", strlen("You need to use some object to open this door or this room doesn't exist \n\n"));
-				}
+				} else write(1,"You need to use some object to open this door or this room doesn't exist \n", strlen("You need to use some object to open this door or this room doesn't exist \n\n"));
 			}
 		}
-		
-		
-		
 		break;
 	}
+	}
+
 	free(buf);
-	
-
 	return 0;
-
-	
 }
 
 

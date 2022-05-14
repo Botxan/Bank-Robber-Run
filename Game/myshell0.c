@@ -187,10 +187,9 @@ int execute(int argc, char *argv[])
 		if(strcmp(prompt, "VentilationDucts") == 0)
 		{
 			if(argv[2] !=NULL)
-			{				
+			{
 				if(strcmp(argv[1], "SecurityRoom") == 0 || strcmp(argv[2], "SecurityRoom") == 0)
 				{
-					
 					strcat(path,"/chmod");
 					strcat(path2,"/Directories/Van/MainEntrance/MainBankingHall/Corridor/SecurityRoom");
 					int chmod7=fork();
@@ -221,13 +220,12 @@ int execute(int argc, char *argv[])
 					}
 				}
 			}
-			
 		}
 
-		
+
 		if(cd(argc,argv,home,0)==1)
 		{
-			prompt=strrchr(getcwd(NULL, 0),'/')+1;	
+			prompt=strrchr(getcwd(NULL, 0),'/')+1;
 			id=idFromName(argv[1]);
 			roomText="";
 			switch(id)
@@ -258,8 +256,8 @@ int execute(int argc, char *argv[])
 		{
 			wait(NULL);
 		}
-		
 	}
+
 	else if(strcmp(argv[0], "pickUp") == 0 || strcmp(argv[0], "pu") == 0)
 	{
 		if(argc==2)
@@ -350,9 +348,8 @@ int execute(int argc, char *argv[])
 	else if (strcmp(argv[0], "map") == 0)
 	{
 		child = fork();
-		if (child == 0) {
-			execlp("/bin/cat", "/bin/cat", mapPath, (char *) NULL);
-		} else wait(NULL);
+		if (child == 0) execlp("/bin/cat", "/bin/cat", mapPath, (char *) NULL);
+		else wait(NULL);
 	}
 	else if (strcmp(argv[0], "Time") == 0)
 	{
@@ -509,16 +506,17 @@ int show_main_menu() {
 //thread for time
 void* Time1(){
 	while(1){
-				pthread_detach(pthread_self());
-				countTime=clock(); 
-				milliseconds=countTime-startTime;
-				seconds=(milliseconds/(CLOCKS_PER_SEC))-(minutes*60);
-				minutes=(milliseconds/(CLOCKS_PER_SEC))/60;
-				hours=minutes/60;
-				time_left=count_down_time_in_secs-seconds;				
+		pthread_detach(pthread_self());
+		countTime=clock();
+		milliseconds=countTime-startTime;
+		seconds=(milliseconds/(CLOCKS_PER_SEC))-(minutes*60);
+		minutes=(milliseconds/(CLOCKS_PER_SEC))/60;
+		hours=minutes/60;
+		time_left=count_down_time_in_secs-seconds;
 	}
 	pthread_exit(NULL);
 }
+
 void Time(){
 	pthread_t ptid;
   
@@ -560,7 +558,6 @@ void converttimeprint()
 	char times1[100]="Time :";
 	strcat(times1,Hour),strcat(times1," h:"),strcat(times1,Minute),strcat(times1," m:"),strcat(times1,second),strcat(times1,"s \n");
 	write(0, times1, strlen(times1));
-		
 }
 
 
@@ -597,21 +594,29 @@ int main() {
 
 		startTime=clock();  // start clock
 		time_left=count_down_time_in_secs-seconds;   // update timer
-		Time();
-		
-		while (1) {		
-				converttimeprint();
+		//Time();
+
+
+		// Starting dialog
+		if (fork() == 0) {
+			printf("Working dir: %s\n", getcwd(NULL, 0));
+			execlp("../../talk", "talk", "Robert", NULL);
+			if (errno != 0) {
+                                printf("Error displaying starting dialogue: %s\n", strerror(errno));
+                                return 1;
+                        }
+		} else wait(NULL);
+
+		while (1) {
 				write(0, prompt, strlen(prompt));
 				write(0, ">", 1);
 				if (read_args(&argc, args, MAXARGS, &eof) && argc > 0)
-				{
 					countpipe(argc,args,args);
 					//execute(argc, args);
-				}
 				if (eof) exit(0);
-				if(time_left <=0)
+				if(time_left <= 0)
 				{
-					write(0, "Game Over", strlen("Game Over"));
+					write(0, "Game Over\n", strlen("Game Over\n"));
 					exit(0);
 				}
 		}
