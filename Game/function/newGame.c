@@ -148,7 +148,7 @@ void newGame()
 	DIR *d = opendir("assets/npc/");
 	struct dirent *dir;
 	int fd;
-	char filePath[80]; // asets/npc/xxxxxxx.npc
+	char filePath[80]; // asets/roomVisitedCounter/room_x_counter.npc
 
 	if (!d) {
 		write(1, "Directory assets/npc not found.\n", strlen("Directory assets/npc not found.\n"));

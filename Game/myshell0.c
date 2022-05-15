@@ -152,6 +152,39 @@ int idFromName(char *newRoom)
 	return 0;
 }
 
+/**
+ * Function: getTimesVisited
+ * -------------------------
+ * Opens the room description file for the given room, and returns the first
+ * number found, which is the number of times the room has been accesed.
+ * @param room the name of the room
+ * @return the number of times the room has been accessed
+ */
+int getTimesVisited(char *room) {
+	char path[PATH_MAX];
+	FILE *f;
+	int visitedTimes;
+
+	// Current room
+	if (room == NULL) strcpy(path, ".counter.txt"); // there's always a symlink in the current room
+	// Any other room
+	else {
+		strncpy(path, root, PATH_MAX);
+		strcat(path, "/../assets/roomVisitedCounter/");
+		strncat(path, room, PATH_MAX);
+		strncat(path, "Counter.txt", PATH_MAX);
+	}
+
+	if (!(f = fopen(path, "r"))) {
+		perror("Error when opening room counter file");
+		return -1;
+	}
+
+	fscanf(f, "%d", &visitedTimes);
+	fclose(f);
+	return visitedTimes;
+}
+
 //////////////////////////////////////////////
 int execute(int argc, char *argv[])
 {
@@ -230,7 +263,7 @@ int execute(int argc, char *argv[])
 			prompt=strrchr(getcwd(NULL, 0),'/')+1;
 			id=idFromName(argv[1]);
 			roomText="";
-
+			printf("Visited times: %d\n", getTimesVisited(NULL));
 			switch(id)
 			{
 				case CORRIDOR:
