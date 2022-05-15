@@ -49,6 +49,7 @@ unsigned int milliseconds=0;
 unsigned int totaltime=0,count_down_time_in_secs=0,time_left=0;
 clock_t countTime;
 clock_t startTime;
+void converttimeprint();
 
 idStruct lookuptable[19] = {
 	{"Van", VAN},
@@ -393,6 +394,7 @@ int execute(int argc, char *argv[])
 		sprintf(Minute, "%d", tempminute);
 		sprintf(Hour, "%d", temphour);
 		strcat(times2,Hour),strcat(times2," h:"),strcat(times2,Minute),strcat(times2," m:"),strcat(times2,second),strcat(times2,"s left to finish the game \n");
+		converttimeprint();
 		write(0, times2, strlen(times2));
 	}
 	else write(1, "this function doesn't exist\n", strlen("this function doesn't exist\n"));
@@ -532,6 +534,7 @@ void* Time1(){
 		minutes=(milliseconds/(CLOCKS_PER_SEC))/60;
 		hours=minutes/60;
 		time_left=count_down_time_in_secs-seconds;
+		
 	}
 	pthread_exit(NULL);
 }
@@ -542,6 +545,8 @@ void Time(){
     pthread_create(&ptid, NULL, &Time1, NULL);
     //printf("This line may be printed"
       //     " before thread terminates\n");
+  
+	printf("");
   
     // The following line terminates
     // the thread manually
@@ -612,7 +617,7 @@ int main() {
 
 		startTime=clock();  // start clock
 		time_left=count_down_time_in_secs-seconds;   // update timer
-		//Time();
+		Time();
 
 
 		// Starting dialog
