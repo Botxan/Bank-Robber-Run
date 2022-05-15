@@ -1,4 +1,3 @@
-  GNU nano 2.3.1                                                                       File: StoreMoves.c                                                                                                                                                    
 
 #include <sys/stat.h>
 #include <sys/types.h>
