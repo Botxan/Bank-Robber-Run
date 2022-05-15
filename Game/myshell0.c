@@ -546,11 +546,11 @@ void Time(){
     //printf("This line may be printed"
       //     " before thread terminates\n");
   
-	printf("");
+	//printf("");
   
     // The following line terminates
     // the thread manually
-    pthread_cancel(ptid);
+    //pthread_cancel(ptid);
   
     // Compare the two threads created
     //if(pthread_equal(ptid, pthread_self()))
@@ -559,7 +559,7 @@ void Time(){
       //  printf("Threads are not equal\n");
   
     // Waiting for the created thread to terminate
-    pthread_join(ptid, NULL);
+    //pthread_join(ptid, NULL);
   
    // printf("This line will be printed"
      //      " after thread ends\n");
@@ -591,7 +591,10 @@ void converttimeprint()
 * Displays the main menu and executes the action selected by the user
 */
 
-int main() {
+
+
+int *beginning() {
+	pthread_detach(pthread_self());
 	// Load the main menu
 	int opt = show_main_menu();
 	eof=0;
@@ -652,5 +655,13 @@ int main() {
 	default:
 		exit(1);
 	}
+	pthread_exit(NULL);
+}
+
+int main() {
+	pthread_t ptid;
+  
+    pthread_create(&ptid, NULL, &beginning, NULL);
+	
 	pthread_exit(NULL);
 }
