@@ -31,12 +31,12 @@ if(argc <3 && argc>4)
         i = strtol(argv[2], 0, 8);
 		if(chmod(argv[1],i)<0)
 		{
-			write(1,"The permission of the file has not changed.\n", strlen("The permission of the file has not changed.\n"));
+			//write(1,"The permission of the file has not changed.\n", strlen("The permission of the file has not changed.\n"));
 			return 0;
 		}
 		else
 		{
-			write(0,"The permission of the file has changed.\n", strlen("The permission of the file has changed.\n"));
+			//write(0,"The permission of the file has changed.\n", strlen("The permission of the file has changed.\n"));
 			return 1;
 		}
 		
@@ -49,12 +49,12 @@ if(argc <3 && argc>4)
               (((perm[6] == 'r') * 4 | (perm[7] == 'w') * 2 | (perm[8] == 'x')));
 	if(chmod(argv[1],mode)<0)
 		{
-			write(1,"The permission of the file has not changed.\n", strlen("The permission of the file has not changed.\n"));
+			//write(1,"The permission of the file has not changed.\n", strlen("The permission of the file has not changed.\n"));
 			return 0;
 		}
 		else
 		{
-			write(0,"The permission of the file has changed.\n", strlen("The permission of the file has changed.\n"));
+			//write(0,"The permission of the file has changed.\n", strlen("The permission of the file has changed.\n"));
 			return 1;
 		}
 	}

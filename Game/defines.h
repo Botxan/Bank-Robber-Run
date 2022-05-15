@@ -43,7 +43,7 @@
 #define errors(a) { perror(a); exit(1); }
 #define MAXLINE 200
 #define MAXARGS 20
-#define NKEYS 4
+#define NKEYS 19
 #define KEY_DOORS_SIZE 9
 #define PATH_MAX 4096
 

@@ -36,6 +36,10 @@ char *function;
 char *root;
 char mapPath[PATH_MAX];
 int table[100];
+int visitedTimes;
+char visitedTimesText[12];
+int fd;
+FILE *f;
 
 //time
 unsigned int hours=0;
@@ -49,7 +53,7 @@ clock_t startTime;
 idStruct lookuptable[19] = {
 	{"Van", VAN},
 	{"MainEntrance", ENTRANCE},
-	{"MainBanking Hll", HALL},
+	{"MainBankingHall", HALL},
 	{"LostAndFound", LANDF},
 	{"ElectricalPanelRoom", ELECPANEL},
 	{"Corridor", CORRIDOR},
@@ -156,29 +160,23 @@ int execute(int argc, char *argv[])
 	int child;
 	strcpy(path,function);
 	strcpy(path2,function);
-	
-	
+
 	if(strcmp(argv[0], "view") == 0 || strcmp(argv[0], "ls") == 0)
 	{
 		child=fork();
 		if(child==0)
 		{
 			strcat(path,"/view");
-			
-			execlp(path,"",argv[1],argv[2]);
+			execlp(path,"",argv[1],argv[2], NULL);
 			if (errno != 0)
 			{
 				printf("Error launching child process: %s\n", strerror(errno));
 				return 1;
 			}
 
-		}
-		if(child>0)
-		{
-			wait(NULL);
-		}
-		return 1;
+		} else wait(NULL);
 
+		return 1;
 	}
 	else if(strcmp(argv[0], "access") == 0 || strcmp(argv[0], "cd") == 0)
 	{
@@ -192,15 +190,9 @@ int execute(int argc, char *argv[])
 				{
 					strcat(path,"/chmod");
 					strcat(path2,"/Directories/Van/MainEntrance/MainBankingHall/Corridor/SecurityRoom");
-					int chmod7=fork();
-					if(chmod7==0)
-					{
-						execlp(path,"./chmod",path2,"rwxrwxrwx");
-					}
-					else
-					{
-						wait(NULL);
-					}
+					int chmod7 = fork();
+					if(chmod7 == 0) execlp(path,"./chmod",path2,"rwxrwxrwx", NULL);
+					else wait(NULL);
 				}
 			}
 			else
@@ -209,15 +201,10 @@ int execute(int argc, char *argv[])
 				{
 					strcat(path,"/chmod");
 					strcat(path2,"/Directories/Van/MainEntrance/MainBankingHall/Corridor/SecurityRoom");
-					int chmod7=fork();
-					if(chmod7==0)
-					{
-						execlp(path,"./chmod",path2,"rwxrwxrwx");
-					}
-					else
-					{
-						wait(NULL);
-					}
+					int chmod7 = fork();
+
+					if(chmod7 == 0) execlp(path,"./chmod",path2,"rwxrwxrwx", NULL);
+					else wait(NULL);
 				}
 			}
 		}
@@ -225,25 +212,37 @@ int execute(int argc, char *argv[])
 
 		if(cd(argc,argv,home,0)==1)
 		{
+			// Increase room visited counter
+			fd = open("./.counter.txt", O_RDWR);
+
+			if (fd == -1) write(2, "Could not add room visited counter. File .counter not found\n.", strlen("Could not add room visited counter. File .counter not found\n."));
+
+			f = fdopen(fd, "r"); // used to read whole integer with fscanf (may be more than one digit)
+			fscanf(f, "%d", &visitedTimes); // fscanf moves the fd offset
+			lseek(fd, 0, SEEK_SET);
+			visitedTimes++;
+			sprintf(visitedTimesText, "%d", visitedTimes);
+			write(fd, visitedTimesText, strlen(visitedTimesText));
+			close(fd);
+			fclose(f);
+
+			// Display prompt
 			prompt=strrchr(getcwd(NULL, 0),'/')+1;
 			id=idFromName(argv[1]);
 			roomText="";
+
 			switch(id)
 			{
-			case VAN :
-				break;
-			case ENTRANCE :
-				//roomText="nice bank!\n";
-				break;
+				case CORRIDOR:
+					break;
 			}
 			write(0,roomText,strlen(roomText));
 		}
-		return 1;
-
 	}
 
 	else if(strcmp(argv[0], "inv") == 0 || strcmp(argv[0], "inventory") == 0)
 	{
+
 		child=fork();
 		if(child==0)
 		{
@@ -286,11 +285,8 @@ int execute(int argc, char *argv[])
 				strcat(path,"/talk");
 				execl(path,argv[0],argv[1], NULL);
 				if (errno != 0) printf("Error on talk function: %s\n", strerror(errno));
-			}
-			if(child>0)
-			{
-				wait(NULL);
-			}
+			} wait(NULL);
+
 		} else write(0,"You can only talk to a person at a time\n",strlen("You can only talk to a person at a time\n"));
 
 	}
@@ -365,8 +361,6 @@ int execute(int argc, char *argv[])
 		sprintf(Hour, "%d", temphour);
 		strcat(times2,Hour),strcat(times2," h:"),strcat(times2,Minute),strcat(times2," m:"),strcat(times2,second),strcat(times2,"s left to finish the game \n");
 		write(0, times2, strlen(times2));
-		
-		
 	}
 	else write(1, "this function doesn't exist\n", strlen("this function doesn't exist\n"));
 
@@ -378,7 +372,6 @@ int execute(int argc, char *argv[])
 
 int countpipe(int argc,char *argv[],char *test[])
 {
-
 	int i=1;
 	int result=0;
 	int t=0;
@@ -387,15 +380,14 @@ int countpipe(int argc,char *argv[],char *test[])
 		table[t]=0;
 		t++;
 	}
-	
+
 	while(argv[i] !=NULL)
 	{
-		
+
 		if(strcmp(argv[i], "||") == 0)
 		{
 			table[result]=i;
 			result++;
-			
 		}
 		i++;
 	}
@@ -418,10 +410,9 @@ int countpipe(int argc,char *argv[],char *test[])
 				save[j]=NULL;
 				j++;
 			}
-			int p=0;	
+			int p=0;
 			while(table[compare] != number)
 			{
-				
 				save[p]=argv[number];
 				number++;
 				p++;
@@ -430,13 +421,8 @@ int countpipe(int argc,char *argv[],char *test[])
 			number++;
 			execute(p, save);
 			write(0,"\n",strlen("\n"));
-			
-		}	
-		
+		}
 	}
-	
-	
-	
 	return 1;
 }
 
@@ -583,7 +569,6 @@ int main() {
 	case NEW_GAME:
 		system("clear");
 		newGame();
-		write(2, "Starting new game...\n\n", 22);
 		chdir("Directories");
 		root = getcwd(NULL, 0);
 		chdir("Van");
@@ -599,7 +584,6 @@ int main() {
 
 		// Starting dialog
 		if (fork() == 0) {
-			printf("Working dir: %s\n", getcwd(NULL, 0));
 			execlp("../../talk", "talk", "Robert", NULL);
 			if (errno != 0) {
                                 printf("Error displaying starting dialogue: %s\n", strerror(errno));

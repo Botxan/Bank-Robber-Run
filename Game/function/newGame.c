@@ -36,6 +36,28 @@ void newGame()
         }
         else wait(NULL);
 
+	// Add room visited counters
+        symlink("../../assets/roomVisitedCounter/VanCounter.txt", "Directories/Van/.counter.txt");
+        symlink("../../../assets/roomVisitedCounter/MainEntranceCounter.txt", "Directories/Van/MainEntrance/.counter.txt");
+        symlink("../../../../assets/roomVisitedCounter/ParkingCounter.txt", "Directories/Van/MainEntrance/Parking/.counter.txt");
+        symlink("../../../../../assets/roomVisitedCounter/BasementCounter.txt", "Directories/Van/MainEntrance/Parking/Basement/.counter.txt");
+        symlink("../../../../../../assets/roomVisitedCounter/VaultCorridorCounter.txt", "Directories/Van/MainEntrance/Parking/Basement/VaultCorridor/.counter.txt");
+        symlink("../../../../../../../assets/roomVisitedCounter/VaultRoomCounter.txt", "Directories/Van/MainEntrance/Parking/Basement/VaultCorridor/VaultRoom/.counter.txt");
+        symlink("../../../../../../../../assets/roomVisitedCounter/VaultCounter.txt", "Directories/Van/MainEntrance/Parking/Basement/VaultCorridor/VaultRoom/Vault/.counter.txt");
+        symlink("../../../../assets/roomVisitedCounter/MainBankingHallCounter.txt", "Directories/Van/MainEntrance/MainBankingHall/.counter.txt");
+        symlink("../../../../../assets/roomVisitedCounter/ElectricalPanelRoomCounter.txt", "Directories/Van/MainEntrance/MainBankingHall/ElectricalPanelRoom/.counter.txt");
+        symlink("../../../../../assets/roomVisitedCounter/LostAndFoundCounter.txt", "Directories/Van/MainEntrance/MainBankingHall/LostAndFound/.counter.txt");
+        symlink("../../../../../assets/roomVisitedCounter/CorridorCounter.txt", "Directories/Van/MainEntrance/MainBankingHall/Corridor/.counter.txt");
+        symlink("../../../../../../assets/roomVisitedCounter/Office1Counter.txt", "Directories/Van/MainEntrance/MainBankingHall/Corridor/Office1/.counter.txt");
+        symlink("../../../../../../assets/roomVisitedCounter/Office2Counter.txt", "Directories/Van/MainEntrance/MainBankingHall/Corridor/Office2/.counter.txt");
+        symlink("../../../../../../assets/roomVisitedCounter/WCCounter.txt", "Directories/Van/MainEntrance/MainBankingHall/Corridor/WC/.counter.txt");
+        symlink("../../../../../../../assets/roomVisitedCounter/VentilationDuctsCounter.txt", "Directories/Van/MainEntrance/MainBankingHall/Corridor/WC/VentilationDucts/.counter.txt");
+        symlink("../../../../../../assets/roomVisitedCounter/SecurityRoomCounter.txt", "Directories/Van/MainEntrance/MainBankingHall/Corridor/SecurityRoom/.counter.txt");
+        symlink("../../../../../../assets/roomVisitedCounter/BossOfficeCounter.txt", "Directories/Van/MainEntrance/MainBankingHall/Corridor/BossOffice/.counter.txt");
+        symlink("../../../../../../assets/roomVisitedCounter/JanitorRoomCounter.txt", "Directories/Van/MainEntrance/MainBankingHall/Corridor/JanitorRoom/.counter.txt");
+        symlink("../../../../../../assets/roomVisitedCounter/RooftopCounter.txt", "Directories/Van/MainEntrance/MainBankingHall/Corridor/Rooftop/.counter.txt");
+
+
 	// Add room descriptions (they are not deleted from scenario, but just in case)
 	symlink("../../assets/roomDescription/VanDescription.txt", "Directories/Van/.description.txt");
 	symlink("../../../assets/roomDescription/MainEntranceDescription.txt", "Directories/Van/MainEntrance/.description.txt");
@@ -126,22 +148,44 @@ void newGame()
 	DIR *d = opendir("assets/npc/");
 	struct dirent *dir;
 	int fd;
-	char filePath[30]; // asets/npc/xxxxxxx.npc
+	char filePath[80]; // asets/npc/xxxxxxx.npc
 
 	if (!d) {
-		write(1, "Directory assets/npc/ not found.\n", strlen("Directory assets/npc/ not found.\n"));
+		write(1, "Directory assets/npc not found.\n", strlen("Directory assets/npc not found.\n"));
 		exit(1);
 	}
+
 	while ((dir = readdir(d)) != NULL) {
-		if (strcmp(dir->d_name, ".") != 0 && strcmp(dir->d_name, "..") != 0) {
-			strncpy(filePath, "assets/npc/", 30);
-			strncat(filePath, dir->d_name, 30);
+		if (strcmp(dir->d_name, ".") != 0 && strcmp(dir->d_name, "..") != 0 && strcmp(dir->d_name, "who.txt")) {
+			strncpy(filePath, "assets/npc/", 50);
+			strncat(filePath, dir->d_name, 50);
 			fd = open(filePath, O_WRONLY);
 			write(fd, "0", 1);
-			printf("%s\n", filePath);
 			filePath[0] = '\0';
+			close(fd);
 		}
 	}
+	closedir(d);
+
+	// Set each room visited counter to 0
+	d = opendir("assets/roomVisitedCounter");
+	if (!d) {
+                write(1, "Directory assets/roomVisitedCounter not found.\n", strlen("Directory assets/roomVisitedCounter not found.\n"));
+                exit(1);
+        }
+
+	while ((dir = readdir(d)) != NULL) {
+                if (strcmp(dir->d_name, ".") != 0 && strcmp(dir->d_name, "..") != 0) {
+                        strncpy(filePath, "assets/roomVisitedCounter/", 80);
+                        strncat(filePath, dir->d_name, 80);
+                        fd = open(filePath, O_WRONLY);
+			ftruncate(fd, 1);
+                        write(fd, "0", 1);
+                        filePath[0] = '\0';
+                        close(fd);
+                }
+        }
+	closedir(d);
 
 	// Set readonly permissions for player to those directories that need a key or tool to be opened
 	if (fork() == 0)
@@ -205,6 +249,15 @@ void newGame()
 		execlp("./chmod","./chmod","./Directories/Van/MainEntrance/MainBankingHall/Corridor/WC/VentilationDucts","0066", NULL);
                 printf("Error changing VentilationDucts permissions: %s.\n", strerror(errno));
                 exit(0);
+	}
+	else wait(NULL);
+
+
+	// Print bank robber run ascii and begin the game!
+	if (fork () == 0)
+	{
+		execlp("/bin/cat", "/bin/cat", "./assets/newGameAscii.txt", NULL);
+		printf("Error printing new game ascii art: %s\n", strerror(errno));
 	}
 	else wait(NULL);
 }
