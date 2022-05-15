@@ -173,7 +173,7 @@ int getTimesVisited(char *room) {
 		strncpy(path, root, PATH_MAX);
 		strcat(path, "/../assets/roomVisitedCounter/");
 		strncat(path, room, PATH_MAX);
-		strncat(path, "Counter.txt", PATH_MAX);
+		strncat(path, "Counter.txt", PATH_MAX-10);
 	}
 
 	if (!(f = fopen(path, "r"))) {
