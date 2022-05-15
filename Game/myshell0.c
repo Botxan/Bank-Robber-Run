@@ -593,7 +593,7 @@ void converttimeprint()
 
 
 
-int *beginning() {
+int beginning() {
 	pthread_detach(pthread_self());
 	// Load the main menu
 	int opt = show_main_menu();
