@@ -33,7 +33,8 @@ int dress;
 char *home;
 int id;
 char *function;
-char *root;
+char *root; // /Directories
+char assets[PATH_MAX]; // /assets
 char mapPath[PATH_MAX];
 int table[100];
 int visitedTimes;
@@ -137,7 +138,6 @@ int read_args(int* argcp, char* args[], int max, int* eofp) {
 }
 
 
-
 ////////////////////////////////////////////////////
 //function for room ids
 int idFromName(char *newRoom)
@@ -175,6 +175,7 @@ int getTimesVisited(char *room) {
 		strncat(path, "Counter.txt", PATH_MAX);
 	}
 
+
 	if (!(f = fopen(path, "r"))) {
 		perror("Error when opening room counter file");
 		return -1;
@@ -183,6 +184,69 @@ int getTimesVisited(char *room) {
 	fscanf(f, "%d", &visitedTimes);
 	fclose(f);
 	return visitedTimes;
+}
+
+/**
+ * Function moveNpc
+ * ----------------
+ * Moves the given npc to the specified room
+ * npc: path of the symlink of the npc
+ * destination: the relative path to be placed the new symlink
+ * Note: this function wont remove npc from its original place
+ * if the player has no needed permissions in any of the directories
+ * in the path to the current position of the npc
+ */
+void moveNpc(char *name, char *dest) {
+	// Remove np (symlink) from current location
+	char nameWithExtension[strlen(name) + 5];
+	char find[PATH_MAX];
+	sprintf(nameWithExtension, "%s.npc", name);
+	sprintf(find, "find %s -type l -iname %s -delete 2>/dev/null", root, nameWithExtension);
+	system(find);
+
+	// Create new symlink on dest taking the file from assets/npc (if permissions are ok)
+	char npcPath[PATH_MAX];
+	char destPath[PATH_MAX];
+	sprintf(npcPath, "%s/npc/%s", assets, nameWithExtension);
+	sprintf(destPath, "%s/%s/%s", getcwd(NULL, 0), dest, nameWithExtension);
+	symlink(npcPath, destPath);
+}
+
+
+/**
+ * Function getNpcState
+ * --------------------
+ * Returns an integer indicated the state of the npc
+ * Note: The state is always bounded by 0 and 9
+ */
+int getNpcState(char *name) {
+	char npcPath[strlen(assets) + 40];
+	char fd;
+	char state[1]; // need to be string for read()
+
+	sprintf(npcPath, "%s/npc/%s.npc", assets, name);
+	fd = open(npcPath, O_RDONLY);
+	read(fd, state, 1);
+	close(fd);
+	return state[0] - '0';
+}
+
+/**
+ * Function: talk
+ * --------------
+ * This function is used for avoid repeating
+ * the code for calling talk process
+ *
+ */
+void talkTo(char *npc) {
+	char commandPath[strlen(function) + 30];
+	if (fork() == 0) {
+		sprintf(commandPath, "%s/talk", function);
+		execlp(commandPath, "talk", npc, NULL);
+		// This will only be printed if exelp fails
+		if (errno != 0) printf("Error on talk function: %s\n", strerror(errno));
+		fprintf(stderr, "Unable not talk with %s.\n", npc);
+	} else wait(NULL);
 }
 
 //////////////////////////////////////////////
@@ -213,7 +277,6 @@ int execute(int argc, char *argv[])
 	}
 	else if(strcmp(argv[0], "access") == 0 || strcmp(argv[0], "cd") == 0)
 	{
-		char *roomText;
 		prompt=strrchr(getcwd(NULL, 0),'/')+1;
 		if(strcmp(prompt, "VentilationDucts") == 0)
 		{
@@ -260,16 +323,46 @@ int execute(int argc, char *argv[])
 			fclose(f);
 
 			// Display prompt
-			prompt=strrchr(getcwd(NULL, 0),'/')+1;
-			id=idFromName(argv[1]);
-			roomText="";
-			printf("Visited times: %d\n", getTimesVisited(NULL));
+                        prompt=strrchr(getcwd(NULL, 0),'/')+1;
+
+			// Special interactions in each room
+                        id=idFromName(argv[1]);
+
 			switch(id)
 			{
-				case CORRIDOR:
+				case ENTRANCE:
+					// Bank manager accompanies player to the electrical panel room
+					if (visitedTimes == 1) {
+						// Talk with the bank manager
+						talkTo("Edurne");
+
+						// Move to main banking hall with bank manager
+						moveNpc("Edurne", "MainBankingHall");
+						char *argv[2] = {"access", "MainBankingHall"};
+						execute(2, argv);
+					}
+					break;
+				case HALL:
+					if (visitedTimes == 1) {
+						// Manager describes the main banking hall
+						talkTo("Edurne");
+
+						// Move to electrical panel room with the bank manager
+						moveNpc("Edurne", "ElectricalPanelRoom");
+						char *argv[2] = {"access", "ElectricalPanelRoom"};
+						execute(2, argv);
+					}
+					break;
+				case ELECPANEL:
+					if (visitedTimes == 1) {
+						// Manager describes the electrical panel room
+						talkTo("Edurne");
+
+						// Move bank manager to electrical panel room
+						moveNpc("Edurne", "MainBankingHall");
+					}
 					break;
 			}
-			write(0,roomText,strlen(roomText));
 		}
 	}
 
@@ -307,22 +400,20 @@ int execute(int argc, char *argv[])
 			wait(NULL);
 		} else write(0,"You can only take an object at a time",strlen("You can only take an object at a time"));
 	}
+
 	else if(strcmp(argv[0], "talk") == 0)
 	{
-		if(argc==2)
+		if(argc == 2)
 		{
-			child=fork();
-			if(child==0)
+			if(fork() == 0)
 			{
-				write(0, "talk\n", strlen("talk\n"));
 				strcat(path,"/talk");
 				execl(path,argv[0],argv[1], NULL);
 				if (errno != 0) printf("Error on talk function: %s\n", strerror(errno));
 			} wait(NULL);
-
 		} else write(0,"You can only talk to a person at a time\n",strlen("You can only talk to a person at a time\n"));
-
 	}
+
 	else if(strcmp(argv[0], "Pause") == 0 || strcmp(argv[0], "P") == 0|| strcmp(argv[0], "quit") == 0|| strcmp(argv[0], "q") == 0)
 	{
 		int t =Leave();
@@ -503,16 +594,16 @@ int show_main_menu() {
 
 		// If only one character has been introduced
 		if (i == 1)
-		switch (opt[0]) {
-		case '1': // New game
-		case '2': // Load game (not implemented yet)
-		case '3': // Options (not implemented yet)
-			return (int)opt[0] - '0'; // convert to int
-		case '4': // Quit
-			exit(0);
-		default: // Invalid option
-			write(0, "Invalid option\n", 16);
-		}
+			switch (opt[0]) {
+				case '1': // New game
+				case '2': // Load game (not implemented yet)
+				case '3': // Options (not implemented yet)
+					return (int)opt[0] - '0'; // convert to int
+				case '4': // Quit
+					exit(0);
+				default: // Invalid option
+					write(0, "Invalid option\n", 16);
+			}
 		// If more than one character, invalid
 		else write(0, "Invalid option\n", 16);
 
@@ -597,11 +688,12 @@ int main() {
 	strncpy(mapPath, function, PATH_MAX);
 	strncat(mapPath, "/assets/map.txt", PATH_MAX-100);
 
-	// Perform the corresponding actiond depending on user selection
+	// Perform the corresponding action depending on user selection
 	switch(opt) {
 	case NEW_GAME:
 		system("clear");
 		newGame();
+		sprintf(assets, "%s/assets", getcwd(NULL, 0));
 		chdir("Directories");
 		root = getcwd(NULL, 0);
 		chdir("Van");
