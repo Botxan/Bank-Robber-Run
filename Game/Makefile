@@ -45,7 +45,11 @@ SRC9= function/use.c
 OBJ9 = ${SRC9:.c=.o}
 DEP9 = ${SRC9:.c=.d}
 
-all: view myshell0 cd inv leave pickUp talk pwd chmod use
+SRC10= ../Hold-up-Game.c
+OBJ10 = ${SRC10:.c=.o}
+DEP10 = ${SRC10:.c=.d}
+
+all: view myshell0 cd inv leave pickUp talk pwd chmod use ../Hold-up-Game
 
 -include ${DEP1}
 view: ${SRC1}
@@ -87,6 +91,11 @@ chmod: ${SRC8}
 use: ${SRC9}
 	$(CC1) -o $@ $^ $(CFLAGS) -D_DEFAULT_SOURCE -D_BSD_SOURCE
 
+-include ${DEP10}
+Hold-up-Game: ${SRC10}
+	$(CC1) -o $@ $^ $(CFLAGS)
+
+
 clean:
-	@rm -f ${OBJ} ${DEP} myshell0 ${DEP1} ${OBJ1} view  ${DEP2} ${OBJ2} cd ${DEP3} ${OBJ3} inv ${DEP4} ${OBJ4} Leave ${DEP5} ${OBJ5} pickUp ${DEP6} ${OBJ6} talk ${DEP7} ${OBJ7} pwd ${DEP8} ${OBJ8} chmod ${DEP9} ${OBJ9} use
+	@rm -f ${OBJ} ${DEP} myshell0 ${DEP1} ${OBJ1} view  ${DEP2} ${OBJ2} cd ${DEP3} ${OBJ3} inv ${DEP4} ${OBJ4} Leave ${DEP5} ${OBJ5} pickUp ${DEP6} ${OBJ6} talk ${DEP7} ${OBJ7} pwd ${DEP8} ${OBJ8} chmod ${DEP9} ${OBJ9} use ${DEP10} ${OBJ10} ../Hold-up-Game
 # END
