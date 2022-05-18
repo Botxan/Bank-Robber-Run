@@ -36,6 +36,7 @@ void newGame()
         }
         else wait(NULL);
 
+
 	// Add room visited counters
         symlink("../../assets/roomVisitedCounter/VanCounter.txt", "Directories/Van/.counter.txt");
         symlink("../../../assets/roomVisitedCounter/MainEntranceCounter.txt", "Directories/Van/MainEntrance/.counter.txt");
@@ -104,6 +105,10 @@ void newGame()
 	symlink("../../../ElectricalPanelRoom", "Directories/Van/MainEntrance/MainBankingHall/Corridor/WC/VentilationDucts/ElectricalPanelRoom");
 	symlink("../../SecurityRoom", "Directories/Van/MainEntrance/MainBankingHall/Corridor/WC/VentilationDucts/SecurityRoom");
 	symlink("../../Parking/Basement", "Directories/Van/MainEntrance/MainBankingHall/Corridor/Basement");
+
+
+	// Copy electrical panel
+	system("cp assets/readonly/electrical-panel-ascii.txt assets/electrical-panel-ascii.txt");
 
 
 	// Add all the .obj to the map
@@ -186,6 +191,29 @@ void newGame()
                 }
         }
 	closedir(d);
+
+
+	// Set .obj default status to 0 (except electrical panel room, to 3 (= all lights on)
+	d = opendir("assets/obj");
+        if (!d) {
+                write(1, "Directory assets/obj not found.\n", strlen("Directory assets/obj not found.\n"));
+                exit(1);
+        }
+
+        while ((dir = readdir(d)) != NULL) {
+                if (strcmp(dir->d_name, ".") != 0 && strcmp(dir->d_name, "..") != 0) {
+                        strncpy(filePath, "assets/obj/", 80);
+                        strncat(filePath, dir->d_name, 80);
+                        fd = open(filePath, O_WRONLY);
+                        ftruncate(fd, 1);
+			if (strcmp(dir->d_name, "electrical-panel.obj") == 0) write(fd, "3", 1);
+			else write(fd, "0", 1);
+
+	                filePath[0] = '\0';
+                        close(fd);
+                }
+        }
+        closedir(d);
 
 	// Set readonly permissions for player to those directories that need a key or tool to be opened
 	if (fork() == 0)

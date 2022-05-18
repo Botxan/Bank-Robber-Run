@@ -35,25 +35,40 @@ Is everything okay?
 A: Yes, all under control
 B: No, I don't know how to get in 
 --y
+
+
 1A
 Smart boy!
 --12
+
+
 1B
-Okay, do you want me to distract the securyty guard so you can acces the corridor? 
+Okay, do you want me to distract the security guard so you can access the corridor? 
 
 A:That would be awesome but how will you do that?
 B:No I can work all by myself
 --y
+
+
 2A
-A good magician never reaveals it's tricks my friend. 
+A good magician never reaveals it's tricks my friend.
+...
+...
+*You hear the crack of the crystal of the main banking hall. Guard is running to looks what is going on.*
 --40
+
+
 2B
 You sure about that?
 A: To be honest... No
 --y
+
+
 3A
 I'm gonna distract him
 --40
+
+
 // Using radio in any place which is not WC or Janitor's room
 2#
 0A
@@ -61,13 +76,11 @@ This place is not safe for radio use.
 --20
 
 
-
 // Repeating dialogue until office key card is obtained
 3#
 0A
 Find the office card. Look for an office where the clerk has left the door open. If there is no other option, you can try to knock one out. But avoid it if possible, we have to try to go unnoticed.
 --30
-
 
 
 // Robert is distracting guard to allow you to sneak into the corridor. Repetitive until office key card found
@@ -81,13 +94,11 @@ Find the office card. Look for an office where the clerk has left the door open.
 --40
 
 
-
 // If Robert has been distracting the guard, pre-main dialog after obtaining office key card
 5#
 0A
 That fucking guard chased me by car for 10 fucking blocks! Luckily I managed to avoid him, sorry I didn't pick up the radio sooner.
 --50
-
 
 
 6#
@@ -96,13 +107,11 @@ So you managed to get the key card. Good, but remember, it's our first priority 
 --60
 
 
-
 // Repeating dialogue until security cameras are deactivated and boss key has been obtained
 7#
 0A
 Find a way to sneak into the security room.
 --70
-
 
 
 // Security cameras are deactivated and director card has been obtained

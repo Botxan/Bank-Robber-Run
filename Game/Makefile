@@ -5,7 +5,7 @@ CC1 = gcc -rdynamic
 CPPFLAGS = -MMD 
 CFLAGS = -Wall -Wextra  -std=gnu99 -g 
 
-SRC = myshell0.c  function/cd.c function/view.c function/inv.c function/Leave.c function/pickUp.c function/talk.c function/chmod.c function/newGame.c
+SRC = myshell0.c  function/cd.c function/view.c function/inv.c function/Leave.c function/talk.c function/chmod.c function/newGame.c
 OBJ = ${SRC:.c=.o}
 DEP = ${SRC:.c=.d}
 
@@ -25,7 +25,7 @@ SRC4 = function/Leave.c
 OBJ4 = ${SRC4:.c=.o}
 DEP4 = ${SRC4:.c=.d}
 
-SRC5 = function/pickUp.c
+SRC5 = function/pickup.c
 OBJ5 = ${SRC5:.c=.o}
 DEP5 = ${SRC5:.c=.d}
 
@@ -49,7 +49,12 @@ SRC10= ../Hold-up-Game.c
 OBJ10 = ${SRC10:.c=.o}
 DEP10 = ${SRC10:.c=.d}
 
-all: view myshell0 cd inv leave pickUp talk pwd chmod use ../Hold-up-Game
+SRC11= function/check.c
+OBJ11 = ${SRC11:.c=.o}
+DEP11 = ${SRC11:.c=.d}
+
+
+all: view myshell0 cd inv leave pickup talk pwd chmod use ../Hold-up-Game check
 
 -include ${DEP1}
 view: ${SRC1}
@@ -72,7 +77,7 @@ leave: ${SRC4}
 	$(CC1) -o $@ $^ $(CFLAGS)
 
 -include ${DEP5}
-pickUp: ${SRC5}
+pickup: ${SRC5}
 	$(CC1) -o $@ $^ $(CFLAGS)
 
 -include ${DEP6}
@@ -95,7 +100,11 @@ use: ${SRC9}
 Hold-up-Game: ${SRC10}
 	$(CC1) -o $@ $^ $(CFLAGS)
 
+-include ${DEP11}
+check: ${SRC11}
+	$(CC1) -o $@ $^ $(CFLAGS)
+
 
 clean:
-	@rm -f ${OBJ} ${DEP} myshell0 ${DEP1} ${OBJ1} view  ${DEP2} ${OBJ2} cd ${DEP3} ${OBJ3} inv ${DEP4} ${OBJ4} Leave ${DEP5} ${OBJ5} pickUp ${DEP6} ${OBJ6} talk ${DEP7} ${OBJ7} pwd ${DEP8} ${OBJ8} chmod ${DEP9} ${OBJ9} use ${DEP10} ${OBJ10} ../Hold-up-Game
+	@rm -f ${OBJ} ${DEP} myshell0 ${DEP1} ${OBJ1} view  ${DEP2} ${OBJ2} cd ${DEP3} ${OBJ3} inv ${DEP4} ${OBJ4} Leave ${DEP5} ${OBJ5} pickup ${DEP6} ${OBJ6} talk ${DEP7} ${OBJ7} pwd ${DEP8} ${OBJ8} chmod ${DEP9} ${OBJ9} use ${DEP10} ${OBJ10} ../Hold-up-Game ${DEP11} ${OBJ11} check
 # END

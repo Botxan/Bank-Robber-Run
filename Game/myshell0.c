@@ -23,7 +23,6 @@
 #include "./function/cd.h"
 #include "./function/inv.h"
 #include "./function/Leave.h"
-#include "./function/pickUp.h"
 #include "./function/talk.h"
 #include "./function/newGame.h"
 
@@ -41,6 +40,7 @@ int visitedTimes;
 char visitedTimesText[12];
 int fd;
 FILE *f;
+int gameOver = 0;
 
 //time
 unsigned int hours=0;
@@ -217,7 +217,7 @@ void moveNpc(char *name, char *dest) {
 /**
  * Function getNpcState
  * --------------------
- * Returns an integer indicated the state of the npc
+ * Returns an integer indicating the state of the npc
  * Note: The state is always bounded by 0 and 9
  */
 int getNpcState(char *name) {
@@ -227,6 +227,25 @@ int getNpcState(char *name) {
 
 	sprintf(npcPath, "%s/npc/%s.npc", assets, name);
 	fd = open(npcPath, O_RDONLY);
+	read(fd, state, 1);
+	close(fd);
+	return state[0] - '0';
+}
+
+
+/**
+ * Function getObjState
+ * --------------------
+ * Returns an integer indicating the state of the object
+ * Note: The state is always bounded by 0 and 9
+ */
+int getObjState(char *name) {
+	char objPath[strlen(assets) + 40];
+	char fd;
+	char state[1]; // need to be string for read
+
+	sprintf(objPath, "%s/obj/%s.obj", assets, name);
+	fd = open(objPath, O_RDONLY);
 	read(fd, state, 1);
 	close(fd);
 	return state[0] - '0';
@@ -244,7 +263,7 @@ void talkTo(char *npc) {
 	if (fork() == 0) {
 		sprintf(commandPath, "%s/talk", function);
 		execlp(commandPath, "talk", npc, NULL);
-		// This will only be printed if exelp fails
+		// This will only be printed if execlp fails
 		if (errno != 0) printf("Error on talk function: %s\n", strerror(errno));
 		fprintf(stderr, "Unable not talk with %s.\n", npc);
 	} else wait(NULL);
@@ -255,6 +274,7 @@ int execute(int argc, char *argv[])
 {
 	char path[100];
 	char path2[100];
+	char auxPath[strlen(function) + 50];
 	int child;
 	strcpy(path,function);
 	strcpy(path2,function);
@@ -278,6 +298,7 @@ int execute(int argc, char *argv[])
 	}
 	else if(strcmp(argv[0], "access") == 0 || strcmp(argv[0], "cd") == 0)
 	{
+		// Pre entering events
 		prompt=strrchr(getcwd(NULL, 0),'/')+1;
 		if(strcmp(prompt, "VentilationDucts") == 0)
 		{
@@ -306,11 +327,22 @@ int execute(int argc, char *argv[])
 			}
 		}
 
+		// Main banking hall lights are on and guard is there and electrician skin is wear => guard prohibits entrance to coridor
+		if ((strcmp(prompt, "MainBankingHall") == 0) && (strcmp(argv[1], "Corridor") == 0) && (access("Ramon.npc", R_OK) == 0) && ((getObjState("electrical-panel") == 2) || (getObjState("electrical-panel") == 3))) {
+			if (fork() == 0) {
+				strcpy(auxPath, function);
+				strcat(auxPath, "/talk");
+				execlp(auxPath, "talk", "Ramon", NULL);
+				if (errno != 0) printf("Error, Ramon cannot talk right now: %s.\n", strerror(errno));
+			} else wait(0);
+			return 0;
+		}
 
 		if(cd(argc,argv,home,0)==1)
 		{
 			// Increase room visited counter
 			fd = open("./.counter.txt", O_RDWR);
+
 
 			if (fd == -1) write(2, "Could not add room visited counter. File .counter not found\n.", strlen("Could not add room visited counter. File .counter not found\n."));
 
@@ -362,7 +394,18 @@ int execute(int argc, char *argv[])
 						// Move bank manager to electrical panel room
 						moveNpc("Edurne", "MainBankingHall");
 					}
+
+					// view the janitors key card
+					if (visitedTimes == 2) {
+						sprintf(auxPath, "%s/assets/tool/janitor-card.tool", function);
+						symlink(auxPath, "janitor-card.tool");
+					}
 					break;
+				case CORRIDOR:
+					if (visitedTimes == 1) {
+						talkTo("Matt");
+						moveNpc("Matt", "WC");
+					}
 			}
 		}
 	}
@@ -384,21 +427,19 @@ int execute(int argc, char *argv[])
 		}
 	}
 
-	else if(strcmp(argv[0], "pickUp") == 0 || strcmp(argv[0], "pu") == 0)
+	else if(strcmp(argv[0], "pickup") == 0 || strcmp(argv[0], "pu") == 0)
 	{
-		if(argc==2)
+		if(argc == 2)
 		{
-			child=fork();
-			if(child==0)
+			if(fork() == 0)
 			{
 				write(0, "\n", strlen("\n"));
-				strcat(path,"/pickUp");
+				strcat(path,"/pickup");
 				execl(path,argv[0],argv[1],root,NULL);
 				if(errno!=1) write(0,"Unknown error\n",strlen("Unknown error\n"));
 				else write(0,"The object doesn't exist\n",strlen("The object doesn't exist\n"));
 
-			}
-			wait(NULL);
+			} else wait(NULL);
 		} else write(0,"You can only take an object at a time",strlen("You can only take an object at a time"));
 	}
 
@@ -488,6 +529,19 @@ int execute(int argc, char *argv[])
 		converttimeprint();
 		write(0, times2, strlen(times2));
 	}
+
+	else if (strcmp(argv[0], "check") == 0)
+	{
+		if (fork() == 0) {
+			char *path = strcat(function, "/check");
+			execlp(path, argv[0], argv[1], function, NULL);
+			if (errno != 0) {
+				printf("Error launching child process: %s\n", strerror(errno));
+				return 1;
+			}
+		} else wait(NULL);
+	}
+
 	else write(1, "this function doesn't exist\n", strlen("this function doesn't exist\n"));
 
 
@@ -552,12 +606,6 @@ int countpipe(int argc,char *argv[],char *test[])
 	return 1;
 }
 
-
-
-
-
-
-
 /*
 * Function: show_main_menu
 * ------------------------
@@ -615,6 +663,12 @@ int show_main_menu() {
 	return -1;
 }
 
+void printGameOver() {
+	char command[strlen(assets) + 30];
+	sprintf(command, "cat %s/gameOver.txt", assets);
+	system(command);
+}
+
 //thread for time
 void* Time1(){
 	while(1){
@@ -625,7 +679,6 @@ void* Time1(){
 		minutes=(milliseconds/(CLOCKS_PER_SEC))/60;
 		hours=minutes/60;
 		time_left=count_down_time_in_secs-seconds;
-		
 	}
 	pthread_exit(NULL);
 }
@@ -708,12 +761,6 @@ int begin() {
 		prompt="Van";
 		count_down_time_in_secs=7200;  // 1 minute is 60, 1 hour is 3600
 
-
-		startTime=clock();  // start clock
-		time_left=count_down_time_in_secs-seconds;   // update timer
-		Time();
-
-
 		// Starting dialog
 		if (fork() == 0) {
 			execlp("../../talk", "talk", "Robert", NULL);
@@ -722,30 +769,32 @@ int begin() {
                                 return 1;
                         }
 		} else wait(NULL);
-
-		while (1) {
-				write(0, prompt, strlen(prompt));
-				write(0, ">", 1);
-				if (read_args(&argc, args, MAXARGS, &eof) && argc > 0)
-					countpipe(argc,args,args);
-					//execute(argc, args);
-				if (eof) exit(0);
-				if(time_left <= 0)
-				{
-					write(0, "Game Over\n", strlen("Game Over\n"));
-					exit(0);
-				}
-		}
 		break;
 	case LOAD_GAME:
-		write(1, "Not implemented yet\n", 20);
-		break;
-	case OPTIONS:
 		write(1, "Not implemented yet\n", 20);
 		break;
 	default:
 		exit(1);
 	}
+
+	startTime=clock();  // start clock
+        time_left=count_down_time_in_secs-seconds;   // update timer
+        Time();
+
+	while (1) {
+        	write(0, prompt, strlen(prompt));
+                write(0, ">", 1);
+                if (read_args(&argc, args, MAXARGS, &eof) && argc > 0)
+                	countpipe(argc,args,args);
+                        //execute(argc, args);
+                if (eof) exit(0);
+
+		if ((gameOver == 1) || (time_left <= 0)) {
+			printGameOver();
+			exit(0);
+		}
+        }
+
 	pthread_exit(NULL);
 }
 

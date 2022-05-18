@@ -1,9 +1,9 @@
 0
 
 // First encounter
-#0
+0#
+0A
 Hello... you... I don't know your face... you don't work here, do you?
-
 
 A:I'm the electrician, here to check the bank's wiring.
 B:I'm the director's brother, I'd rather you didn't bother me. Thank you.
@@ -17,6 +17,7 @@ I thought that only internal employees were allowed in, did they let you in?
 A:Yes, I have told the guard that I need to check the sockets coming down from the ceiling.
 B:Yes, and if you don't want to feel 150K volts coursing through your body you'd better leave me alone.
 --y
+
 
 1B
 Are you the one who used to work at the IRS? Or the one who used to be the IT guy?
@@ -38,40 +39,102 @@ G:I won't tell you again, either you let me pass, or I will pass over you.
 2A
 Ah yes, Ignacio, the boss, has already told us that the light in the basement stopped working a few days ago. I'm leaving, good luck... I guess.
 *The officer goes to the WC and leaves his office door open.*
---1
+--20
 
 
 2B
 Hey, take it easy, man (you can't even say good morning anymore...).
 *The officer goes to the WC and leaves his office door open.*
---1
+--20
 
 
 2C
-*The officer goes to the WC and leaves his office door open*.
 Oh, so it's you! You're nothing alike... except that you've both found a way to make a lot of dough! Anyway, next time you talk to him, put in a good word for me, please, maybe I'll get a raise. Well, I'll be on my way, good luck.... I guess.
---1
+*The officer goes to the WC and leaves his office door open*.
+--20
 
 
 2D
-*The officer goes to the WC and leaves his office door open*.
 Oh, so it's you! You're nothing alike... anyway, next time you talk to him, put in a good word for me, please, maybe I'll get a raise. Well, I'll be on my way, good luck.... I guess.
---1
+*The officer goes to the WC and leaves his office door open*.
+--20
 
 
 2E
 I hope you are the IT guy! Those of us who know about computers, people look at us as if we were magicians. I would too if I wasn't so good at using Excel. Anyway, next time you talk to him, put in a good word for me, please, maybe I'l get a raise. Well, I'll be on my way, good luck...I guess.
 *The officer goes to the WC and leaves his office door open*.
---1
+--20
 
 
 2F
 Ah yes, Ignacio, the boss, has already told us that the light in the basement stopped working a few days ago. I'm leaving, good luck... I guess.
 *The officer goes to the WC and leaves his office door open*.
---1
+--20
 
 
 2G
 SECURITYYYY!!!!!
 *The guards have incapacitated you.*
---2
+--02
+
+
+// Officer is coming from WC while you hide inside the cabinet or curtains
+1#
+0A
+............
+*Officer is about to enter the office*
+--12
+
+
+// Officer enters the office and player is hidden in cabinet
+2#
+0A
+...
+....
+.....
+*Sits in the desk*
+
+Have I left my email open? And the door too? Every day I look more and more like my mother, what a head... time for a cigarette!
+*The officer leaves the office*
+--04
+
+
+// Officer is going to enter and sees player hidden behind the curtain
+3#
+0A
+HEY YOU! Your feet are showing! Who would think of hiding behind the curtain when you have a cabinet there!?!?
+SECURITYYYY!!!
+*You have alerted the employees*
+--02
+
+
+// Officer is going to enter but the player, hidden behind the door, knocks out the employee
+4#
+0A
+*You have knocked out the officer with a blow to the head, using a book that says "How to become the god of PowerPoint"*
+*The officer is now unconscious inside the office*
+--07
+
+
+// Default conversation 1
+5#
+0A
+You know, my psychologist says I should talk to more people, but I don't agree. Do you think I should take it out of the trunk?
+--40
+
+
+// Default conversation 2
+6#
+0A
+You know that song that goes ooO....mmNaNaNa.....virtual address space OOOH....NaNaNaNaNa....
+--30
+
+
+// Knocked out
+7#
+0A
+..........
+
+*It seems that it is not very available at the moment*
+
+

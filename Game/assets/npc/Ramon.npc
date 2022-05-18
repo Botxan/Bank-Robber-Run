@@ -1,40 +1,63 @@
 0
-
-
-
 // Ramon is in the main banking hall and you try to enter to the corridor as electrician
 // Default talk when wearing electrician skin
-1
+0#
+0A
 Sorry, access to the corridor is only authorized for internal employees.
 
 A:I understand
 B:I am the electrician I have to check the sockets connected to the bathroom.
 C:Come on, let me in, I'll just be a minute.
---1
+--y
+
+1A
+I hope so.
+--00
+
+1B
+As I have already told you, entry is only allowed to internal employees. I won't repeat it again.
+
+A:I understand.
+B:I don't care, I'm going in.
+--y
 
 
-B1 C1
-As I have already told you, entry is only allowed to internal employees. No te lo volveré a repetir.
+1C
+As I have already told you, entry is only allowed to internal employees. I won't repeat it again.
+
+C:I understand.
+D:I don't care, I'm going in.
+--y
 
 
-D:I understand.
-E:I don't care, I'm going in.
---1
+2A
+I hope so.
+--00
 
-D
-I hope so
---0
 
-*Ramon has knocked you out*.
-1E
---0
+// Game over, guard arrests you
+2B
+HANDS BEHIND YOUR BACK, GET ON YOUR KNEES!
+*Ramon has incapacitated you.*
+--0G
+
+
+2C
+I hope so.
+--00
+
+
+2D
+HANDS BEHIND YOUR BACK, GET ON YOUR KNEES!
+*Ramon has incapacitated you.*
+--02
 
 
 // Default talk when wearing executive skin
-2
+1#
 ...
 *He seems to be very focused*
---0
+--01
 
 
 

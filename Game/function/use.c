@@ -46,15 +46,16 @@ int main(int argc, char *argv[]){
 	// Print args
 	// for (int i = 0; i < argc; i++)
 	//	printf("%d: %s\n", i, argv[i]);
-
+	switch(argc) {
+	}
 	if (argc < 4) {
 		write(1, "Select an item to use.\n", strlen("Select an item to use.\n"));
-		return 0;
+		return 1;
 	}
 
 	if (argc > 5) {
 		write(1, "Too much arguments.\n", strlen("Too much arguments.\n"));
-		return 0;
+		return 1;
 	}
 
 	// Check if item is in inventory
@@ -65,12 +66,13 @@ int main(int argc, char *argv[]){
 
 	if (access(itemPath, F_OK) == -1) {
 		write(1, "You don't have that object in the inventory.\n", strlen("You don't have that object in the inventory.\n"));
-		return 0;
+		return 1;
 	}
 
 	// non-targeted use command
 	if (argc == 4) {
 		write(1, "Object used in the room. Nothing happened.\n.", strlen("Object used in the room. Nothing happened.\n"));
+		return 0;
 	}
 
 	// Get file type
@@ -81,7 +83,7 @@ int main(int argc, char *argv[]){
 			if (strcmp(dir->d_name, argv[4]) == 0) {
 				if (stat(dir->d_name, &stat_buf) != 0) {
 					write(1, "Error on stat system call.\n", strlen("Error on stat system call.\n"));
-					return 0;
+					return 1;
 				};
 
 				targetType = dir->d_type;
@@ -101,7 +103,7 @@ int main(int argc, char *argv[]){
 
 			if (fd == -1) {
 				write(1, "Error opening key_door.txt.\n", strlen("Error opening key_door.txt.\n"));
-				return 0;
+				return 1;
 			}
 
 			while ((ret = read(fd, buf+i, 1)) == 1) {
@@ -146,7 +148,7 @@ int main(int argc, char *argv[]){
 						execlp(chmodPath, chmodPath, roomPath, "0755", (char *) NULL);
 						if (errno != 0) {
 							printf("Problem unlocking the door: %s.\n", strerror(errno));
-							return 0;
+							return 1;
 						}
 					} else wait(NULL);
 					write(1, "Door unlocked\n", strlen("Dorr unlocked\n"));
@@ -165,5 +167,5 @@ int main(int argc, char *argv[]){
 			printf("Unknown file type\n");
 	}
 
-	return 1;
+	return 0;
 }
