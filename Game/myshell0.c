@@ -1,4 +1,3 @@
-
 // myShell0
 //////////////////////////////////////////////////
 
@@ -799,7 +798,23 @@ int begin() {
         time_left=count_down_time_in_secs-seconds;   // update timer
         Time();
 
-	while (1) {
+
+		}
+        }
+        
+    if(pipe(pfd))
+    {
+        write(0,"Log Pipe ERROR", strlen("Log Pipe ERROR"));
+        exit(2);
+    }
+
+    switch(fork())
+    {
+    case -1:
+    write(0,"FORK ERROR",strlen("FORK ERROR"));
+    case 0:
+    close(pfd[0]);
+    	while (1) {
         	write(0, prompt, strlen(prompt));
                 write(0, ">", 1);
                 if (read_args(&argc, args, MAXARGS, &eof) && argc > 0)
@@ -810,9 +825,11 @@ int begin() {
 		if ((gameOver == 1) || (time_left <= 0)) {
 			printGameOver();
 			exit(0);
-		}
-        }
-
+    default:
+        close(pfd[1]);close(0);
+        dup2(pfd[0],STDIN_FILENO);close(pfd[0]);
+        execlp("StoreMoves","StoreMoves",NULL);
+    }
 	pthread_exit(NULL);
 }
 
