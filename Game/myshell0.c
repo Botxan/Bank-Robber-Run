@@ -541,6 +541,24 @@ int execute(int argc, char *argv[])
 			}
 		} else wait(NULL);
 	}
+	else if (strcmp(argv[0], "man") == 0)
+	{
+		char *back=getcwd(NULL, 0);
+		chdir(function);
+		if (fork() == 0) {
+			
+			char *path = strcat(function, "/man");
+			execlp(path, argv[1], NULL);
+			if (errno != 0) {
+				printf("Error launching child process: %s\n", strerror(errno));
+				return 1;
+			}
+		} else 
+		{
+			wait(NULL);
+			chdir(back);
+		}
+	}
 
 	else write(1, "this function doesn't exist\n", strlen("this function doesn't exist\n"));
 
