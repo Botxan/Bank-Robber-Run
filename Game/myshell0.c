@@ -206,8 +206,8 @@ void moveNpc(char *name, char *dest) {
 	system(find);
 
 	// Create new symlink on dest taking the file from assets/npc (if permissions are ok)
-	char npcPath[PATH_MAX];
-	char destPath[PATH_MAX];
+	char npcPath[PATH_MAX+10];
+	char destPath[PATH_MAX+10];
 	sprintf(npcPath, "%s/npc/%s", assets, nameWithExtension);
 	sprintf(destPath, "%s/%s/%s", getcwd(NULL, 0), dest, nameWithExtension);
 	symlink(npcPath, destPath);

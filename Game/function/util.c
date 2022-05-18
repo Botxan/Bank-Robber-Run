@@ -33,7 +33,7 @@ int getObjStateInRoom(char *name) {
 void setObjStateInRoom(char *name, int newState) {
 	int fd;
 	char object[strlen(name) + 5];
-	char state[1] = " "; // conversion to write
+	char state[10] = " "; // conversion to write
 
 	sprintf(object, "%s.obj", name);
 
