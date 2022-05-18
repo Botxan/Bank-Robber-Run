@@ -9,13 +9,13 @@
 #include <errno.h>
 #include <string.h>
 
-int main (int argc, char* argv[])
+int main (/*int argc, char* argv[]*/)
 {
 
- int line =0;
- int bs = 0;
- int i = 0;
- char buffC[20];char buffIn[20];char *cmd;char* token;
+ //int line =0;
+ //int bs = 0;
+ //int i = 0;
+ char buffC[20];/*char buffIn[20];char *cmd*/;char* token;
  int fd =  open("moves.txt",O_RDWR|O_CREAT,0666);
 
 
