@@ -11,5 +11,7 @@
 /Game/chmod
 /Game/use
 /Game/talk
+/Game/check
+/Game/pickup
 /Game/Directories/*
-./BANK-ROBBER-RUN
+BANK-ROBBER-RUN
