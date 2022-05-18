@@ -800,9 +800,8 @@ int begin() {
         Time();
 
 
-		}
-        }
-        
+		
+       
     
 
     if(pipe(pfd))
@@ -815,6 +814,7 @@ int begin() {
     {
     case -1:
     write(0,"FORK ERROR",strlen("FORK ERROR"));
+	break;
     case 0:
     close(pfd[0]);
     	while (1) {
