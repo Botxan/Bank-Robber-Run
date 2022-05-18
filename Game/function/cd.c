@@ -96,7 +96,7 @@ char home[]="";
 		}
 		else
 		{
-			printf("\033[31mYou can't exit of the game like that.\n\033[37m");
+			write(1,"\033[31mYou can't exit of the game like that.\n\033[37m",strlen("\033[31mYou can't exit of the game like that.\n\033[37m"));
 			chdir(homemain);
 			return 0;
 		}

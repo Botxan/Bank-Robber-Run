@@ -24,6 +24,7 @@
 #include "./function/Leave.h"
 #include "./function/talk.h"
 #include "./function/newGame.h"
+#include "./function/StoreMoves.h"
 
 int eof;
 char *prompt;
@@ -593,6 +594,7 @@ int countpipe(int argc,char *argv[],char *test[])
 	int compare=0;
 	if(result==0)
 	{
+		Storemoves(test);
 		execute(argc, test);
 	}
 	else
@@ -617,6 +619,7 @@ int countpipe(int argc,char *argv[],char *test[])
 			}
 			compare++;
 			number++;
+			Storemoves(save);
 			execute(p, save);
 			write(0,"\n",strlen("\n"));
 		}
