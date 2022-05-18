@@ -34,6 +34,7 @@ int extension(char argv[])
 	if(strcmp(strrchr(argv, '.'),".tool")==0) return 1;
 	if(strcmp(strrchr(argv, '.'),".obj")==0) return 2;
 	if(strcmp(strrchr(argv, '.'),".npc")==0) return 3;
+	if(strcmp(strrchr(argv, '.'),".txt")==0) return 4;
 	return 0;
 }
 
@@ -115,6 +116,8 @@ int main(int argc,char *argv[])
 							strcat(npc,dir->d_name);
 							strcat(npc,"\n");
 							break;
+						case 4:
+							break;
 						default:
 							strcat(room,"  ");
 							strcat(room,dir->d_name);
@@ -162,6 +165,8 @@ int main(int argc,char *argv[])
 						case 2:
 							break;
 						case 3:
+							break;
+						case 4:
 							break;
 						default:
 							write(0,dir->d_name, strlen(dir->d_name));
@@ -236,6 +241,8 @@ int main(int argc,char *argv[])
 											strcat(npc,dir->d_name);
 											strcat(npc,"\n");
 											break;
+										case 4:
+											break;
 										default:
 											strcat(room,"  ");
 											strcat(room,dir->d_name);
@@ -295,6 +302,8 @@ int main(int argc,char *argv[])
 									strcat(npc,"  ");
 									strcat(npc,dir->d_name);
 									strcat(npc,"\n");
+									break;
+								case 4:
 									break;
 								default:
 									strcat(room,"  ");
@@ -367,6 +376,8 @@ int main(int argc,char *argv[])
 										case 2:
 											break;
 										case 3:
+											break;
+										case 4:
 											break;
 										default:
 											write(0,dir->d_name, strlen(dir->d_name));
@@ -450,6 +461,8 @@ int main(int argc,char *argv[])
 										case 2:
 											break;
 										case 3:
+											break;
+										case 4:
 											break;
 										default:
 											write(0,dir->d_name, strlen(dir->d_name));
@@ -562,6 +575,8 @@ int main(int argc,char *argv[])
 										strcat(npc,dir->d_name);
 										strcat(npc,"\n");
 										break;
+									case 4:
+										break;
 									default:
 										strcat(room,"  ");
 										strcat(room,dir->d_name);
@@ -621,6 +636,8 @@ int main(int argc,char *argv[])
 									strcat(npc,"  ");
 									strcat(npc,dir->d_name);
 									strcat(npc,"\n");
+									break;
+								case 4:
 									break;
 								default:
 									strcat(room,"  ");
