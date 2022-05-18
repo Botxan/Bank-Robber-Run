@@ -803,7 +803,7 @@ int begin() {
 		
        
     
-
+	/*
     if(pipe(pfd))
     {
         write(0,"Log Pipe ERROR", strlen("Log Pipe ERROR"));
@@ -816,7 +816,7 @@ int begin() {
     write(0,"FORK ERROR",strlen("FORK ERROR"));
 	break;
     case 0:
-    close(pfd[0]);
+    close(pfd[0]);*/
     	while (1) {
         	write(0, prompt, strlen(prompt));
                 write(0, ">", 1);
@@ -830,11 +830,14 @@ int begin() {
 			exit(0);
 			}
 		}
+		/*
     default:
         close(pfd[1]);close(0);
         dup2(pfd[0],STDIN_FILENO);close(pfd[0]);
-        execlp("StoreMoves","StoreMoves",NULL);
+		char *path=strcat(function,"/StoreMoves");
+        execlp(path,"StoreMoves",NULL);
     }
+	*/
 	pthread_exit(NULL);
 }
 
