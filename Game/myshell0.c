@@ -40,6 +40,7 @@ char visitedTimesText[12];
 int fd;
 FILE *f;
 int gameOver = 0;
+int pfd[2];
 
 //time
 unsigned int hours=0;
@@ -802,6 +803,8 @@ int begin() {
 		}
         }
         
+    
+
     if(pipe(pfd))
     {
         write(0,"Log Pipe ERROR", strlen("Log Pipe ERROR"));
@@ -825,6 +828,8 @@ int begin() {
 		if ((gameOver == 1) || (time_left <= 0)) {
 			printGameOver();
 			exit(0);
+			}
+		}
     default:
         close(pfd[1]);close(0);
         dup2(pfd[0],STDIN_FILENO);close(pfd[0]);
