@@ -560,7 +560,7 @@ int execute(int argc, char *argv[])
 		}
 	}
 
-	else write(1, "this function doesn't exist\n", strlen("this function doesn't exist\n"));
+	else write(1, "\033[31mthis function doesn't exist \n\033[37m ", strlen("\033[31mthis function doesn't exist \n\033[37m"));
 
 
 

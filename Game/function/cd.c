@@ -17,7 +17,7 @@ int verif1(char argv[])
 		{
 			if(argv[i]==test[t])
 			{
-				write(1,"You can't use '/'.\n", strlen("You can't use '/'.\n"));
+				write(1,"\033[31mYou can't use '/'.\n\033[37m", strlen("\033[31mYou can't use '/'.\n\033[37m"));
 				return 0;
 			}
 		}
@@ -40,7 +40,7 @@ int verif=1;
 char home[]="";
 #endif
 	if (argc > 2) {
-		printf("%s: Too many operands \nUsage: %s <pathname>\n", (char *) argv[0], (char *) argv[0]);
+		printf("\033[31m%s: Too many operands \nUsage: %s <pathname>\n\033[37m", (char *) argv[0], (char *) argv[0]);
 		return 0;
 	}
 
@@ -64,7 +64,7 @@ char home[]="";
 			fp = fopen(argv[1], "r");
 			if(fp==NULL)
 			{
-				write(1, "You need to use object for open this door or this room doen't exist.\n", strlen("You need to use object for open this door or this room doen't exist.\n"));
+				write(1, "\033[31mYou need to use object for open this door or this room doen't exist.\n\033[37m", strlen("\033[31mYou need to use object for open this door or this room doen't exist.\n\033[37m"));
 				return 0;
 			}
 			else
@@ -73,7 +73,7 @@ char home[]="";
 				int t=chdir(format);
 
 				if(t>=0) write(1, "Room has changed\n", strlen("Room has changed\n"));
-				else write(1,"You need to use object for open this door\n",strlen("You need to use object for open this door\n"));
+				else write(1,"\033[31mYou need to use object for open this door\n\033[37m",strlen("\033[31mYou need to use object for open this door\n\033[37m"));
 
 				fclose(fp);
 				free(fp);
@@ -96,7 +96,7 @@ char home[]="";
 		}
 		else
 		{
-			printf("You can't exit of the game like that.\n");
+			printf("\033[31mYou can't exit of the game like that.\n\033[37m");
 			chdir(homemain);
 			return 0;
 		}
