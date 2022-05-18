@@ -240,7 +240,7 @@ int main(int argc,char *argv[]) {
 		return 0;
 	}
 	else {
-		printf("\nInvalid input!\n");
+		printf("\033[31m\nInvalid input!\n\033[37m");
 	}
 	return 0;
 }

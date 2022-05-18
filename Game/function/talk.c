@@ -63,7 +63,7 @@ int main(int argc,char* argv[]) {
 	// Check if npc is the current room
 	//if (stat(current, &file) == -1) return -1;
 	if (access(current, W_OK) == -1) {
-		write(2, "There is no one by that name in this room.\n", strlen("There is no one by that name in this room.\n"));
+		write(2, "\033[31mThere is no one by that name in this room.\n\033[37m", strlen("\033[31mThere is no one by that name in this room.\n\033[37m"));
 		return -1;
 	}
 

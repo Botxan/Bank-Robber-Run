@@ -20,12 +20,12 @@ int main(int argc, char *argv[]) {
 	char objectWithExtension[strnlen(argv[1], 30)];
 
 	if (argc < 3) {
-		write(2, "Select an object to check.\n", strlen("Select an object to check.\n"));
+		write(2, "\033[31mSelect an object to check.\n\033[37m", strlen("\033[31mSelect an object to check.\n\033[37m"));
 		exit(1);
 	}
 
 	if (argc > 3) {
-		write(2, "Too much arguments. Usage: check <object>.\n", strlen("Too much arguments. Usage: check <object>.\n"));
+		write(2, "\033[31mToo much arguments. Usage: check <object>.\n\033[37m", strlen("\033[31mToo much arguments. Usage: check <object>.\n\033[37m"));
 		exit(1);
 	}
 
@@ -35,7 +35,7 @@ int main(int argc, char *argv[]) {
 
 	// Check if the object is in the current room
 	if (access(objectWithExtension, R_OK) == -1) {
-		printf("The object does not exist or is not in this room.\n");
+		printf("\033[31mThe object does not exist or is not in this room.\n\033[37m");
 		exit(1);
 	}
 

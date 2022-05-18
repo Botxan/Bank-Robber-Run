@@ -34,7 +34,7 @@ int main(int argc,char* argv[]) {
 
 	if (argc>2)
 	{
-		write(0,"We don't need argument for this function!\n\n",strlen("We don't need argument for this function!\n\n"));
+		write(0,"\033[31mWe don't need argument for this function!\n\n\033[37m",strlen("\033[31mWe don't need argument for this function!\n\n\033[37m"));
 	 	return 1;
 	}
 	char *root=argv[1];

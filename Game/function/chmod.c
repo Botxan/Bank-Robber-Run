@@ -19,7 +19,7 @@ int main(int argc,char *argv[])
 {
 if(argc <3 && argc>4)
 {
-	write(1,"You need to use three argument (path of the file,permission)\n", strlen("You need to use three argument (path of the file,permission)\n"));
+	write(1,"\033[31mYou need to use three argument (path of the file,permission)\n\033[37m", strlen("\033[31mYou need to use three argument (path of the file,permission)\n\033[37m"));
 }else{
 	//const char *perm = "rwxrwxrwx";
 	char *ptr;
