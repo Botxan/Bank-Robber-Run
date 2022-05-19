@@ -44,6 +44,5 @@ void setObjStateInRoom(char *name, int newState) {
         }
 
 	sprintf(state, "%d", newState);
-	int a = write(fd, state, 1);
-	printf("bytes written: %d\n", a);
+	write(fd, state, 1);
 }

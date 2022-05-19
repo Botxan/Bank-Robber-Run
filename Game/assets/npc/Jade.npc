@@ -1,4 +1,4 @@
-0
+7
 
 // Repeating block when wearing electrician skin or executive skin without using laxatives in the cofee machine
 0#
@@ -10,6 +10,7 @@ Sorry, I have a lot of work now, come back later!
 // Block when you have cofee with laxatives and knock the door and you wear executive suit
 1#
 0A
+*You knock on the door*
 Hey, honey, you want something?
 
 A:Well, I’m new at the bank, and I’m taking a walk to meet my mates. I brought you coffee, will you?
@@ -70,6 +71,8 @@ Thanks for understanding it, honey, if you need anything else, I’ll be in my o
 // Waiting in the corridor until light are turned on again
 6#
 0A
+*You knock on the door*
+*You hear someone shouting inside*
 My office lights have gone out again! Until it is fixed, I refuse to work!
 --60
 
@@ -85,4 +88,5 @@ My office lights have gone out again! Until it is fixed, I refuse to work!
 // Auxiliar state for game over
 9#
 0A
+
 -92

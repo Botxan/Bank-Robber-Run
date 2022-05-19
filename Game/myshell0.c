@@ -24,6 +24,7 @@
 #include "./function/Leave.h"
 #include "./function/resetGame.h"
 #include "./function/interaction/officerBack.c"
+#include "./function/interaction/validateId.c"
 #include "./function/StoreMoves.h"
 
 int eof;
@@ -45,6 +46,8 @@ int pfd[2];
 // situational variables
 int distractedGuard = 0;
 int isGameOver = 0;
+int introduceIdAttempts = 0;
+char* introducedId;
 
 
 
@@ -194,32 +197,6 @@ void moveNpc(char *name, char *dest) {
 	destPath[strcspn(destPath, "\n")] = 0; // remove the newline
 	sprintf(destPath, "%s/%s.npc", destPath, name);
 	symlink(npcPath, destPath);
-}
-
-/* Function spawnNpc
- * -----------------
- * Spawns the npc in the given location
- */
-void spawnNpc(char *name, char *dest) {
-	char nameWithExtension[PATH_MAX];
-        char find[PATH_MAX];
-        char npcPath[PATH_MAX];
-        char destPath[PATH_MAX];
-        FILE *fp;
-
-	// Create new symlink on dest taking the file from assets/npc (if permissions are ok)
-        sprintf(npcPath, "%s/npc/%s", assets, nameWithExtension);
-
-	// Find the room
-        sprintf(find, "find %s -type d -name %s 2>/dev/null", root, dest);
-        fp = popen(find, "r");
-        if (fp == NULL) printf("Failed to move %s to new location.\n", name);
-        fgets(destPath, sizeof(destPath), fp);
-        pclose(fp);
-
-        destPath[strcspn(destPath, "\n")] = 0; // remove the newline
-        sprintf(destPath, "%s/%s.npc", destPath, name);
-        symlink(npcPath, destPath);
 }
 
 /* Function removeNpc
@@ -460,7 +437,6 @@ int execute(int argc, char *argv[])
 					setNpcState("Matt", 2);
 					talkTo("Matt");
 					moveNpc("Matt", "Rooftop");
-					printf("Mat is now in the rooftop\n");
 					break;
 				case 'B': // Behind curtains (game over)
 					setNpcState("Matt", 3);
@@ -477,24 +453,22 @@ int execute(int argc, char *argv[])
 
 		// Knocking Jade's door and Jade is not unconscious (7)
 		if ((strcmp(prompt, "Corridor") == 0) && (strcmp(argv[1], "Office2") == 0) && (getNpcState("Jade") != 7)) {
-			printf("haas toold coffe laxa? %d\n", hasTool("coffe-with-laxatives"));
-			printf("has skin executive? %d\n", hasSkin("executive"));
 			if ((getObjState("electrical-panel") == 0) || (getObjState("electrical-panel") == 2)) {
 				setNpcState("Jade", 6);
-				spawnNpc("Jade", "Corridor"); // need to duplicate because not enough permissions in office 2
+				moveNpc("Jade", "Corridor"); // need to duplicate because not enough permissions in office 2
 				talkTo("Jade");
 				removeNpc("Jade"); // remove duplicated
 			} else {
 				if ((hasTool("coffee-with-laxatives") == 0) && hasSkin("executive") == 0) setNpcState("Jade", 1);
 				else setNpcState("Jade", 0);
-				spawnNpc("Jade", "Corridor");
+				moveNpc("Jade", "Corridor");
 				talkTo("Jade");
 				// If Jade takes laxatives, move to bathroom and open her office room
 				if (getNpcState("Jade") == 7) {
 					// Open office 2
 					system("chmod 755 ./Office2");
 					removeNpc("Jade");
-					spawnNpc("Jade", "WC");
+					moveNpc("Jade", "WC");
 					removeTool("coffee-with-laxatives");
 				}
 				else removeNpc("Jade");
@@ -503,6 +477,21 @@ int execute(int argc, char *argv[])
 			}
 
 			return 0;
+		}
+
+
+		// Lost found dialogues depending if the player has checked lost and found email
+		// and current skin
+		if ((strcmp(prompt, "MainBankingHall") == 0) && (strcmp(argv[1], "LostAndFound") == 0)) {
+			// If wearing elecrician skin or already got the office key card
+			if (hasSkin("electrician") == 0) {
+				if (hasTool("officer-card") == 0) setNpcState("Veronica", 1);
+				else setNpcState("Veronica", 0);
+			}
+			if (hasSkin("executive") == 0) {
+				if (hasTool("officer-card") == 0) setNpcState("Veronica", 3);
+				else setNpcState("Veronica", 0);
+			}
 		}
 
 
@@ -525,7 +514,6 @@ int execute(int argc, char *argv[])
 
 			// Display prompt
                         prompt=strrchr(getcwd(NULL, 0),'/')+1;
-
 			// Special interactions in each room
                         id=idFromName(argv[1]);
 			switch(id)
@@ -553,6 +541,7 @@ int execute(int argc, char *argv[])
 						execute(2, argv);
 					}
 					break;
+
 				case ELECPANEL:
 					if (visitedTimes == 1) {
 						// Manager describes the electrical panel room
@@ -590,6 +579,7 @@ int execute(int argc, char *argv[])
 						moveNpc("Matt", "WC");
 						setNpcState("Mat", 6);
 					}
+					break;
 			}
 		}
 	}
@@ -629,8 +619,22 @@ int execute(int argc, char *argv[])
 
 	else if(strcmp(argv[0], "talk") == 0)
 	{
-		if(argc == 2) talkTo(argv[1]);
-		else write(0,"You can only talk to a person at a time\n",strlen("You can only talk to a person at a time\n"));
+		if(argc == 2) {
+			talkTo(argv[1]);
+
+			// Special interactions
+			// Telling id to Veronica in Lost and Found
+			if ((strcmp(prompt, "LostAndFound") == 0) && (strcmp(argv[1], "Veronica") == 0)) {
+				if (validateId() == 0) setNpcState("Veronica", 4);
+				else {
+					introduceIdAttempts++;
+					printf("\nRemaining attempts: %d\n", 3-introduceIdAttempts);
+					setNpcState("Veronica", 5);
+					talkTo("Veronica");
+					isGameOver = 1;
+				}
+			}
+		} else write(0,"You can only talk to a person at a time\n",strlen("You can only talk to a person at a time\n"));
 	}
 
 	else if(strcmp(argv[0], "Pause") == 0 || strcmp(argv[0], "P") == 0|| strcmp(argv[0], "quit") == 0|| strcmp(argv[0], "q") == 0)

@@ -58,6 +58,8 @@ int main(int argc, char *argv[]){
         char roomPath[PATH_MAX];
 	char rootPath[PATH_MAX];
 	char obj[30];
+	char line[256];
+	char opt;
 
         // Put extension to the tool
         strncpy(tool, argv[2], 20);
@@ -218,6 +220,40 @@ int main(int argc, char *argv[]){
 				symlink("../../assets/tool/coffee-with-laxatives.tool", "../../../../Inv/coffee-with-laxatives.tool");
 				// Remove laxatives from inventory
 				unlink("../../../../Inv/laxatives.tool");
+			}
+			else if ((strcmp(argv[2], "decoder") == 0) && (strcmp(argv[3], "laptop") == 0)) {
+				while (1) {
+					printf("Which is the cypher?\n\n");
+					printf("A: Rot13\n");
+					printf("B: Base64\n");
+					printf("C: Morse\n");
+					printf("Choose an option: ");
+
+					fgets(line, sizeof(line), stdin);
+					opt = line[0];
+
+					if (opt == 'A' || opt == 'B' || opt == 'C') break;
+				}
+
+				printf("Decoding pass.txt...\n");
+				sleep(1);
+				printf("...\n");
+				sleep(1);
+				printf("...\n");
+				sleep(1);
+
+				switch (opt) {
+					case 'A':
+						printf("ITuyVUOup3A3o3WxVTMipvO0nTHtMTS0LJWup2HtnKZ6VTIcM2u0VTMcqzHtqUqiVUE3oj==\n");
+						return 0;
+					case 'B':
+						printf("The password for the database is: eight five two two\n");
+						return 0;
+					case 'C':
+						printf("...- --. .... .-.. .. .... -... .... -.-. ...-- -. ...-- -... ...-- .--- -.- .. --. --.. ...- -.-. .. -... ----- .- --. ..- --. --.. --. ..-. ----- -.-- .-- .--- .... -.-. ..--- ..- --. .- -..- -- -.... .. --. ...- .--. --.. ..--- .... ----- .. --. --.. .--. -.. -- ..- --. -.. .... -.. ...- .. .... .-. ...-- -... .-- -...- -...-\n");
+						return 0;
+
+				}
 			} else {
 				printf("Nothing happened.\n");
 			}

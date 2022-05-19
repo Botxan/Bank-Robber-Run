@@ -1,6 +1,6 @@
 0
 
-// If information of missing card hasn't been found in office2
+// If lost and found email has been red
 // And default conversation after obtaining the office key card
 0#
 0A
@@ -9,12 +9,13 @@ Hi, what can I do for you?
 A:Hi, the anchor you have at the back of the room, I should have left it the last time I came to withdraw money, could I get it back?
 --y
 
+
 1A
 There must have been a misunderstanding, sir, we’ve already been called asking for the anchor, I’m afraid you won’t be able to take it away for now.
 --00
 
 
-// If information of missing card has been found
+// If lost and found email has been read
 // If wearing electrician skin
 1#
 0A
@@ -27,15 +28,15 @@ B:Hello, it seems that you have found the card that I lost, would it be possible
 
 1A
 There must have been a misunderstanding, sir, we’ve already been called asking for the anchor, I’m afraid you won’t be able to take it away for now.
---0
+--10
 
 
 1B
 I’m sorry, I don’t know how you found out about that information, but the card belongs to an internal employee, and you don’t look like a bank employee.
---00
+--10
 
 
-// If information of msissing card hasn't been found in office
+// If lost and found email has been read
 // If wearing executive skin
 2#
 0A
@@ -48,33 +49,33 @@ B:Hello, it seems that you have found the card that I lost, would it be possible
 
 1A
 There must have been a misunderstanding, sir, we’ve already been called asking for the anchor, I’m afraid you won’t be able to take it away for now.
---00
+--10
 
 
 1B
-Of course, sir, tell me your ID.
---00
+Of course, sir, I will give you 3 attempts. Tell me your ID.
+--31
 
 
-// 1st attempt: incorrect ID
+// Introduce id attemps
 3#
 0A
-The ID is not correct sir, you have other two opportunities.
---00
+Tell me your ID.
+--30
 
 
-// 2nd attempt: incorrect ID 
+// Incorrect ID
 4#
-0A
-The ID is not correct sir, you have one more opportunity.
---00
+The ID is incorrect, sir.
+--30
 
 
 // 3rd attempt: incorrect ID
 5#
 0A
 The ID is incorrect, sir, I’m afraid we won’t be able to give you the card.
---20
+*You lost the opportunity to obtain the office key card*
+--92
 
 
 // Correct ID

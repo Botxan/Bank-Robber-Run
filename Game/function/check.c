@@ -8,6 +8,7 @@
 #include "./check/checkDrawers.c"
 #include "./check/checkComputer.c"
 #include "./check/checkCabinet.c"
+#include "./check/checkLaptop.c"
 
 /**
  * Function: main (check)
@@ -49,20 +50,22 @@ int main(int argc, char *argv[]) {
 		exit(1);
 	}
 
-	// Add +1 to checked times
-	fd = open(objectWithExtension, O_RDWR);
-        f = fdopen(fd, "r");
-	fscanf(f, "%d", &checkedTimes);
-        lseek(fd, 0, SEEK_SET);
-        checkedTimes++;
-        sprintf(checkedTimesText, "%d", checkedTimes);
-        write(fd, checkedTimesText, strlen(checkedTimesText));
-        close(fd);
-        fclose(f);
+
+	// Add +1 to checked times (except for electrical panel and laptop, they have another use)
+	if (strcmp(objectWithExtension, "electrical-panel.obj") != 0 && strcmp(objectWithExtension, "laptop.obj") == 0) {
+		fd = open(objectWithExtension, O_RDWR);
+	        f = fdopen(fd, "r");
+		fscanf(f, "%d", &checkedTimes);
+	        lseek(fd, 0, SEEK_SET);
+	        checkedTimes++;
+	        sprintf(checkedTimesText, "%d", checkedTimes);
+	        write(fd, checkedTimesText, strlen(checkedTimesText));
+	        close(fd);
+	        fclose(f);
+	}
 
 
 	// Load corresponding function to each object
-
 	// Interact with electrical panel room
 	if (strcmp(objectWithExtension, "electrical-panel.obj") == 0) return checkElectricalPanel();
 
@@ -81,5 +84,7 @@ int main(int argc, char *argv[]) {
         if (strcmp(objectWithExtension, "cabinet.obj") == 0) return checkCabinet();
 
 
+	// ----------- OFFICE #2 ---------------
+	if (strcmp(objectWithExtension, "laptop.obj") == 0) return checkLaptop();
 	return 0;
 }

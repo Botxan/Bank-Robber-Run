@@ -118,7 +118,7 @@ void resetGame()
         symlink("../../../../../../assets/obj/office1-desk.obj", "Directories/Van/MainEntrance/MainBankingHall/Corridor/Office1/desk.obj");
         symlink("../../../../../../assets/obj/office1-drawers.obj", "Directories/Van/MainEntrance/MainBankingHall/Corridor/Office1/drawers.obj");
         symlink("../../../../../../assets/obj/office1-cabinet.obj", "Directories/Van/MainEntrance/MainBankingHall/Corridor/Office1/cabinet.obj");
-        symlink("../../../../../../assets/obj/office2-computer.obj", "Directories/Van/MainEntrance/MainBankingHall/Corridor/Office2/computer.obj");
+        symlink("../../../../../../assets/obj/office2-laptop.obj", "Directories/Van/MainEntrance/MainBankingHall/Corridor/Office2/laptop.obj");
 	symlink("../../../../../../assets/obj/monitors.obj", "Directories/Van/MainEntrance/MainBankingHall/Corridor/SecurityRoom/monitors.obj");
 	symlink("../../../../../../assets/obj/janitorial-supplies.obj", "Directories/Van/MainEntrance/MainBankingHall/Corridor/JanitorRoom/janitorial-supplies.obj");
         symlink("../../../../../../assets/obj/boss-computer.obj", "Directories/Van/MainEntrance/MainBankingHall/Corridor/BossOffice/computer.obj");
@@ -129,7 +129,6 @@ void resetGame()
 	symlink("../../assets/tool/lockpick.tool", "Directories/Inv/lockpick.tool");
 	symlink("../../assets/tool/hacking-tool.tool", "Directories/Inv/hacking-tool.tool");
 	symlink("../../assets/tool/radio.tool", "Directories/Inv/radio.tool");
-	symlink("../../../../../../assets/tool/telephone.tool", "Directories/Van/MainEntrance/MainBankingHall/Corridor/Office2/telephone.tool");
 	symlink("../../../../../../assets/tool/boss-picture.tool", "Directories/Van/MainEntrance/MainBankingHall/Corridor/JanitorRoom/boss-picture.tool");
 	symlink("../../../../../../assets/tool/night-vision-googles.tool", "Directories/Van/MainEntrance/MainBankingHall/Corridor/SecurityRoom/night-vision-googles.tool");
 
@@ -268,15 +267,6 @@ void resetGame()
 	//
 	//}
 	//else wait(NULL);
-
-	if (fork() == 0)
-	{
-		execlp("./chmod","./chmod","./Directories/Van/MainEntrance/MainBankingHall/Corridor/Office1","0066", NULL);
-		printf("\033[31mError changing Office1 permissions: %s.\n\033[37m", strerror(errno));
-                exit(0);
-
-	}
-	else wait(NULL);
 
 	if (fork() == 0)
 	{
