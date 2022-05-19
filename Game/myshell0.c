@@ -485,14 +485,16 @@ int execute(int argc, char *argv[])
 		// Lost found dialogues depending if the player has checked lost and found email
 		// and current skin
 		if ((strcmp(prompt, "MainBankingHall") == 0) && (strcmp(argv[1], "LostAndFound") == 0)) {
-			// If wearing elecrician skin or already got the office key card
-			if (hasSkin("electrician") == 0) {
-				if (hasTool("officer-card") == 0) setNpcState("Veronica", 1);
-				else setNpcState("Veronica", 0);
-			}
-			if (hasSkin("executive") == 0) {
-				if (hasTool("officer-card") == 0) setNpcState("Veronica", 3);
-				else setNpcState("Veronica", 0);
+			// Email not read
+			printf("the laptop state is: %d\n", getObjState("office2-laptop"));
+			printf("hastool officer card: %d\n", hasTool("officer-card"));
+			if ((getObjState("office2-laptop") == 0) && (hasTool("officer-card") != 0)) setNpcState("Veronica", 0);
+			else { // email read
+				if (hasSkin("electrician") == 0) setNpcState("Veronica", 1);
+				if (hasSkin("executive") == 0) {
+					if (introduceIdAttempts == 0) setNpcState("Veronica", 2);
+					else setNpcState("Veronica", 3);
+				}
 			}
 		}
 
@@ -641,16 +643,45 @@ int execute(int argc, char *argv[])
 			talkTo(argv[1]);
 
 			// Special interactions
+
 			// Telling id to Veronica in Lost and Found
 			if ((strcmp(prompt, "LostAndFound") == 0) && (strcmp(argv[1], "Veronica") == 0)) {
-				if (validateId() == 0) setNpcState("Veronica", 4);
-				else {
-					introduceIdAttempts++;
-					printf("\nRemaining attempts: %d\n", 3-introduceIdAttempts);
-					setNpcState("Veronica", 5);
-					talkTo("Veronica");
-					isGameOver = 1;
+				// If waiting for the ID (3)
+				if (getNpcState("Veronica") == 3) {
+					// Correct id
+					if (validateId() == 0)  {
+						setNpcState("Veronica", 6);
+						talkTo("Veronica");
+
+						// Add card to the inventory
+						char cardPath[PATH_MAX];
+						strcpy(cardPath, assets);
+						strcat(cardPath, "/tool/officer-card.tool");
+						char invPath[PATH_MAX];
+						strcpy(invPath, root);
+						strcat(invPath, "/Inv/officer-card.tool");
+						printf("cardPath: %s\n", cardPath);
+						printf("invPath: %s\n", invPath);
+						symlink(cardPath, invPath);
+						printf("*officer-card has been added to your inventory*\n");
+
+					} else {
+						introduceIdAttempts++;
+						// Check if maximum attempts reached => Game over
+						if (introduceIdAttempts == 3) {
+							setNpcState("Veronica", 5);
+							talkTo("Veronica");
+							isGameOver = 1;
+						} else {
+							setNpcState("Veronica", 4);
+							talkTo("Veronica");
+							printf("\nRemaining attempts: %d\n", 3-introduceIdAttempts);
+						}
+					}
 				}
+
+				// If card obtained (4), return to default dialogue
+				if (getNpcState("Veronica") == 4) setNpcState("Veronica", 0);
 			}
 		} else write(0,"You can only talk to a person at a time\n",strlen("You can only talk to a person at a time\n"));
 	}
@@ -992,8 +1023,8 @@ int begin() {
 
 		chdir("Directories");
 		root = getcwd(NULL, 0);
-		chdir("Van");
-		//chdir("Van/MainEntrance/MainBankingHall/Corridor");
+		//chdir("Van");
+		chdir("Van/MainEntrance/MainBankingHall");
 		home = getcwd(NULL, 0);
 		prompt="Van";
 		count_down_time_in_secs=7200;  // 1 minute is 60, 1 hour is 3600
