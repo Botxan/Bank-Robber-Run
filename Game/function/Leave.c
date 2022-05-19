@@ -88,10 +88,6 @@ int execute1(int argc, char *argv[])
 	{
 		return 0;
 	}
-	if(strcmp(argv[0], "S") == 0 || strcmp(argv[0], "SAVE") == 0)
-	{
-		return 2;
-	}
 	return 3;
 		
 }
@@ -111,7 +107,6 @@ int main()
 
       write(0,Prompt1, strlen(Prompt1));
 	  write(0,"R : Resume\n",strlen("R : Resume\n"));
-      write(0,"S : SAVE\n",strlen("S : SAVE\n"));
 	  write(0,"Q : Quit\n",strlen("Q : Quit\n"));
 	  write(0,"> ",strlen("> "));
       if (read_args1(&argc, args, MAXARGS, &eof) && argc > 0) {
@@ -124,10 +119,6 @@ int main()
 	  else if(t ==1)
 	  {
 		  return 1;
-	  }
-	  else if(t==2)
-	  {
-		  return 2;
 	  }
    }
 
