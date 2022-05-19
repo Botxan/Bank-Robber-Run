@@ -70,10 +70,10 @@ int main(int argc,char *argv[])
 {
 	struct dirent *dir;
 	struct stat *buf = malloc(sizeof(struct stat));
-	char room[100]="Places:\n";
-	char tool[100]="Tools:\n";
-	char object[100]="Objects:\n";
-	char npc[100]="People:\n";
+	char room[1000]="Places:\n";
+	char tool[1000]="Tools:\n";
+	char object[1000]="Objects:\n";
+	char npc[1000]="People:\n";
 
 	switch(argc)
 	{
