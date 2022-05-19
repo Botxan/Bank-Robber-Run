@@ -1024,7 +1024,7 @@ int begin() {
 		chdir("Directories");
 		root = getcwd(NULL, 0);
 		//chdir("Van");
-		chdir("Van/MainEntrance/MainBankingHall");
+		chdir("Van");
 		home = getcwd(NULL, 0);
 		prompt="Van";
 		count_down_time_in_secs=7200;  // 1 minute is 60, 1 hour is 3600
