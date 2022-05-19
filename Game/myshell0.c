@@ -560,6 +560,10 @@ int execute(int argc, char *argv[])
 						char *argv[2] = {"access", "ElectricalPanelRoom"};
 						execute(2, argv);
 					}
+					if(getObjState("electrical-panel")<2){
+						printf("Haven't they thought of installing some windows?? You can't see shit with the lights off...\n\n");
+						
+					}
 					break;
 
 				case ELECPANEL:
