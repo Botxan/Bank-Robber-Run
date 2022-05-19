@@ -1,4 +1,3 @@
-
 // myShell0
 //////////////////////////////////////////////////
 
@@ -23,8 +22,14 @@
 #include "./function/cd.h"
 #include "./function/inv.h"
 #include "./function/Leave.h"
+<<<<<<< HEAD
 #include "./function/resetGame.h"
 #include "./function/interaction/officerBack.c"
+=======
+#include "./function/talk.h"
+#include "./function/newGame.h"
+#include "./function/StoreMoves.h"
+>>>>>>> 8f53178a0c98d03465e88d24439767ab6b6f6d39
 
 int eof;
 char *prompt;
@@ -40,12 +45,17 @@ int visitedTimes;
 char visitedTimesText[12];
 int fd;
 FILE *f;
+<<<<<<< HEAD
 
 
 // situational variables
 int distractedGuard = 0;
 int isGameOver = 0;
 
+=======
+int gameOver = 0;
+int pfd[2];
+>>>>>>> 8f53178a0c98d03465e88d24439767ab6b6f6d39
 
 //time
 unsigned int hours=0;
@@ -181,6 +191,11 @@ void moveNpc(char *name, char *dest) {
 	system(find);
 
 	// Create new symlink on dest taking the file from assets/npc (if permissions are ok)
+<<<<<<< HEAD
+=======
+	char npcPath[PATH_MAX+10];
+	char destPath[PATH_MAX+10];
+>>>>>>> 8f53178a0c98d03465e88d24439767ab6b6f6d39
 	sprintf(npcPath, "%s/npc/%s", assets, nameWithExtension);
 
 	// Find the room
@@ -727,8 +742,34 @@ int execute(int argc, char *argv[])
 			} else write(2, "Usage: check <object>\n", strlen("Usage: check <object>\n"));
 		} else wait(NULL);
 	}
+	else if (strcmp(argv[0], "man") == 0)
+	{
+		char *back=getcwd(NULL, 0);
+		chdir(function);
+		if (fork() == 0) {
+			
+			char *path = strcat(function, "/man");
+			execlp(path, argv[1], NULL);
+			if (errno != 0) {
+				printf("Error launching child process: %s\n", strerror(errno));
+				return 1;
+			}
+		} else 
+		{
+			wait(NULL);
+			chdir(back);
+		}
+	}
 
+<<<<<<< HEAD
 	return 0;
+=======
+	else write(1, "\033[31mthis function doesn't exist \n\033[37m ", strlen("\033[31mthis function doesn't exist \n\033[37m"));
+
+
+
+	return 1;
+>>>>>>> 8f53178a0c98d03465e88d24439767ab6b6f6d39
 }
 
 
@@ -756,6 +797,7 @@ int countpipe(int argc,char *argv[],char *test[])
 	int compare = 0;
 	if(result==0)
 	{
+		Storemoves(test);
 		execute(argc, test);
 
 	}
@@ -782,6 +824,7 @@ int countpipe(int argc,char *argv[],char *test[])
 			}
 			compare++;
 			number++;
+			Storemoves(save);
 			execute(p, save);
 			write(0,"\n",strlen("\n"));
 		}
@@ -965,7 +1008,25 @@ int begin() {
         time_left=count_down_time_in_secs-seconds;   // update timer
         Time();
 
-	while (1) {
+
+		
+       
+    
+	/*
+    if(pipe(pfd))
+    {
+        write(0,"Log Pipe ERROR", strlen("Log Pipe ERROR"));
+        exit(2);
+    }
+
+    switch(fork())
+    {
+    case -1:
+    write(0,"FORK ERROR",strlen("FORK ERROR"));
+	break;
+    case 0:
+    close(pfd[0]);*/
+    	while (1) {
         	write(0, prompt, strlen(prompt));
                 write(0, ">", 1);
                 if (read_args(&argc, args, MAXARGS, &eof) && argc > 0)
@@ -976,9 +1037,16 @@ int begin() {
 		if ((isGameOver == 1) || (time_left <= 0)) {
 			gameOver();
 			exit(0);
+			}
 		}
-        }
-
+		/*
+    default:
+        close(pfd[1]);close(0);
+        dup2(pfd[0],STDIN_FILENO);close(pfd[0]);
+		char *path=strcat(function,"/StoreMoves");
+        execlp(path,"StoreMoves",NULL);
+    }
+	*/
 	pthread_exit(NULL);
 }
 

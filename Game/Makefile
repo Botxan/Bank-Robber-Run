@@ -45,7 +45,7 @@ SRC9= function/use.c
 OBJ9 = ${SRC9:.c=.o}
 DEP9 = ${SRC9:.c=.d}
 
-SRC10= ../Hold-up-Game.c
+SRC10= ../BANK-ROBBER-RUN.c
 OBJ10 = ${SRC10:.c=.o}
 DEP10 = ${SRC10:.c=.d}
 
@@ -53,8 +53,12 @@ SRC11= function/check.c
 OBJ11 = ${SRC11:.c=.o}
 DEP11 = ${SRC11:.c=.d}
 
+SRC12= function/man.c
+OBJ12 = ${SRC12:.c=.o}
+DEP12 = ${SRC12:.c=.d}
 
-all: view myshell0 cd inv leave pickup talk pwd chmod use ../Hold-up-Game check
+
+all: view myshell0 cd inv leave pickup talk pwd chmod use ../BANK-ROBBER-RUN check man 
 
 -include ${DEP1}
 view: ${SRC1}
@@ -97,15 +101,21 @@ use: ${SRC9}
 	$(CC1) -o $@ $^ $(CFLAGS) -D_DEFAULT_SOURCE -D_BSD_SOURCE
 
 -include ${DEP10}
-Hold-up-Game: ${SRC10}
+BANK-ROBBER-RUN: ${SRC10}
 	$(CC1) -o $@ $^ $(CFLAGS)
 
 -include ${DEP11}
 check: ${SRC11}
 	$(CC1) -o $@ $^ $(CFLAGS)
+	
+-include ${DEP12}
+man: ${SRC12}
+	$(CC1) -o $@ $^ $(CFLAGS)
+	
+
 
 
 clean:
-	@rm -f ${OBJ} ${DEP} myshell0 ${DEP1} ${OBJ1} view  ${DEP2} ${OBJ2} cd ${DEP3} ${OBJ3} inv ${DEP4} ${OBJ4} Leave ${DEP5} ${OBJ5} pickup ${DEP6} ${OBJ6} talk ${DEP7} ${OBJ7} pwd ${DEP8} ${OBJ8} chmod ${DEP9} ${OBJ9} use ${DEP10} ${OBJ10} ../Hold-up-Game ${DEP11} ${OBJ11} check
+	@rm -f ${OBJ} ${DEP} myshell0 ${DEP1} ${OBJ1} view  ${DEP2} ${OBJ2} cd ${DEP3} ${OBJ3} inv ${DEP4} ${OBJ4} Leave ${DEP5} ${OBJ5} pickup ${DEP6} ${OBJ6} talk ${DEP7} ${OBJ7} pwd ${DEP8} ${OBJ8} chmod ${DEP9} ${OBJ9} use ${DEP10} ${OBJ10} ../BANK-ROBBER-RUN ${DEP11} ${OBJ11} check ${DEP12} ${OBJ12} man 
 # END
 

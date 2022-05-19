@@ -23,7 +23,7 @@ int verif(char argv[])
 		for(size_t t=0;t<strlen(test);t++)
 			if(argv[i]==test[t])
 			{
-				write(1,"You can't use '/'.\n\n", strlen("You can't use '/'.\n\n"));
+				write(1,"\033[31mYou can't use '/'.\n\n\033[37m", strlen("\033[31mYou can't use '/'.\n\n\033[37m"));
 				return 0;
 			}
 	return 1;
@@ -34,6 +34,7 @@ int extension(char argv[])
 	if(strcmp(strrchr(argv, '.'),".tool")==0) return 1;
 	if(strcmp(strrchr(argv, '.'),".obj")==0) return 2;
 	if(strcmp(strrchr(argv, '.'),".npc")==0) return 3;
+	if(strcmp(strrchr(argv, '.'),".txt")==0) return 4;
 	return 0;
 }
 
@@ -115,6 +116,8 @@ int main(int argc,char *argv[])
 							strcat(npc,dir->d_name);
 							strcat(npc,"\n");
 							break;
+						case 4:
+							break;
 						default:
 							strcat(room,"  ");
 							strcat(room,dir->d_name);
@@ -163,6 +166,8 @@ int main(int argc,char *argv[])
 							break;
 						case 3:
 							break;
+						case 4:
+							break;
 						default:
 							write(0,dir->d_name, strlen(dir->d_name));
 							write(0,"\n", strlen("\n"));
@@ -191,7 +196,7 @@ int main(int argc,char *argv[])
 
 					if(fp==NULL)
 					{
-						printf("It's not a directory\n");
+						printf("\033[31mIt's not a directory\n\033[37m");
 						return 0;
 					}
 					else
@@ -235,6 +240,8 @@ int main(int argc,char *argv[])
 											strcat(npc,"  ");
 											strcat(npc,dir->d_name);
 											strcat(npc,"\n");
+											break;
+										case 4:
 											break;
 										default:
 											strcat(room,"  ");
@@ -296,6 +303,8 @@ int main(int argc,char *argv[])
 									strcat(npc,dir->d_name);
 									strcat(npc,"\n");
 									break;
+								case 4:
+									break;
 								default:
 									strcat(room,"  ");
 									strcat(room,dir->d_name);
@@ -318,7 +327,7 @@ int main(int argc,char *argv[])
 				}
 				else
 				{
-					write(1,"You need to use some object to open this door or this room doesn't exist \n", strlen("You need to use some object to open this door or this room doesn't exist \n\n"));
+					write(1,"\033[31mYou need to use some object to open this door or this room doesn't exist \n\033[37m", strlen("\033[31mYou need to use some object to open this door or this room doesn't exist \n\n\033[37m"));
 				}
 			}
 		}
@@ -344,7 +353,7 @@ int main(int argc,char *argv[])
 
 					if(fp==NULL)
 					{
-						printf("It's not a directory\n");
+						printf("\033[31mIt's not a directory\n\033[37m");
 						return 0;
 					}
 					else
@@ -367,6 +376,8 @@ int main(int argc,char *argv[])
 										case 2:
 											break;
 										case 3:
+											break;
+										case 4:
 											break;
 										default:
 											write(0,dir->d_name, strlen(dir->d_name));
@@ -408,7 +419,7 @@ int main(int argc,char *argv[])
 				}
 				else
 				{
-					write(1,"You need to use some object to open this door or this room doesn't exist \n", strlen("You need to use some object to open this door or this room doesn't exist \n\n"));
+					write(1,"\033[31mYou need to use some object to open this door or this room doesn't exist \n\033[37m", strlen("\033[31mYou need to use some object to open this door or this room doesn't exist \n\n\033[37m"));
 				}
 			}
 		}
@@ -427,7 +438,7 @@ int main(int argc,char *argv[])
 					fp = fopen(part1, "r");
 					if(fp==NULL)
 					{
-						printf("It's not a directory\n");
+						printf("\033[31mIt's not a directory\n\033[37m");
 						return 0;
 					}
 					else
@@ -450,6 +461,8 @@ int main(int argc,char *argv[])
 										case 2:
 											break;
 										case 3:
+											break;
+										case 4:
 											break;
 										default:
 											write(0,dir->d_name, strlen(dir->d_name));
@@ -495,7 +508,7 @@ int main(int argc,char *argv[])
 				}
 				else
 				{
-					write(1,"You need to use some object to open this door or this room doesn't exist \n", strlen("You need to use some object to open this door or this room doesn't exist \n\n"));
+					write(1,"\033[31mYou need to use some object to open this door or this room doesn't exist \n\033[37m", strlen("\033[31mYou need to use some object to open this door or this room doesn't exist \n\n\033[37m"));
 				}
 			}
 		}
@@ -517,7 +530,7 @@ int main(int argc,char *argv[])
 
 					if(fp==NULL)
 					{
-						printf("It's not a directory\n");
+						printf("\033[31mIt's not a directory\n\033[37m");
 						return 0;
 					}
 					else
@@ -561,6 +574,8 @@ int main(int argc,char *argv[])
 										strcat(npc,"  ");
 										strcat(npc,dir->d_name);
 										strcat(npc,"\n");
+										break;
+									case 4:
 										break;
 									default:
 										strcat(room,"  ");
@@ -622,6 +637,8 @@ int main(int argc,char *argv[])
 									strcat(npc,dir->d_name);
 									strcat(npc,"\n");
 									break;
+								case 4:
+									break;
 								default:
 									strcat(room,"  ");
 									strcat(room,dir->d_name);
@@ -641,7 +658,7 @@ int main(int argc,char *argv[])
 					write(0,"\n", strlen("\n\n"));
 					chdir(home);
 					closedir(d);
-				} else write(1,"You need to use some object to open this door or this room doesn't exist \n", strlen("You need to use some object to open this door or this room doesn't exist \n\n"));
+				} else write(1,"\033[31mYou need to use some object to open this door or this room doesn't exist \n\033[37m", strlen("\033[31mYou need to use some object to open this door or this room doesn't exist \n\n\033[37m"));
 			}
 		}
 		break;

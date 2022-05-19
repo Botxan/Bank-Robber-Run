@@ -13,7 +13,7 @@ int main (int argc, char* argv[])
 
  if(argc > 2)
  {
-  fprintf(stdout,"You don't need any arguments for this command\n");
+  fprintf(stdout,"\033[31mYou don't need any arguments for this command\n\033[37m");
  }
 
  char *buff;

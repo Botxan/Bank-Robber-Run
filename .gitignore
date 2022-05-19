@@ -11,4 +11,10 @@
 /Game/chmod
 /Game/use
 /Game/talk
-/Game/Directories/*
+/Game/check
+/Game/pickup
+/Game/man
+/Game/StoreMoves
+/Game/Directories
+/Game/assets/roomVisitedCounter/*
+BANK-ROBBER-RUN

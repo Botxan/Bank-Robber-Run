@@ -13,7 +13,7 @@ int main(int argc, char *argv[]){
 
  if(argc > 2)
  {
-  fprintf(stdout,"You don´t need to enter anything else\n");
+  fprintf(stdout,"\033[31mYou don´t need to enter anything else\n\033[37m");
   exit(1);
  }
  int room = 0;
@@ -53,7 +53,7 @@ int main(int argc, char *argv[]){
 
  if(pipe(pfd))
  {
-  fprintf(stdout,"Pipe ERROR");
+  fprintf(stdout,"\033[31mPipe ERROR\033[37m");
   exit(1);
  }
 
@@ -61,7 +61,7 @@ int main(int argc, char *argv[]){
  switch(fork())
  {
   case -1:
-   fprintf(stdout,"Fork ERROR");
+   fprintf(stdout,"\033[31mFork ERROR\033[37m");
    exit(2);
   case 0:
    close(pfd[0]);//close(1);

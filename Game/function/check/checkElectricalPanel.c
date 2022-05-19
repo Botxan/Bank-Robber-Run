@@ -22,7 +22,7 @@ void switcher(char switcher, int oldState) {
 	int fd = open("../../../../../assets/electrical-panel-ascii.txt", O_RDWR);
 
         if (fd == -1) {
-                write(2, "electrical-panel-ascii.txt not found.\n", strlen("electrical-panel-ascii.txt not found.\n"));
+                write(2, "\033[31melectrical-panel-ascii.txt not found.\n\033[37m", strlen("\033[31melectrical-panel-ascii.txt not found.\n\033[37m"));
                 exit(1);
         }
 
@@ -122,7 +122,7 @@ int checkElectricalPanel() {
 	// Open the electrical panel picture
 	if (fork() == 0) {
 		execlp("/bin/cat", "cat", "../../../../../assets/electrical-panel-ascii.txt", NULL);
-		if (errno != 0) printf("Error on talk function: %s\n", strerror(errno));
+		if (errno != 0) printf("\033[31mError on talk function: %s\n\033[37m", strerror(errno));
 	} else wait(NULL);
 
 	printf("CAUTION! Do not touch the switches unless strictly necessary.\n\n");

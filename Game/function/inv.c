@@ -22,7 +22,11 @@ void deletextensionTool(char argv[])
 int main(int argc,char* argv[]) {
 	if (argc > 2)
 	{
+<<<<<<< HEAD
 		write(0,"No arguments needed.\n",strlen("No arguments needed.\n"));
+=======
+		write(0,"\033[31mWe don't need argument for this function!\n\n\033[37m",strlen("\033[31mWe don't need argument for this function!\n\n\033[37m"));
+>>>>>>> 8f53178a0c98d03465e88d24439767ab6b6f6d39
 	 	return 1;
 	}
 

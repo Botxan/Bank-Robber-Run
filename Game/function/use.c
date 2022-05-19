@@ -26,6 +26,7 @@
 int main(int argc, char *argv[]){
 
 	// Print args
+<<<<<<< HEAD
         //for (int i = 0; i < argc; i++)
         //        printf("%d: %s\n", i, argv[i]);
 
@@ -36,6 +37,19 @@ int main(int argc, char *argv[]){
 
 	if (argc > 4) {
 		write(2, "Too much arguments.\n", strlen("Too much arguments.\n"));
+=======
+	// for (int i = 0; i < argc; i++)
+	//	printf("%d: %s\n", i, argv[i]);
+	switch(argc) {
+	}
+	if (argc < 4) {
+		write(1, "\033[31mSelect an item to use.\n\033[37m", strlen("\033[31mSelect an item to use.\n\033[37m"));
+		return 1;
+	}
+
+	if (argc > 5) {
+		write(1, "\033[31mToo much arguments.\n\033[37m", strlen("\033[31mToo much arguments.\n\033[37m"));
+>>>>>>> 8f53178a0c98d03465e88d24439767ab6b6f6d39
 		return 1;
 	}
 
@@ -74,11 +88,12 @@ int main(int argc, char *argv[]){
 	strncat(itemPath, tool, sizeof(itemPath));
 
 	if (access(itemPath, F_OK) == -1) {
-		write(1, "You don't have that object in the inventory.\n", strlen("You don't have that object in the inventory.\n"));
+		write(1, "\033[31mYou don't have that object in the inventory.\n\033[37m", strlen("\033[31mYou don't have that object in the inventory.\n\033[37m"));
 		return 1;
 	}
 
 	// non-targeted use command
+<<<<<<< HEAD
 	if (argc == 3) {
 
 		// Use radio to communicate with you teammate
@@ -113,6 +128,10 @@ int main(int argc, char *argv[]){
 			} else write(1, "*This is not a safe place to use the radio*\n", strlen("*This is not a safe place to use the radio*\n"));
                 } else write(1, "Object used in the room. Nothing happened.\n.", strlen("Object used in the room. Nothing happened.\n"));
 
+=======
+	if (argc == 4) {
+		write(1, "\033[31mObject used in the room. Nothing happened.\n.\033[37m", strlen("\033[31mObject used in the room. Nothing happened.\n\033[37m"));
+>>>>>>> 8f53178a0c98d03465e88d24439767ab6b6f6d39
 		return 0;
 	}
 
@@ -125,7 +144,7 @@ int main(int argc, char *argv[]){
 			// If it is a directory
 			if (strcmp(dir->d_name, argv[3]) == 0) {
 				if (stat(dir->d_name, &stat_buf) != 0) {
-					write(1, "Error on stat system call.\n", strlen("Error on stat system call.\n"));
+					write(1, "\033[31mError on stat system call.\n\033[37m", strlen("\033[31mError on stat system call.\n\033[37m"));
 					return 1;
 				};
 
@@ -158,7 +177,7 @@ int main(int argc, char *argv[]){
 			fd = open(keyDoorPath, O_RDONLY);
 
 			if (fd == -1) {
-				write(1, "Error opening key_door.txt.\n", strlen("Error opening key_door.txt.\n"));
+				write(1, "\033[31mError opening key_door.txt.\n\033[37m", strlen("\033[31mError opening key_door.txt.\n\033[37m"));
 				return 1;
 			}
 
@@ -203,12 +222,17 @@ int main(int argc, char *argv[]){
 						//char *args[] = {roomPath, "0755"};
 						execlp(commandPath, commandPath, roomPath, "0755", (char *) NULL);
 						if (errno != 0) {
-							printf("Problem unlocking the door: %s.\n", strerror(errno));
+							printf("\033[31mProblem unlocking the door: %s.\n\033[37m", strerror(errno));
 							return 1;
 						}
 					} else wait(NULL);
+<<<<<<< HEAD
 					write(1, "Door unlocked\n", strlen("Door unlocked\n"));
 				} else write(1, "Wrong key.\n", strlen("Wrong key.\n"));
+=======
+					write(1, "Door unlocked\n", strlen("Dorr unlocked\n"));
+				} else write(1, "\033[31mWrong key.\n\033[37m", strlen("\033[31mWrong key.\n\033[37m"));
+>>>>>>> 8f53178a0c98d03465e88d24439767ab6b6f6d39
 
 			} else write(1, "This door doesn't require any key to be opened.\n", strlen("This door doesn't require any key to be opened.\n"));
 
@@ -228,10 +252,10 @@ int main(int argc, char *argv[]){
 			write(2, "You cannot use something in that target.\n", strlen("You cannot use something in that target.\n"));
 			break;
 		case -1:
-			printf("Target not found\n");
+			printf("\033[31mTarget not found\n\033[37m");
 			break;
 		default:
-			printf("Unknown file type\n");
+			printf("\033[31mUnknown file type\n\033[37m");
 	}
 
 	return 0;

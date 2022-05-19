@@ -52,11 +52,11 @@ int read_args1(int* argcp, char* args[], int max, int* eofp)
               return 0;
               break;
      case -1 : *argcp = -1;     // reading failure
-              fprintf(stderr,"Reading failure \n");
+              fprintf(stderr,"\033[31mReading failure \n\033[37m");
               return 0;
               break;
      case -2 : *argcp = -1;     // line too long
-              fprintf(stderr,"Line too long -- removed command\n");
+              fprintf(stderr,"\033[31mLine too long -- removed command\n\033[37m");
               return 0;
               break;
    }
@@ -67,7 +67,7 @@ int read_args1(int* argcp, char* args[], int max, int* eofp)
       cmdp= NULL;
    }
    if (i >= max) {
-      fprintf(stderr,"Too many arguments -- removed command\n");
+      fprintf(stderr,"\033[31mToo many arguments -- removed command\n\033[37m");
       return 0;
    }
    *argcp= i;

@@ -21,7 +21,7 @@ void resetGame()
 	if (fork() == 0)
         {
                 execlp("find", "find", "./Directories", "-type", "d", "-exec", "chmod", "755", "{}", ";", NULL);
-                printf("Error applying default permissions to some directory under ./Directories %s.\n", strerror(errno));
+                printf("\033[31mError applying default permissions to some directory under ./Directories %s.\n\033[37m", strerror(errno));
                 exit(0);
         }
 	else wait(NULL);
@@ -31,7 +31,7 @@ void resetGame()
         if (fork() == 0)
         {
                 execlp("find", "find", "./Directories", "-type", "l", "!", "-iname", "*description.txt", "-delete", NULL);
-                printf("Error emptying directories: %s\n", strerror(errno));
+                printf("\033[31mError emptying directories: %s\n\033[37m", strerror(errno));
                 exit(0);
         }
         else wait(NULL);
@@ -160,7 +160,7 @@ void resetGame()
 	char filePath[80]; // asets/roomVisitedCounter/room_x_counter.npc
 
 	if (!d) {
-		write(1, "Directory assets/npc not found.\n", strlen("Directory assets/npc not found.\n"));
+		write(1, "\033[31mDirectory assets/npc not found.\n\033[37m", strlen("\033[31mDirectory assets/npc not found.\n\033[37m"));
 		exit(1);
 	}
 
@@ -179,7 +179,7 @@ void resetGame()
 	// Set each room visited counter to 0
 	d = opendir("assets/roomVisitedCounter");
 	if (!d) {
-                write(1, "Directory assets/roomVisitedCounter not found.\n", strlen("Directory assets/roomVisitedCounter not found.\n"));
+                write(1, "\033[31mDirectory assets/roomVisitedCounter not found.\n\033[37m", strlen("\033[31mDirectory assets/roomVisitedCounter not found.\n\033[37m"));
                 exit(1);
         }
 
@@ -200,7 +200,7 @@ void resetGame()
 	// Set .obj default status to 0 (except electrical panel room, to 3 (= all lights on)
 	d = opendir("assets/obj");
         if (!d) {
-                write(1, "Directory assets/obj not found.\n", strlen("Directory assets/obj not found.\n"));
+                write(1, "\033[31mDirectory assets/obj not found.\n\033[37m", strlen("\033[37mDirectory assets/obj not found.\n\033[37m"));
                 exit(1);
         }
 
@@ -223,7 +223,7 @@ void resetGame()
 	if (fork() == 0)
 	{
 		execlp("./chmod","./chmod","./Directories/Van/MainEntrance/Parking/Basement/VaultCorridor/VaultRoom","0066", NULL);
-		printf("Error changing VaultRoom permissions: %s.\n", strerror(errno));
+		printf("\033[31mError changing VaultRoom permissions: %s.\n\033[37m", strerror(errno));
 		exit(0);
 	}
 	else wait(NULL);
@@ -231,7 +231,7 @@ void resetGame()
 	if (fork() == 0)
 	{
 		execlp("./chmod","./chmod","./Directories/Van/MainEntrance/Parking/Basement","0066", NULL);
-		printf("Error changing Basement permissions: %s.\n", strerror(errno));
+		printf("\033[31mError changing Basement permissions: %s.\n\033[37m", strerror(errno));
                 exit(0);
 	}
 	else wait(NULL);
@@ -239,7 +239,7 @@ void resetGame()
 	if (fork() == 0)
 	{
 		execlp("./chmod","./chmod","./Directories/Van/MainEntrance/MainBankingHall/Corridor/BossOffice","0066", NULL);
-		printf("Error changing BossOffice permissions: %s.\n", strerror(errno));
+		printf("\033[31mError changing BossOffice permissions: %s.\n\033[37m", strerror(errno));
                 exit(0);
 	}
 	else wait(NULL);
@@ -247,7 +247,7 @@ void resetGame()
 	if (fork() == 0)
 	{
 		execlp("./chmod","./chmod","./Directories/Van/MainEntrance/MainBankingHall/Corridor/JanitorRoom","0066", NULL);
-		printf("Error changing JanitorRoom permissions: %s.\n", strerror(errno));
+		printf("\033[31mError changing JanitorRoom permissions: %s.\n\033[37m", strerror(errno));
                 exit(0);
 	}
 	else wait(NULL);
@@ -255,11 +255,12 @@ void resetGame()
 	if (fork() == 0)
 	{
 		execlp("./chmod","./chmod","./Directories/Van/MainEntrance/MainBankingHall/Corridor/Office2","0066", NULL);
-		printf("Error changing Office2 permissions: %s.\n", strerror(errno));
+		printf("\033[31mError changing Office2 permissions: %s.\n\033[37m", strerror(errno));
                 exit(0);
 	}
 	else wait(NULL);
 
+<<<<<<< HEAD:Game/function/resetGame.c
 	//if (fork() == 0)
 	//{
 	//	execlp("./chmod","./chmod","./Directories/Van/MainEntrance/MainBankingHall/Corridor/Office1","0066", NULL);
@@ -268,19 +269,41 @@ void resetGame()
 	//
 	//}
 	//else wait(NULL);
+=======
+	if (fork() == 0)
+	{
+		execlp("./chmod","./chmod","./Directories/Van/MainEntrance/MainBankingHall/Corridor/Office1","0066", NULL);
+		printf("\033[31mError changing Office1 permissions: %s.\n\033[37m", strerror(errno));
+                exit(0);
+
+	}
+	else wait(NULL);
+>>>>>>> 8f53178a0c98d03465e88d24439767ab6b6f6d39:Game/function/newGame.c
 
 	if (fork() == 0)
 	{
 		execlp("./chmod","./chmod","./Directories/Van/MainEntrance/MainBankingHall/Corridor/SecurityRoom","0066", NULL);
-		printf("Error changing MainBankingHall permissions: %s.\n", strerror(errno));
+		printf("\033[31mError changing MainBankingHall permissions: %s.\n\033[37m", strerror(errno));
                 exit(0);
 	}
 	else wait(NULL);
 
 	if (fork() == 0) {
 		execlp("./chmod","./chmod","./Directories/Van/MainEntrance/MainBankingHall/Corridor/WC/VentilationDucts","0066", NULL);
-                printf("Error changing VentilationDucts permissions: %s.\n", strerror(errno));
+                printf("\033[31mError changing VentilationDucts permissions: %s.\n\033[37m", strerror(errno));
                 exit(0);
 	}
 	else wait(NULL);
+<<<<<<< HEAD:Game/function/resetGame.c
+=======
+
+
+	// Print bank robber run ascii and begin the game!
+	if (fork () == 0)
+	{
+		execlp("/bin/cat", "/bin/cat", "./assets/newGameAscii.txt", NULL);
+		printf("\033[31mError printing new game ascii art: %s\n\033[37m", strerror(errno));
+	}
+	else wait(NULL);
+>>>>>>> 8f53178a0c98d03465e88d24439767ab6b6f6d39:Game/function/newGame.c
 }
