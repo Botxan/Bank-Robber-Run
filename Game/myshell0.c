@@ -628,10 +628,10 @@ int execute(int argc, char *argv[])
 					}
 					break;
 				case VAULTC:
+					int mls = 2;int mam = 7;int i = 0; int o = 0; int b = 0;
+					char ans[mam][mls] ={"up","up","dw","rg","lf","rg","dw"}; char mIn[mam][mls];char mOut[mam][msl];char player[mls];
 					if(visitedTimes%2 != 0){
                                          printf("*It seens to be some kind of laser... I should remember my moves* ");
-					 int mls = 2;int mam = 7;int i = 0; int o = 0; int b = 0;
-					 char ans[mam][mls] ={"up","up","dw","rg","lf","rg","dw"}; char mIn[mam][mls];char mOut[mam][msl];char player[mls];
 					 while(i < mam)
 					 {
 					  fscanf(stdin,"%s",player);
