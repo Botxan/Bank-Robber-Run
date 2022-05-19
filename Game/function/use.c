@@ -54,7 +54,7 @@ int main(int argc, char *argv[]){
         int keyDoorI = 0;
         int readItem = 0;
         int found = 0;
-        char commandPath[PATH_MAX];
+        char *commandPath=malloc(PATH_MAX);
         char roomPath[PATH_MAX];
 	char rootPath[PATH_MAX];
 	char obj[30];
@@ -108,9 +108,10 @@ int main(int argc, char *argv[]){
         	                                return 1;
 	                                }
 				} else wait(NULL);
+				free(commandPath);
 
 			} else write(1, "*This is not a safe place to use the radio*\n", strlen("*This is not a safe place to use the radio*\n"));
-                } else write(1, "\033[31mObject used in the room. Nothing happened.\n.\033[37m", strlen("\033[31mObject used in the room. Nothing happened.\n\033[37m"));
+                } else write(1, "\033[31mObject used in the room. Nothing happened.\n\033[37m", strlen("\033[31mObject used in the room. Nothing happened.\n\033[37m"));
 
 		return 0;
 	}
@@ -194,8 +195,8 @@ int main(int argc, char *argv[]){
 				// Check if key used by player is the one that opens the target door
 				if (strcmp(argv[2], keyDoor[keyDoorI].key) == 0) {
 					// Change door permissions
-					strncpy(commandPath, argv[0], sizeof(commandPath));
-					strncat(commandPath, "/../chmod", sizeof(commandPath));
+					strncpy(commandPath, argv[0], strlen(commandPath));
+					strncat(commandPath, "/../chmod", strlen(commandPath));
                                         realpath(dir->d_name, roomPath);
 
 					if (fork() == 0) {
