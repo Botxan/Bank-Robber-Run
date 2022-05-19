@@ -7,15 +7,15 @@
 #include <dirent.h>
 #include <fcntl.h>
 
-#include "newGame.h"
+#include "resetGame.h"
 
 /**
- * Function: newGame
+ * Function: resetGame
  * -----------------
- * Initializes a new game by setting the correct permissions to each directory
+ * Resets the situation of the game by setting the correct permissions to each directory
  * and placing each object in its corresponding starting point
  */
-void newGame()
+void resetGame()
 {
 	// Set default to 755
 	if (fork() == 0)
@@ -113,7 +113,7 @@ void newGame()
 
 	// Add all the .obj to the map
         symlink("../../../../../assets/obj/electrical-panel.obj", "Directories/Van/MainEntrance/MainBankingHall/ElectricalPanelRoom/electrical-panel.obj");
-        symlink("../../../../../assets/obj/electrical-panel.obj", "Directories/Van/MainEntrance/MainBankingHall/Corridor/cofee-machine.obj");
+        symlink("../../../../../assets/obj/electrical-panel.obj", "Directories/Van/MainEntrance/MainBankingHall/Corridor/coffee-machine.obj");
         symlink("../../../../../../assets/obj/office1-computer.obj", "Directories/Van/MainEntrance/MainBankingHall/Corridor/Office1/computer.obj");
         symlink("../../../../../../assets/obj/office1-desk.obj", "Directories/Van/MainEntrance/MainBankingHall/Corridor/Office1/desk.obj");
         symlink("../../../../../../assets/obj/office1-drawers.obj", "Directories/Van/MainEntrance/MainBankingHall/Corridor/Office1/drawers.obj");
@@ -147,6 +147,10 @@ void newGame()
 
 	// If ventilation ducts have been discovered in previous game, remove symlink
         unlink("./Directories/Van/MainEntrance/MainBankingHall/ElectricalPanelRoom/VentilationDucts");
+
+
+	// Set default skin (electrician)
+	symlink("../../assets/skin/electrician.skin", "Directories/Inv/electrician.skin");
 
 
 	// Set npc's default status to 0
@@ -256,14 +260,14 @@ void newGame()
 	}
 	else wait(NULL);
 
-	if (fork() == 0)
-	{
-		execlp("./chmod","./chmod","./Directories/Van/MainEntrance/MainBankingHall/Corridor/Office1","0066", NULL);
-		printf("Error changing Office1 permissions: %s.\n", strerror(errno));
-                exit(0);
-
-	}
-	else wait(NULL);
+	//if (fork() == 0)
+	//{
+	//	execlp("./chmod","./chmod","./Directories/Van/MainEntrance/MainBankingHall/Corridor/Office1","0066", NULL);
+	//	printf("Error changing Office1 permissions: %s.\n", strerror(errno));
+        //        exit(0);
+	//
+	//}
+	//else wait(NULL);
 
 	if (fork() == 0)
 	{
@@ -277,15 +281,6 @@ void newGame()
 		execlp("./chmod","./chmod","./Directories/Van/MainEntrance/MainBankingHall/Corridor/WC/VentilationDucts","0066", NULL);
                 printf("Error changing VentilationDucts permissions: %s.\n", strerror(errno));
                 exit(0);
-	}
-	else wait(NULL);
-
-
-	// Print bank robber run ascii and begin the game!
-	if (fork () == 0)
-	{
-		execlp("/bin/cat", "/bin/cat", "./assets/newGameAscii.txt", NULL);
-		printf("Error printing new game ascii art: %s\n", strerror(errno));
 	}
 	else wait(NULL);
 }

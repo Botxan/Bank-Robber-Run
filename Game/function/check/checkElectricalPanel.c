@@ -1,5 +1,6 @@
 #include <errno.h>
 #include <sys/wait.h>
+
 #include "../util.c"
 
 /**
@@ -103,7 +104,6 @@ void switcher(char switcher, int oldState) {
 	}
 
 }
-
 /*
  * Function: checkElectricalPanel
  * -------------
@@ -115,7 +115,7 @@ void switcher(char switcher, int oldState) {
  * 	2 => 10 => mbh mbh on and office 2 on
  *	3 => 11 => mbh and office 2 on
  */
-void checkElectricalPanel() {
+int checkElectricalPanel() {
 	char opt;
 	int oldState;
 
@@ -136,7 +136,7 @@ void checkElectricalPanel() {
 	printf("H: Janitors room.\n");
 	printf("I: Exit.\n");
 
-	while (1) {
+	while(1) {
 		scanf(" %[^\n]%*c", &opt);
 		if (opt == 'A' || opt == 'D' || opt == 'I') break;
 		if (opt == 'B' || opt == 'C' || opt == 'E' || opt == 'F' || opt == 'G' || opt == 'H')
@@ -150,4 +150,6 @@ void checkElectricalPanel() {
 
 	// Display panel until quit
 	if (opt != 'I') checkElectricalPanel();
+
+	return 0;
 }

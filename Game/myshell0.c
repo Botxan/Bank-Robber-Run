@@ -23,8 +23,8 @@
 #include "./function/cd.h"
 #include "./function/inv.h"
 #include "./function/Leave.h"
-#include "./function/talk.h"
-#include "./function/newGame.h"
+#include "./function/resetGame.h"
+#include "./function/interaction/officerBack.c"
 
 int eof;
 char *prompt;
@@ -40,7 +40,12 @@ int visitedTimes;
 char visitedTimesText[12];
 int fd;
 FILE *f;
-int gameOver = 0;
+
+
+// situational variables
+int distractedGuard = 0;
+int isGameOver = 0;
+
 
 //time
 unsigned int hours=0;
@@ -154,40 +159,6 @@ int idFromName(char *newRoom)
 }
 
 /**
- * Function: getTimesVisited
- * -------------------------
- * Opens the room description file for the given room, and returns the first
- * number found, which is the number of times the room has been accesed.
- * @param room the name of the room
- * @return the number of times the room has been accessed
- */
-int getTimesVisited(char *room) {
-	char path[PATH_MAX];
-	FILE *f;
-	int visitedTimes;
-
-	// Current room
-	if (room == NULL) strcpy(path, ".counter.txt"); // there's always a symlink in the current room
-	// Any other room
-	else {
-		strncpy(path, root, PATH_MAX);
-		strcat(path, "/../assets/roomVisitedCounter/");
-		strncat(path, room, PATH_MAX);
-		strncat(path, "Counter.txt", PATH_MAX-10);
-	}
-
-
-	if (!(f = fopen(path, "r"))) {
-		perror("Error when opening room counter file");
-		return -1;
-	}
-
-	fscanf(f, "%d", &visitedTimes);
-	fclose(f);
-	return visitedTimes;
-}
-
-/**
  * Function moveNpc
  * ----------------
  * Moves the given npc to the specified room
@@ -198,30 +169,82 @@ int getTimesVisited(char *room) {
  * in the path to the current position of the npc
  */
 void moveNpc(char *name, char *dest) {
-	// Remove np (symlink) from current location
-	char nameWithExtension[strlen(name) + 5];
+	char nameWithExtension[PATH_MAX];
 	char find[PATH_MAX];
+	char npcPath[PATH_MAX];
+	char destPath[PATH_MAX];
+	FILE *fp;
+
+	// Remove npc (symlink) from current location
 	sprintf(nameWithExtension, "%s.npc", name);
 	sprintf(find, "find %s -type l -iname %s -delete 2>/dev/null", root, nameWithExtension);
 	system(find);
 
 	// Create new symlink on dest taking the file from assets/npc (if permissions are ok)
-	char npcPath[PATH_MAX];
-	char destPath[PATH_MAX];
 	sprintf(npcPath, "%s/npc/%s", assets, nameWithExtension);
-	sprintf(destPath, "%s/%s/%s", getcwd(NULL, 0), dest, nameWithExtension);
+
+	// Find the room
+	sprintf(find, "find %s -type d -name %s 2>/dev/null", root, dest);
+	fp = popen(find, "r");
+	if (fp == NULL) printf("Failed to move %s to new location.\n", name);
+	fgets(destPath, sizeof(destPath), fp);
+	pclose(fp);
+
+	destPath[strcspn(destPath, "\n")] = 0; // remove the newline
+	sprintf(destPath, "%s/%s.npc", destPath, name);
 	symlink(npcPath, destPath);
+}
+
+/* Function spawnNpc
+ * -----------------
+ * Spawns the npc in the given location
+ */
+void spawnNpc(char *name, char *dest) {
+	char nameWithExtension[PATH_MAX];
+        char find[PATH_MAX];
+        char npcPath[PATH_MAX];
+        char destPath[PATH_MAX];
+        FILE *fp;
+
+	// Create new symlink on dest taking the file from assets/npc (if permissions are ok)
+        sprintf(npcPath, "%s/npc/%s", assets, nameWithExtension);
+
+	// Find the room
+        sprintf(find, "find %s -type d -name %s 2>/dev/null", root, dest);
+        fp = popen(find, "r");
+        if (fp == NULL) printf("Failed to move %s to new location.\n", name);
+        fgets(destPath, sizeof(destPath), fp);
+        pclose(fp);
+
+        destPath[strcspn(destPath, "\n")] = 0; // remove the newline
+        sprintf(destPath, "%s/%s.npc", destPath, name);
+        symlink(npcPath, destPath);
+}
+
+/* Function removeNpc
+ * ------------------
+ * Removes the npc from the scenario
+ */
+void removeNpc(char *name) {
+	char nameWithExtension[PATH_MAX];
+        char find[PATH_MAX];
+
+        // Remove npc (symlink) from current location
+        sprintf(nameWithExtension, "%s.npc", name);
+        sprintf(find, "find %s -type l -iname %s -delete 2>/dev/null", root, nameWithExtension);
+        system(find);
 }
 
 
 /**
- * Function getNpcState
+ * Function: getNpcState
  * --------------------
  * Returns an integer indicating the state of the npc
  * Note: The state is always bounded by 0 and 9
+ * @param name the name of the npc
  */
 int getNpcState(char *name) {
-	char npcPath[strlen(assets) + 40];
+	char npcPath[PATH_MAX];
 	char fd;
 	char state[1]; // need to be string for read()
 
@@ -232,6 +255,25 @@ int getNpcState(char *name) {
 	return state[0] - '0';
 }
 
+/**
+ * Function: setNpcState
+ * ---------------------
+ * Changes the state of the given npc
+ * Note: The state is always bounded by 0 and 9
+ * @param name the name of the npc
+ * @param state the new state of the npc
+ */
+void setNpcState(char *name, int state) {
+	char npcPath[PATH_MAX];
+	char fd;
+	char newState[1];
+	sprintf(npcPath, "%s/npc/%s.npc", assets, name);
+	fd = open(npcPath, O_WRONLY);
+	sprintf(newState, "%d", state);
+	write(fd, newState, 1);
+	close(fd);
+}
+
 
 /**
  * Function getObjState
@@ -240,7 +282,7 @@ int getNpcState(char *name) {
  * Note: The state is always bounded by 0 and 9
  */
 int getObjState(char *name) {
-	char objPath[strlen(assets) + 40];
+	char objPath[PATH_MAX];
 	char fd;
 	char state[1]; // need to be string for read
 
@@ -252,24 +294,94 @@ int getObjState(char *name) {
 }
 
 /**
- * Function: talk
- * --------------
+ * Function: talkTo
+ * ----------------
  * This function is used for avoid repeating
  * the code for calling talk process
  *
  */
 void talkTo(char *npc) {
-	char commandPath[strlen(function) + 30];
+	char commandPath[PATH_MAX];
 	if (fork() == 0) {
 		sprintf(commandPath, "%s/talk", function);
-		execlp(commandPath, "talk", npc, NULL);
+		execlp(commandPath, "talk", npc, function, NULL);
 		// This will only be printed if execlp fails
 		if (errno != 0) printf("Error on talk function: %s\n", strerror(errno));
 		fprintf(stderr, "Unable not talk with %s.\n", npc);
 	} else wait(NULL);
+
+
+	// [*] Special interactions [*]
+
+	// If ramon arrests you, game over
+        if (getNpcState("Ramon") == 8) isGameOver = 1;
+
+}
+
+/**
+ * Function: getTimesVisited
+ * -----------------------------
+ * Returns an integer indicating the number of times
+ * the given room has been visited
+ */
+int getTimesVisited(char *roomName) {
+	char roomPath[PATH_MAX];
+	FILE *f;
+	int state = -1;
+	sprintf(roomPath, "%s/roomVisitedCounter/%sCounter.txt", assets, roomName);
+	f = fopen(roomPath, "r");
+	fscanf(f, "%d", &state);
+	fclose(f);
+
+	return state;
+}
+
+/*
+ * Function: hasItem
+ * -----------------
+ * Checks if the player has the given object in the inventory
+ * @return 0 if the player has the object in the inventory.
+ * Otherwise 1
+ */
+int hasTool(char *name) {
+	char toolPath[PATH_MAX];
+
+	sprintf(toolPath, "%s/Inv/%s.tool", root, name);
+	if (access(toolPath, R_OK) == 0) return 0;
+	return 1;
+
+}
+
+/*
+ * Function: removeTool
+ * -----------------
+ * Removes the given tool from player's directory
+ */
+void removeTool(char *name) {
+        char toolPath[PATH_MAX];
+        sprintf(toolPath, "%s/Inv/%s.tool", root, name);
+        unlink(toolPath);
+}
+
+
+/*
+ * Function: hasSkin
+ * -----------------
+ * Checks if the payer is wearing the given skin
+ * @ return 0 if the player is wearing the given skin.
+ * Otherwise 1
+ */
+int hasSkin(char *skin) {
+	char skinPath[PATH_MAX];
+
+	sprintf(skinPath, "%s/Inv/%s.skin", root, skin);
+        if (access(skinPath, R_OK) == 0) return 0;
+        return 1;
 }
 
 //////////////////////////////////////////////
+
+
 int execute(int argc, char *argv[])
 {
 	char path[100];
@@ -278,6 +390,9 @@ int execute(int argc, char *argv[])
 	int child;
 	strcpy(path,function);
 	strcpy(path2,function);
+
+	// Get current directory basename
+	prompt = strrchr(getcwd(NULL, 0), '/') + 1;
 
 	if(strcmp(argv[0], "view") == 0 || strcmp(argv[0], "ls") == 0)
 	{
@@ -292,14 +407,13 @@ int execute(int argc, char *argv[])
 				return 1;
 			}
 
-		} else wait(NULL);
+			} else wait(NULL);
 
 		return 1;
 	}
 	else if(strcmp(argv[0], "access") == 0 || strcmp(argv[0], "cd") == 0)
 	{
 		// Pre entering events
-		prompt=strrchr(getcwd(NULL, 0),'/')+1;
 		if(strcmp(prompt, "VentilationDucts") == 0)
 		{
 			if(argv[2] !=NULL)
@@ -329,14 +443,67 @@ int execute(int argc, char *argv[])
 
 		// Main banking hall lights are on and guard is there and electrician skin is wear => guard prohibits entrance to coridor
 		if ((strcmp(prompt, "MainBankingHall") == 0) && (strcmp(argv[1], "Corridor") == 0) && (access("Ramon.npc", R_OK) == 0) && ((getObjState("electrical-panel") == 2) || (getObjState("electrical-panel") == 3))) {
-			if (fork() == 0) {
-				strcpy(auxPath, function);
-				strcat(auxPath, "/talk");
-				execlp(auxPath, "talk", "Ramon", NULL);
-				if (errno != 0) printf("Error, Ramon cannot talk right now: %s.\n", strerror(errno));
-			} else wait(0);
+			talkTo("Ramon");
 			return 0;
 		}
+
+		// Before leaving office1 for first time, office is coming back!!
+		if ((strcmp(prompt, "Office1") == 0) && ((strcmp(argv[1], "Corridor") == 0) || (strcmp(argv[1], "..") == 0)) && (getTimesVisited("Office1") == 1) && (getNpcState("Matt") != 5) && (getNpcState("Matt") != 6) && (getNpcState("Matt") != 7)) {
+			char decision = officerBack();
+			moveNpc("Matt", "Office1");
+			setNpcState("Matt", 1);
+			talkTo("Matt");
+
+			switch(decision) {
+				case 'A': // Inside cabinet
+					setNpcState("Matt", 2);
+					talkTo("Matt");
+					moveNpc("Matt", "Rooftop");
+					printf("Mat is now in the rooftop\n");
+					break;
+				case 'B': // Behind curtains (game over)
+					setNpcState("Matt", 3);
+					talkTo("Matt");
+					isGameOver = 1;
+					break;
+				case 'C': // Knock out
+					setNpcState("Matt", 4);
+					talkTo("Matt");
+					break;
+			}
+			return 0;
+		}
+
+		// Knocking Jade's door and Jade is not unconscious (7)
+		if ((strcmp(prompt, "Corridor") == 0) && (strcmp(argv[1], "Office2") == 0) && (getNpcState("Jade") != 7)) {
+			printf("haas toold coffe laxa? %d\n", hasTool("coffe-with-laxatives"));
+			printf("has skin executive? %d\n", hasSkin("executive"));
+			if ((getObjState("electrical-panel") == 0) || (getObjState("electrical-panel") == 2)) {
+				setNpcState("Jade", 6);
+				spawnNpc("Jade", "Corridor"); // need to duplicate because not enough permissions in office 2
+				talkTo("Jade");
+				removeNpc("Jade"); // remove duplicated
+			} else {
+				if ((hasTool("coffee-with-laxatives") == 0) && hasSkin("executive") == 0) setNpcState("Jade", 1);
+				else setNpcState("Jade", 0);
+				spawnNpc("Jade", "Corridor");
+				talkTo("Jade");
+				// If Jade takes laxatives, move to bathroom and open her office room
+				if (getNpcState("Jade") == 7) {
+					// Open office 2
+					system("chmod 755 ./Office2");
+					removeNpc("Jade");
+					spawnNpc("Jade", "WC");
+					removeTool("coffee-with-laxatives");
+				}
+				else removeNpc("Jade");
+
+				if (getNpcState("Jade") == 9) isGameOver = 1;
+			}
+
+			return 0;
+		}
+
 
 		if(cd(argc,argv,home,0)==1)
 		{
@@ -360,7 +527,6 @@ int execute(int argc, char *argv[])
 
 			// Special interactions in each room
                         id=idFromName(argv[1]);
-
 			switch(id)
 			{
 				case ENTRANCE:
@@ -400,11 +566,28 @@ int execute(int argc, char *argv[])
 						sprintf(auxPath, "%s/assets/tool/janitor-card.tool", function);
 						symlink(auxPath, "janitor-card.tool");
 					}
+
+					// Dialog to distract ward is available while corridor has not reached and guard
+					// is in the main banking hall
+					if ((getTimesVisited("Corridor") == 0) && (getNpcState("Ramon") != 9)) {
+						setNpcState("Robert", 1);
+					}
 					break;
 				case CORRIDOR:
 					if (visitedTimes == 1) {
+						// Robert will no longer will display the dialog to distract the guard
+						setNpcState("Robert", 4);
+						// The ward will return to the main banking hall
+						setNpcState("Ramon", 0);
+						moveNpc("Ramon", "MainBankingHall");
+						distractedGuard = 0;
 						talkTo("Matt");
+
+						// If you are rude with Matt
+						if (getNpcState("Matt") == 9) isGameOver = 1;
+
 						moveNpc("Matt", "WC");
+						setNpcState("Mat", 6);
 					}
 			}
 		}
@@ -436,7 +619,7 @@ int execute(int argc, char *argv[])
 				write(0, "\n", strlen("\n"));
 				strcat(path,"/pickup");
 				execl(path,argv[0],argv[1],root,NULL);
-				if(errno!=1) write(0,"Unknown error\n",strlen("Unknown error\n"));
+				if(errno!=1) printf("Error on pickup function: %s\n", strerror(errno));
 				else write(0,"The object doesn't exist\n",strlen("The object doesn't exist\n"));
 
 			} else wait(NULL);
@@ -445,15 +628,8 @@ int execute(int argc, char *argv[])
 
 	else if(strcmp(argv[0], "talk") == 0)
 	{
-		if(argc == 2)
-		{
-			if(fork() == 0)
-			{
-				strcat(path,"/talk");
-				execl(path,argv[0],argv[1], NULL);
-				if (errno != 0) printf("Error on talk function: %s\n", strerror(errno));
-			} wait(NULL);
-		} else write(0,"You can only talk to a person at a time\n",strlen("You can only talk to a person at a time\n"));
+		if(argc == 2) talkTo(argv[1]);
+		else write(0,"You can only talk to a person at a time\n",strlen("You can only talk to a person at a time\n"));
 	}
 
 	else if(strcmp(argv[0], "Pause") == 0 || strcmp(argv[0], "P") == 0|| strcmp(argv[0], "quit") == 0|| strcmp(argv[0], "q") == 0)
@@ -500,12 +676,20 @@ int execute(int argc, char *argv[])
 		child = fork();
 		if (child == 0) {
 			char *path=strcat(function,"/use");
-			execlp(path, root, getcwd(NULL, 0), argv[0], argv[1], argv[2], argv[3], NULL);
+			execlp(path, root, argv[0], argv[1], argv[2], argv[3], NULL);
 			if (errno != 0) {
 				printf("Error launching child process: %s\n", strerror(errno));
 				return 1;
 			}
 		} else wait(NULL);
+
+		// Special interactions
+                // After using radio, robert distracting guard (4), move guard
+                if ((getNpcState("Robert") == 4) && !distractedGuard) {
+                        moveNpc("Ramon", "MainEntrance");
+                        setNpcState("Ramon", 2);
+                        distractedGuard = 1;
+                }
 	}
 	else if (strcmp(argv[0], "map") == 0)
 	{
@@ -533,20 +717,18 @@ int execute(int argc, char *argv[])
 	else if (strcmp(argv[0], "check") == 0)
 	{
 		if (fork() == 0) {
-			char *path = strcat(function, "/check");
-			execlp(path, argv[0], argv[1], function, NULL);
-			if (errno != 0) {
-				printf("Error launching child process: %s\n", strerror(errno));
-				return 1;
-			}
+			if (argc == 2) {
+				char *path = strcat(function, "/check");
+				execlp(path, argv[0], argv[1], root, NULL);
+				if (errno != 0) {
+					printf("Error launching child process: %s\n", strerror(errno));
+					return 1;
+				}
+			} else write(2, "Usage: check <object>\n", strlen("Usage: check <object>\n"));
 		} else wait(NULL);
 	}
 
-	else write(1, "this function doesn't exist\n", strlen("this function doesn't exist\n"));
-
-
-
-	return 1;
+	return 0;
 }
 
 
@@ -571,14 +753,15 @@ int countpipe(int argc,char *argv[],char *test[])
 		}
 		i++;
 	}
-
-	int compare=0;
+	int compare = 0;
 	if(result==0)
 	{
 		execute(argc, test);
+
 	}
 	else
 	{
+		printf("after else");
 		int number=0;
 		table[result]=i;
 		while(result+1 != compare)
@@ -663,10 +846,12 @@ int show_main_menu() {
 	return -1;
 }
 
-void printGameOver() {
+void gameOver() {
 	char command[strlen(assets) + 30];
 	sprintf(command, "cat %s/gameOver.txt", assets);
 	system(command);
+	chdir(function);
+	resetGame();
 }
 
 //thread for time
@@ -752,23 +937,22 @@ int begin() {
 	switch(opt) {
 	case NEW_GAME:
 		system("clear");
-		newGame();
+		resetGame();
+
+		// Print bank robber run ascii and begin the game!
+		system("cat ./assets/newGameAscii.txt");
+
 		sprintf(assets, "%s/assets", getcwd(NULL, 0));
 		chdir("Directories");
 		root = getcwd(NULL, 0);
 		chdir("Van");
+		//chdir("Van/MainEntrance/MainBankingHall/Corridor");
 		home = getcwd(NULL, 0);
 		prompt="Van";
 		count_down_time_in_secs=7200;  // 1 minute is 60, 1 hour is 3600
 
 		// Starting dialog
-		if (fork() == 0) {
-			execlp("../../talk", "talk", "Robert", NULL);
-			if (errno != 0) {
-                                printf("Error displaying starting dialogue: %s\n", strerror(errno));
-                                return 1;
-                        }
-		} else wait(NULL);
+		talkTo("Robert");
 		break;
 	case LOAD_GAME:
 		write(1, "Not implemented yet\n", 20);
@@ -789,8 +973,8 @@ int begin() {
                         //execute(argc, args);
                 if (eof) exit(0);
 
-		if ((gameOver == 1) || (time_left <= 0)) {
-			printGameOver();
+		if ((isGameOver == 1) || (time_left <= 0)) {
+			gameOver();
 			exit(0);
 		}
         }
@@ -798,16 +982,13 @@ int begin() {
 	pthread_exit(NULL);
 }
 
-void *beginning()
-{
+void *beginning() {
 	begin();
 	pthread_exit(NULL);
 }
 
 int main() {
 	pthread_t ptid;
-  
-    pthread_create(&ptid, NULL, &beginning, NULL);
-	
+	pthread_create(&ptid, NULL, &beginning, NULL);
 	pthread_exit(NULL);
 }

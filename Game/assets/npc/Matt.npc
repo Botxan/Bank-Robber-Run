@@ -20,7 +20,7 @@ B:Yes, and if you don't want to feel 150K volts coursing through your body you'd
 
 
 1B
-Are you the one who used to work at the IRS? Or the one who used to be the IT guy?
+Oh, really? naAre you the one who used to work at the IRS? Or the one who used to be the IT guy?
 
 C:The one who worked for the IRS.
 D:The chad IT computer scientist.
@@ -39,51 +39,51 @@ G:I won't tell you again, either you let me pass, or I will pass over you.
 2A
 Ah yes, Ignacio, the boss, has already told us that the light in the basement stopped working a few days ago. I'm leaving, good luck... I guess.
 *The officer goes to the WC and leaves his office door open.*
---20
+--80
 
 
 2B
 Hey, take it easy, man (you can't even say good morning anymore...).
 *The officer goes to the WC and leaves his office door open.*
---20
+--80
 
 
 2C
 Oh, so it's you! You're nothing alike... except that you've both found a way to make a lot of dough! Anyway, next time you talk to him, put in a good word for me, please, maybe I'll get a raise. Well, I'll be on my way, good luck.... I guess.
 *The officer goes to the WC and leaves his office door open*.
---20
+--80
 
 
 2D
 Oh, so it's you! You're nothing alike... anyway, next time you talk to him, put in a good word for me, please, maybe I'll get a raise. Well, I'll be on my way, good luck.... I guess.
 *The officer goes to the WC and leaves his office door open*.
---20
+--80
 
 
 2E
 I hope you are the IT guy! Those of us who know about computers, people look at us as if we were magicians. I would too if I wasn't so good at using Excel. Anyway, next time you talk to him, put in a good word for me, please, maybe I'l get a raise. Well, I'll be on my way, good luck...I guess.
 *The officer goes to the WC and leaves his office door open*.
---20
+--80
 
 
 2F
 Ah yes, Ignacio, the boss, has already told us that the light in the basement stopped working a few days ago. I'm leaving, good luck... I guess.
 *The officer goes to the WC and leaves his office door open*.
---20
+--80
 
 
 2G
 SECURITYYYY!!!!!
 *The guards have incapacitated you.*
---02
+--92
 
 
-// Officer is coming from WC while you hide inside the cabinet or curtains
+// Officer is coming from WC
 1#
 0A
 ............
 *Officer is about to enter the office*
---12
+--11
 
 
 // Officer enters the office and player is hidden in cabinet
@@ -92,11 +92,11 @@ SECURITYYYY!!!!!
 ...
 ....
 .....
-*Sits in the desk*
+*Sits in the chair*
 
 Have I left my email open? And the door too? Every day I look more and more like my mother, what a head... time for a cigarette!
 *The officer leaves the office*
---04
+--50
 
 
 // Officer is going to enter and sees player hidden behind the curtain
@@ -105,29 +105,30 @@ Have I left my email open? And the door too? Every day I look more and more like
 HEY YOU! Your feet are showing! Who would think of hiding behind the curtain when you have a cabinet there!?!?
 SECURITYYYY!!!
 *You have alerted the employees*
---02
+--92
 
 
 // Officer is going to enter but the player, hidden behind the door, knocks out the employee
 4#
 0A
+AAAAAAAAAAAAAAAAAGHH!!!!
 *You have knocked out the officer with a blow to the head, using a book that says "How to become the god of PowerPoint"*
 *The officer is now unconscious inside the office*
---07
+--70
 
 
 // Default conversation 1
 5#
 0A
 You know, my psychologist says I should talk to more people, but I don't agree. Do you think I should take it out of the trunk?
---40
+--60
 
 
 // Default conversation 2
 6#
 0A
 You know that song that goes ooO....mmNaNaNa.....virtual address space OOOH....NaNaNaNaNa....
---30
+--50
 
 
 // Knocked out
@@ -136,5 +137,13 @@ You know that song that goes ooO....mmNaNaNa.....virtual address space OOOH....N
 ..........
 
 *It seems that it is not very available at the moment*
+--70
+
+
+// In the bathroom "busy"
+8#
+0A
+What's wrong? Can't you do your business in peace?
+--80
 
 

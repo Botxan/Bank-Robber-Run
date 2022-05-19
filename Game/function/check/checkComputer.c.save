@@ -1,0 +1,36 @@
+#include <stdlib.h>
+
+// Check computer in office 1
+int checkComputer() {
+	char opt;
+	system("cat ../../../../../../assets/computer-ascii.txt");
+
+	printf("A: Read Jade's email.\n");
+        printf("B: Read Ignacio's email.\n");
+        printf("C: Read Mom's email.\n");
+        printf("D: Read Avast's email.\n");
+	printf("E: Exit\n");
+	printf("---------------------------");
+
+	while(1) {
+                scanf(" %[^\n]%*c", &opt);
+                if (opt == 'A' || opt == 'B' || opt == 'C' || opt == 'D' || opt == 'E') break;
+        }
+
+	switch (opt) {
+		case 'A':
+			printf("Hello everyone,\nI remind you that tomorrow's meeting is postponed to Tuesday next week because I have been given an appointment for the colonoscopy for tomorrow at 10:00.\nHave a good afternoon my dears.\n");
+			break;
+		case 'B':
+			printf("Hi Matt,\nI'll be in the hallway in a bit, as soon as I finish sending some emails and filling out a couple of reports.\nSee you later.\n Ignacio, the director.\n");
+			break;
+		case 'C':
+			printf("Email C");
+			break;
+		case 'D':
+			printf("Email D");
+			break;
+	}
+
+	return 0;
+}

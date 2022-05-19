@@ -9,76 +9,66 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-
-
-
-
 #include "inv.h"
-
-
 
 char current[200];
 
 void deletextensionTool(char argv[])
 {
 	char *pDot = strchr(argv, '.');
-	if(pDot!=NULL)
-	*pDot = '\0';
+	if(pDot != NULL) *pDot = '\0';
 }
 
-#ifdef FUNCTION
-int inv(int argc,char* argv[]) {
-#else
 int main(int argc,char* argv[]) {
-#endif
-
-	if (argc>2)
+	if (argc > 2)
 	{
-		write(0,"We don't need argument for this function!\n\n",strlen("We don't need argument for this function!\n\n"));
+		write(0,"No arguments needed.\n",strlen("No arguments needed.\n"));
 	 	return 1;
 	}
-	char *root=argv[1];
-	strcpy(current,getcwd(current,200));
+
+	char *root = argv[1];
+	strcpy(current, getcwd(current, 200));
 	struct dirent *dir;
 	struct stat *buf = malloc(sizeof(struct stat));
-	char tool[100]="This are the things on your inventory:\n";
-	int empty=1;
-	int chdirError=0;
-	chdirError+=chdir(root);
-	chdirError+=chdir("Inv");
-	if(chdirError<0)
+	char tool[1024]="------ Inventory ------\n";
+	int chdirError = 0;
+	char skin[20];
+
+	chdirError += chdir(root);
+	chdirError += chdir("Inv");
+
+	if (chdirError < 0) return 1;
+
+	DIR *d = opendir(".");
+	while ((dir = readdir(d)) != NULL)
 	{
-		
-		return 1;
-	}
-	DIR *d=opendir(".");
-	while((dir =readdir(d))!=NULL)
-	{
-	 	stat(dir->d_name,buf);
-		if(!S_ISDIR(buf->st_mode))
+	 	stat(dir -> d_name,buf);
+		if (!S_ISDIR(buf -> st_mode))
 		{
-			
-			if(strcmp(strrchr(dir->d_name, '.'),".tool")==0)
+			if (strcmp(strrchr(dir->d_name, '.'), ".tool") == 0)
 			{
-				empty=0;
-				strcat(tool,"  ");
+				strcat(tool, "  ");
 				deletextensionTool(dir->d_name);
 				strcat(tool,dir->d_name);
-				strcat(tool,"\n");	
-			
+				strcat(tool, "\n");
 			}
-			
+			else if (strcmp(strrchr(dir->d_name, '.'), ".skin") == 0) {
+				deletextensionTool(dir->d_name);
+				strcpy(skin, dir->d_name);
+		        }
 		}
 	}
-	strcat(tool,"\n");	
-	if(empty==1)
-	{
-		write(0,"Inventory empty!",strlen("Inventory empty!"));
-		
-	}
-	else {
-		write(0,tool,strlen(tool));
-	}
+	closedir(d);
+
+	// Print tools
+	strcat(tool,"\n");
+	write(1, tool, strlen(tool));
+
+	// Print skin
+	write(1, "  Skin: ", 8);
+	write(1, skin, strlen(skin));
+	write(1, "\n", 1);
+
 	chdir(current);
-return 0;
+	return 0;
 }

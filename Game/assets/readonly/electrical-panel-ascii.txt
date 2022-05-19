@@ -12,7 +12,7 @@
    |  ~OFF~   | |  ~OFF~   | |  ~OFF~   | |  ~OFF~   |
    '----------' '----------' '----------' '----------'
       M.B.H       Corridor     Office 1     Office 2
-                  (locked)     (locked)     (locked)
+                            
 
    .----------. .----------. .----------. .----------.
    |   ~ON~   | |   ~ON~   | |   ~ON~   | |   ~ON~   |
@@ -27,5 +27,4 @@
    |  ~OFF~   | |  ~OFF~   | |  ~OFF~   | |  ~OFF~   |
    '----------' '----------' '----------' '----------'
        W.C.       Security    Boss office   Janitor
-     (locked)     (locked)     (locked)     (locked)
 

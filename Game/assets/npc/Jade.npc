@@ -1,19 +1,22 @@
 0
 
 // Repeating block when wearing electrician skin or executive skin without using laxatives in the cofee machine
-#0
+0#
+0A
 Sorry, I have a lot of work now, come back later!
---1
+--00
 
 
 // Block when you have cofee with laxatives and knock the door and you wear executive suit
-#1
+1#
+0A
 Hey, honey, you want something?
 
 A:Well, I’m new at the bank, and I’m taking a walk to meet my mates. I brought you coffee, will you?
 B:The boss just sent me, apparently last month’s balance doesn’t add up, and he wants to talk to you. He says go now.
 C:No, nothing, I’m sorry.
 D:*Try to knock her out*
+--y
 
 
 1A
@@ -28,37 +31,58 @@ B:Do you know that mocca, also called mocaccino, is a chocolate-flavoured warm b
 Wow, I remember the accounts were good... and you say it has to be right now? I’m a little busy...
 
 C:The boss seemed pretty upset, if I were you I wouldn’t keep him waiting.
-D:Well, I guess it can wait.
+D:Well, I guess he can wait.
 --y
 
 
 1C
 Oh, well... if you need anything, I’ll be in my office.
---1
+--10
 
 
 1D
 *The woman makes a perfect judo key and incapacitates you*.
 You can’t go around knocking people out, honey. SECURITY!!!
---2
+--92
 
 
 2A
 It seems we already have something in common, honey. Now, if you’ll excuse me, I have to go to the bathroom for a moment...
 *The officer runs off to the bathroom. The office door has been left open.*
---1
+--70
 
 2B
 That sounds pretty interesting, honey. Now, if you'll excuse me, I have to go to the bathroom for a moment...
 *The officer runs off to the bathroom. The office door has been left open.*
---1
+--70
 
 
 2C
-Well I’m afraid you’ll have to wait, I have a customer on the phone and we’re about to close an investment of 125K €. The boss will understand. If you need anything else, I’ll be in my office.
---1
+Well I’m afraid he’ll have to wait, I have a customer on the phone and we’re about to close an investment of 125K €. The boss will understand. If you need anything else, I’ll be in my office.
+--10
 
 
 2D
 Thanks for understanding it, honey, if you need anything else, I’ll be in my office.
---1
+--10
+
+
+// Waiting in the corridor until light are turned on again
+6#
+0A
+My office lights have gone out again! Until it is fixed, I refuse to work!
+--60
+
+
+// Unconscious in the bathroom due to overdose of laxatives
+7#
+0A
+*He appears to be unconscious. It must have been the overdose of laxatives*
+*I hope no one just walks into this particular bathroom and finds it*
+--70
+
+
+// Auxiliar state for game over
+9#
+0A
+-92

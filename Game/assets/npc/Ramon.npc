@@ -39,7 +39,7 @@ I hope so.
 2B
 HANDS BEHIND YOUR BACK, GET ON YOUR KNEES!
 *Ramon has incapacitated you.*
---0G
+--8G
 
 
 2C
@@ -50,16 +50,29 @@ I hope so.
 2D
 HANDS BEHIND YOUR BACK, GET ON YOUR KNEES!
 *Ramon has incapacitated you.*
---02
+--82
 
 
 // Default talk when wearing executive skin
 1#
+0A
 ...
+....
 *He seems to be very focused*
 --01
 
+// Ramon is distracted in the MainEntrance
+2#
+0A
+These scoundrels, this is the third time they have broken our entrance glass!!!
+--20
 
+
+// Auxiliar state: ramon is chasing our teammate
+9#
+0A
+
+--01
 
 
 

@@ -47,13 +47,15 @@ int main(int argc,char* argv[]) {
 	char pathToTool[PATH_MAX];
         struct stat file;
 
-	if (argc != 3) return 1;
+	if (argc != 3) {
+		write(2, "Usage: pickup <tool>\n", strlen("Usage: pickup <tool>\n"));
+		return 1;
+	}
 
 	strcpy(current, getcwd(current, 200));
 	strcat(current, "/");
 	strcat(current, argv[1]);
 	strcat(current, ".tool");
-
 	// Check if file exists in the current room
 	if (stat(current, &file) == -1) {
 		write(2, "There is no such tool to pick-up in the room.\n", strlen("There is no such tool to pick-up in the room.\n"));

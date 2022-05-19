@@ -10,8 +10,6 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-#include "talk.h"
-
 /**
  * Function: searchTalk
  * --------------------
@@ -34,13 +32,23 @@ int searchTalk(char *word, int file){
    	return -1;
 }
 
-#ifdef FUNCTION
-int talk(char* npc){
-#else
-int main(int argc,char* argv[]) {
-	if (argc<1&&strcmp(argv[0],"talk")!=0) return -1;
+int main(int argc, char* argv[]) {
+
+	// Print args
+	// for (int i = 0; i < argc; i++)
+	//	printf("%d: %s\n", i, argv[i]);
+
+	if (argc == 1) {
+		write(2, "Select a target to talk with.\n", strlen("Select a target to tal with.\n"));
+		return -1;
+	}
+
+	if (argc > 3) {
+		write(2, "You can only talk with one person at a time.\n", strlen("You can only talk with one person at a time.\n"));
+		return -1;
+	}
+
 	char *npc=argv[1];
-#endif
 	int i = 0;
 	int end = 0;
 	int lastDialog;
@@ -52,16 +60,15 @@ int main(int argc,char* argv[]) {
 	char continues = 'y';
 	char text[4096];
 	char branch[2];
-	char *current;
+	char current[strlen(argv[2]) + 50];
 
 	// Get npc path
-	current = getcwd(NULL, 0);
-	strcat(current, "/");
+	strncpy(current, argv[2], PATH_MAX);
+	strcat(current, "/assets/npc/");
 	strcat(current, npc);
 	strcat(current, ".npc");
 
 	// Check if npc is the current room
-	//if (stat(current, &file) == -1) return -1;
 	if (access(current, W_OK) == -1) {
 		write(2, "There is no one by that name in this room.\n", strlen("There is no one by that name in this room.\n"));
 		return -1;
