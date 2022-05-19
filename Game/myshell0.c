@@ -1008,6 +1008,7 @@ int begin() {
                 write(0, ">", 1);
                 if (read_args(&argc, args, MAXARGS, &eof) && argc > 0)
                 	countpipe(argc,args,args);
+		        //write(pfd[1],args,strlen(args));
                         //execute(argc, args);
                 if (eof) exit(0);
 
