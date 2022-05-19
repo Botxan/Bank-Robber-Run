@@ -1143,8 +1143,11 @@ int begin() {
     case 0:
     close(pfd[0]);*/
     	while (1) {
+			write(0, "\033[36m", strlen("\033[36m"));
         	write(0, prompt, strlen(prompt));
+			write(0, "\033[32m", strlen("\033[32m"));
                 write(0, ">", 1);
+				write(0, "\033[37m", strlen("\033[37m"));
                 if (read_args(&argc, args, MAXARGS, &eof) && argc > 0)
                 	countpipe(argc,args,args);
 		        //write(pfd[1],args,strlen(args));
