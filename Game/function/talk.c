@@ -47,7 +47,7 @@ int main(int argc, char* argv[]) {
 		write(2, "You can only talk with one person at a time.\n", strlen("You can only talk with one person at a time.\n"));
 		return -1;
 	}
-
+	
 	char *npc=argv[1];
 	int i = 0;
 	int end = 0;
@@ -60,8 +60,9 @@ int main(int argc, char* argv[]) {
 	char continues = 'y';
 	char text[4096];
 	char branch[2];
-	char current[strlen(argv[2]) + 50];
+	char current[4096];
 
+	
 	// Get npc path
 	strncpy(current, argv[2], PATH_MAX);
 	strcat(current, "/assets/npc/");
@@ -73,7 +74,7 @@ int main(int argc, char* argv[]) {
 		write(2, "\033[31mThere is no one by that name in this room.\n\033[37m", strlen("\033[31mThere is no one by that name in this room.\n\033[37m"));
 		return -1;
 	}
-
+	
 	fd = open(current, O_RDWR);
 	if (fd == -1) return 1;
 
