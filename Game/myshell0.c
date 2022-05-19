@@ -36,7 +36,7 @@ char *function;
 char *root; // /Directories
 char assets[PATH_MAX]; // /assets
 char mapPath[PATH_MAX];
-char *savePath;
+char savePath[PATH_MAX];
 int table[100];
 int visitedTimes;
 char visitedTimesText[12];
@@ -175,11 +175,10 @@ int idFromName(char *newRoom)
  * in the path to the current position of the npc
  */
 void moveNpc(char *name, char *dest) {
-	char *nameWithExtension=malloc(PATH_MAX);
-	char *find=malloc(PATH_MAX);
-	char *npcPath=malloc(PATH_MAX);
-	char *destPath=malloc(PATH_MAX);
-	char *destPath1=malloc(PATH_MAX);
+	char nameWithExtension[PATH_MAX];
+	char find[PATH_MAX];
+	char npcPath[PATH_MAX];
+	char destPath[PATH_MAX];
 	FILE *fp;
 
 	// Remove npc (symlink) from current location
@@ -194,17 +193,12 @@ void moveNpc(char *name, char *dest) {
 	sprintf(find, "find %s -type d -name %s 2>/dev/null", root, dest);
 	fp = popen(find, "r");
 	if (fp == NULL) printf("Failed to move %s to new location.\n", name);
-	fgets(destPath1, sizeof(destPath1), fp);
+	fgets(destPath, sizeof(destPath), fp);
 	pclose(fp);
 
 	destPath[strcspn(destPath, "\n")] = 0; // remove the newline
-	sprintf(destPath, "%s/%s.npc", destPath1, name);
+	sprintf(destPath, "%s/%s.npc", destPath, name);
 	symlink(npcPath, destPath);
-	free(nameWithExtension);
-	free(find);
-	free(npcPath);
-	free(destPath);
-	free(destPath1);
 }
 
 /* Function removeNpc
@@ -212,15 +206,13 @@ void moveNpc(char *name, char *dest) {
  * Removes the npc from the scenario
  */
 void removeNpc(char *name) {
-	char *nameWithExtension=malloc(PATH_MAX);
-        char *find=malloc(PATH_MAX);
+	char nameWithExtension[PATH_MAX];
+        char find[PATH_MAX];
 
         // Remove npc (symlink) from current location
         sprintf(nameWithExtension, "%s.npc", name);
         sprintf(find, "find %s -type l -iname %s -delete 2>/dev/null", root, nameWithExtension);
         system(find);
-		free(nameWithExtension);
-		free(find);
 }
 
 
@@ -232,7 +224,7 @@ void removeNpc(char *name) {
  * @param name the name of the npc
  */
 int getNpcState(char *name) {
-	char *npcPath=malloc(PATH_MAX);
+	char npcPath[PATH_MAX];
 	char fd;
 	char state[1]; // need to be string for read()
 
@@ -240,9 +232,7 @@ int getNpcState(char *name) {
 	fd = open(npcPath, O_RDONLY);
 	read(fd, state, 1);
 	close(fd);
-	free(npcPath);
 	return state[0] - '0';
-	
 }
 
 /**
@@ -254,15 +244,14 @@ int getNpcState(char *name) {
  * @param state the new state of the npc
  */
 void setNpcState(char *name, int state) {
-	char *npcPath=malloc(PATH_MAX);
+	char npcPath[PATH_MAX];
 	char fd;
-	char newState[10];
+	char newState[1];
 	sprintf(npcPath, "%s/npc/%s.npc", assets, name);
 	fd = open(npcPath, O_WRONLY);
 	sprintf(newState, "%d", state);
 	write(fd, newState, 1);
 	close(fd);
-	free(npcPath);
 }
 
 
@@ -273,7 +262,7 @@ void setNpcState(char *name, int state) {
  * Note: The state is always bounded by 0 and 9
  */
 int getObjState(char *name) {
-	char *objPath=malloc(PATH_MAX);
+	char objPath[PATH_MAX];
 	char fd;
 	char state[1]; // need to be string for read
 
@@ -281,7 +270,6 @@ int getObjState(char *name) {
 	fd = open(objPath, O_RDONLY);
 	read(fd, state, 1);
 	close(fd);
-	free(objPath);
 	return state[0] - '0';
 }
 
@@ -293,7 +281,7 @@ int getObjState(char *name) {
  *
  */
 void talkTo(char *npc) {
-	char *commandPath=malloc(PATH_MAX);
+	char commandPath[PATH_MAX];
 	if (fork() == 0) {
 		sprintf(commandPath, "%s/talk", function);
 		execlp(commandPath, "talk", npc, function, NULL);
@@ -301,7 +289,6 @@ void talkTo(char *npc) {
 		if (errno != 0) printf("Error on talk function: %s\n", strerror(errno));
 		fprintf(stderr, "Unable not talk with %s.\n", npc);
 	} else wait(NULL);
-	free(commandPath);
 
 
 	// [*] Special interactions [*]
@@ -318,14 +305,13 @@ void talkTo(char *npc) {
  * the given room has been visited
  */
 int getTimesVisited(char *roomName) {
-	char *roomPath=malloc(PATH_MAX);
+	char roomPath[PATH_MAX];
 	FILE *f;
 	int state = -1;
 	sprintf(roomPath, "%s/roomVisitedCounter/%sCounter.txt", assets, roomName);
 	f = fopen(roomPath, "r");
 	fscanf(f, "%d", &state);
 	fclose(f);
-	free(roomPath);
 
 	return state;
 }
@@ -338,14 +324,10 @@ int getTimesVisited(char *roomName) {
  * Otherwise 1
  */
 int hasTool(char *name) {
-	char *toolPath=malloc(PATH_MAX);
+	char toolPath[PATH_MAX];
 
 	sprintf(toolPath, "%s/Inv/%s.tool", root, name);
-	if (access(toolPath, R_OK) == 0) {
-		free(toolPath);
-		return 0;
-	}
-	free(toolPath);
+	if (access(toolPath, R_OK) == 0) return 0;
 	return 1;
 
 }
@@ -356,10 +338,9 @@ int hasTool(char *name) {
  * Removes the given tool from player's directory
  */
 void removeTool(char *name) {
-        char *toolPath=malloc(PATH_MAX);
+        char toolPath[PATH_MAX];
         sprintf(toolPath, "%s/Inv/%s.tool", root, name);
         unlink(toolPath);
-		free(toolPath);
 }
 
 
@@ -371,14 +352,10 @@ void removeTool(char *name) {
  * Otherwise 1
  */
 int hasSkin(char *skin) {
-	char *skinPath=malloc(PATH_MAX);
+	char skinPath[PATH_MAX];
 
 	sprintf(skinPath, "%s/Inv/%s.skin", root, skin);
-        if (access(skinPath, R_OK) == 0) {
-			free(skinPath);
-			return 0;
-		}
-		free(skinPath);
+        if (access(skinPath, R_OK) == 0) return 0;
         return 1;
 }
 
@@ -519,7 +496,7 @@ int execute(int argc, char *argv[])
 					else setNpcState("Veronica", 3);
 				}
 			}
-		}
+
 
 
 		if(cd(argc,argv,home,0)==1)
@@ -627,6 +604,42 @@ int execute(int argc, char *argv[])
 						setNpcState("Mat", 6);
 					}
 					break;
+				case VAULTC:
+					if(visitedTime%2 != 0){
+                                         printf("*It seens to be some kind of laser... I should remember my moves* ");
+					 int mls = 2;int mam = 7;int i = 0; int o = 0; int b = 0;
+					 char ans[mam][mls] ={"up","up","dw","rg","lf","rg","dw"}; char[mam][mls] mIn;char[mam][msl] mOut;char player[mls];
+					 while(i < mam)
+					 {
+					  fscanf(stdin,"%s",player);
+   					  strcpy(mIn[i],player);
+					  if(strcmp(mIn[i],ans[i]) != 0)
+					  {
+					   b = 1;
+					   break;
+					  }
+					  memset(player,0,strlen(player));
+					  i++;
+					 }
+					}else{
+					 i--;
+					 while(o < mam)
+					 {
+					  fscanf(stdin,"%s",player);
+                                          strcpy(mOut[i],player);
+					  if(strcmp(mIn[i],mOut[o]) != 0)
+					  {
+					   b = 1;
+                                           break;
+					  }
+					   memset(player,0,strlen(player));
+                                           i --; o++;
+					 }
+					}
+					if( b != 0)
+					{
+					 isGameOver = 1;
+					}
 			}
 		}
 	}
@@ -1028,7 +1041,6 @@ void converttimeprint()
 int begin() {
 	pthread_detach(pthread_self());
 	// Load the main menu
-	savePath=malloc(PATH_MAX);
 	int opt = show_main_menu();
 	eof=0;
 	int argc;
@@ -1098,7 +1110,6 @@ int begin() {
         write(0,"Log Pipe ERROR", strlen("Log Pipe ERROR"));
         exit(2);
     }
-
     switch(fork())
     {
     case -1:
@@ -1120,7 +1131,6 @@ int begin() {
 			exit(0);
 			}
 		}
-		free(savePath);
 		/*
     default:
         close(pfd[1]);close(0);
@@ -1142,4 +1152,3 @@ int main() {
 	pthread_create(&ptid, NULL, &beginning, NULL);
 	pthread_exit(NULL);
 }
-
