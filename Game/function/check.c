@@ -45,11 +45,7 @@ int main(int argc, char *argv[]) {
 
 	// Check if the object is in the current room
 	if (access(objectWithExtension, R_OK) == -1) {
-<<<<<<< HEAD
-		write(2, "The object does not exist or is not in this room.\n", strlen("The object does not exists or is not in this room.\n"));
-=======
 		printf("\033[31mThe object does not exist or is not in this room.\n\033[37m");
->>>>>>> 8f53178a0c98d03465e88d24439767ab6b6f6d39
 		exit(1);
 	}
 

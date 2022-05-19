@@ -260,7 +260,6 @@ void resetGame()
 	}
 	else wait(NULL);
 
-<<<<<<< HEAD:Game/function/resetGame.c
 	//if (fork() == 0)
 	//{
 	//	execlp("./chmod","./chmod","./Directories/Van/MainEntrance/MainBankingHall/Corridor/Office1","0066", NULL);
@@ -269,7 +268,7 @@ void resetGame()
 	//
 	//}
 	//else wait(NULL);
-=======
+
 	if (fork() == 0)
 	{
 		execlp("./chmod","./chmod","./Directories/Van/MainEntrance/MainBankingHall/Corridor/Office1","0066", NULL);
@@ -278,7 +277,6 @@ void resetGame()
 
 	}
 	else wait(NULL);
->>>>>>> 8f53178a0c98d03465e88d24439767ab6b6f6d39:Game/function/newGame.c
 
 	if (fork() == 0)
 	{
@@ -294,16 +292,4 @@ void resetGame()
                 exit(0);
 	}
 	else wait(NULL);
-<<<<<<< HEAD:Game/function/resetGame.c
-=======
-
-
-	// Print bank robber run ascii and begin the game!
-	if (fork () == 0)
-	{
-		execlp("/bin/cat", "/bin/cat", "./assets/newGameAscii.txt", NULL);
-		printf("\033[31mError printing new game ascii art: %s\n\033[37m", strerror(errno));
-	}
-	else wait(NULL);
->>>>>>> 8f53178a0c98d03465e88d24439767ab6b6f6d39:Game/function/newGame.c
 }

@@ -26,30 +26,13 @@
 int main(int argc, char *argv[]){
 
 	// Print args
-<<<<<<< HEAD
-        //for (int i = 0; i < argc; i++)
-        //        printf("%d: %s\n", i, argv[i]);
-
 	if (argc < 3) {
-		write(2, "Select an item to use.\n", strlen("Select an item to use.\n"));
-		return 1;
-	}
-
-	if (argc > 4) {
-		write(2, "Too much arguments.\n", strlen("Too much arguments.\n"));
-=======
-	// for (int i = 0; i < argc; i++)
-	//	printf("%d: %s\n", i, argv[i]);
-	switch(argc) {
-	}
-	if (argc < 4) {
 		write(1, "\033[31mSelect an item to use.\n\033[37m", strlen("\033[31mSelect an item to use.\n\033[37m"));
 		return 1;
 	}
 
-	if (argc > 5) {
+	if (argc > 4) {
 		write(1, "\033[31mToo much arguments.\n\033[37m", strlen("\033[31mToo much arguments.\n\033[37m"));
->>>>>>> 8f53178a0c98d03465e88d24439767ab6b6f6d39
 		return 1;
 	}
 
@@ -93,7 +76,6 @@ int main(int argc, char *argv[]){
 	}
 
 	// non-targeted use command
-<<<<<<< HEAD
 	if (argc == 3) {
 
 		// Use radio to communicate with you teammate
@@ -126,12 +108,8 @@ int main(int argc, char *argv[]){
 				} else wait(NULL);
 
 			} else write(1, "*This is not a safe place to use the radio*\n", strlen("*This is not a safe place to use the radio*\n"));
-                } else write(1, "Object used in the room. Nothing happened.\n.", strlen("Object used in the room. Nothing happened.\n"));
+                } else write(1, "\033[31mObject used in the room. Nothing happened.\n.\033[37m", strlen("\033[31mObject used in the room. Nothing happened.\n\033[37m"));
 
-=======
-	if (argc == 4) {
-		write(1, "\033[31mObject used in the room. Nothing happened.\n.\033[37m", strlen("\033[31mObject used in the room. Nothing happened.\n\033[37m"));
->>>>>>> 8f53178a0c98d03465e88d24439767ab6b6f6d39
 		return 0;
 	}
 
@@ -226,13 +204,9 @@ int main(int argc, char *argv[]){
 							return 1;
 						}
 					} else wait(NULL);
-<<<<<<< HEAD
+
 					write(1, "Door unlocked\n", strlen("Door unlocked\n"));
-				} else write(1, "Wrong key.\n", strlen("Wrong key.\n"));
-=======
-					write(1, "Door unlocked\n", strlen("Dorr unlocked\n"));
 				} else write(1, "\033[31mWrong key.\n\033[37m", strlen("\033[31mWrong key.\n\033[37m"));
->>>>>>> 8f53178a0c98d03465e88d24439767ab6b6f6d39
 
 			} else write(1, "This door doesn't require any key to be opened.\n", strlen("This door doesn't require any key to be opened.\n"));
 

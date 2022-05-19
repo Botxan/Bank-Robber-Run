@@ -22,14 +22,9 @@
 #include "./function/cd.h"
 #include "./function/inv.h"
 #include "./function/Leave.h"
-<<<<<<< HEAD
 #include "./function/resetGame.h"
 #include "./function/interaction/officerBack.c"
-=======
-#include "./function/talk.h"
-#include "./function/newGame.h"
 #include "./function/StoreMoves.h"
->>>>>>> 8f53178a0c98d03465e88d24439767ab6b6f6d39
 
 int eof;
 char *prompt;
@@ -45,17 +40,13 @@ int visitedTimes;
 char visitedTimesText[12];
 int fd;
 FILE *f;
-<<<<<<< HEAD
-
+int pfd[2];
 
 // situational variables
 int distractedGuard = 0;
 int isGameOver = 0;
 
-=======
-int gameOver = 0;
-int pfd[2];
->>>>>>> 8f53178a0c98d03465e88d24439767ab6b6f6d39
+
 
 //time
 unsigned int hours=0;
@@ -191,11 +182,6 @@ void moveNpc(char *name, char *dest) {
 	system(find);
 
 	// Create new symlink on dest taking the file from assets/npc (if permissions are ok)
-<<<<<<< HEAD
-=======
-	char npcPath[PATH_MAX+10];
-	char destPath[PATH_MAX+10];
->>>>>>> 8f53178a0c98d03465e88d24439767ab6b6f6d39
 	sprintf(npcPath, "%s/npc/%s", assets, nameWithExtension);
 
 	// Find the room
@@ -747,29 +733,24 @@ int execute(int argc, char *argv[])
 		char *back=getcwd(NULL, 0);
 		chdir(function);
 		if (fork() == 0) {
-			
 			char *path = strcat(function, "/man");
 			execlp(path, argv[1], NULL);
 			if (errno != 0) {
 				printf("Error launching child process: %s\n", strerror(errno));
 				return 1;
 			}
-		} else 
+		} else
 		{
 			wait(NULL);
 			chdir(back);
 		}
 	}
 
-<<<<<<< HEAD
-	return 0;
-=======
 	else write(1, "\033[31mthis function doesn't exist \n\033[37m ", strlen("\033[31mthis function doesn't exist \n\033[37m"));
 
 
 
 	return 1;
->>>>>>> 8f53178a0c98d03465e88d24439767ab6b6f6d39
 }
 
 
@@ -1008,10 +989,6 @@ int begin() {
         time_left=count_down_time_in_secs-seconds;   // update timer
         Time();
 
-
-		
-       
-    
 	/*
     if(pipe(pfd))
     {
