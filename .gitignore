@@ -15,5 +15,6 @@
 /Game/pickup
 /Game/man
 /Game/StoreMoves
-/Game/Directories/*
+/Game/Directories
+/Game/assets/roomVisitedCounter/*
 BANK-ROBBER-RUN
