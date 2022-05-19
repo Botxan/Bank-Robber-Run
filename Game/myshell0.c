@@ -15,7 +15,7 @@
 #include <sys/wait.h>
 #include <time.h>
 #include <pthread.h>
-
+#include <libgen.h>
 
 #include "defines.h"
 #include "./function/view.h"
@@ -35,13 +35,15 @@ char *function;
 char *root; // /Directories
 char assets[PATH_MAX]; // /assets
 char mapPath[PATH_MAX];
+char savePath[PATH_MAX];
 int table[100];
 int visitedTimes;
 char visitedTimesText[12];
 int fd;
 FILE *f;
 int pfd[2];
-
+int savefd;
+char lastLocation[PATH_MAX];
 // situational variables
 int distractedGuard = 0;
 int isGameOver = 0;
@@ -525,7 +527,20 @@ int execute(int argc, char *argv[])
 
 			// Display prompt
                         prompt=strrchr(getcwd(NULL, 0),'/')+1;
-
+			//Save location and time left on file
+			savefd=open(savePath,O_TRUNC,O_RDWR);
+			close(savefd);
+			savefd=open(savePath,O_RDWR);
+			char *currentWD;
+			currentWD=getcwd(NULL,0);
+			int iVan=0;
+			while(!(currentWD[iVan]=='V'&&currentWD[iVan+1]=='a'&&currentWD[iVan+2]=='n')){iVan++;}//find Van in the string and get pos
+			char *saveText;
+			currentWD[iVan+3]='#';
+			saveText=strrchr(currentWD,'#')+1;
+			write(savefd,saveText,strlen(saveText));
+			write(savefd,"#",1);
+			dprintf(savefd,"%d",time_left);
 			// Special interactions in each room
                         id=idFromName(argv[1]);
 			switch(id)
@@ -956,7 +971,9 @@ int begin() {
 	// Obtain map file path
 	strncpy(mapPath, function, PATH_MAX);
 	strncat(mapPath, "/assets/map.txt", PATH_MAX-100);
-
+	strncpy(savePath, function, PATH_MAX);
+	strncat(savePath, "/assets/save.txt",PATH_MAX);
+	sprintf(assets, "%s/assets", getcwd(NULL, 0));
 	// Perform the corresponding action depending on user selection
 	switch(opt) {
 	case NEW_GAME:
@@ -966,7 +983,6 @@ int begin() {
 		// Print bank robber run ascii and begin the game!
 		system("cat ./assets/newGameAscii.txt");
 
-		sprintf(assets, "%s/assets", getcwd(NULL, 0));
 		chdir("Directories");
 		root = getcwd(NULL, 0);
 		chdir("Van");
@@ -979,12 +995,33 @@ int begin() {
 		talkTo("Robert");
 		break;
 	case LOAD_GAME:
-		write(1, "Not implemented yet\n", 20);
+		savefd=open(savePath,O_RDWR);
+		system("clear");
+		lseek(savefd,0,SEEK_SET);
+		int pathSize=0;
+		char checkEnd=' ';
+		while(checkEnd!='#'&&pathSize<PATH_MAX){//look for divider between path and time left
+			read(savefd,&checkEnd,1);
+			pathSize++;
+		}
+		lseek(savefd,0,SEEK_SET);
+		read(savefd,&lastLocation,pathSize-1);
+		lseek(savefd,1,SEEK_CUR);
+		char secs[4];
+		read(savefd,&secs,4);
+		chdir("Directories");
+		root = getcwd(NULL, 0);
+                chdir("Van");
+                home = getcwd(NULL, 0);
+		chdir(lastLocation);
+                prompt=strrchr(getcwd(NULL, 0),'/')+1;
+		count_down_time_in_secs=atoi(secs);  // 1 minute is 60, 1 hour is 3600
+		printf("You are now in: %s with %d seconds left\n",prompt,count_down_time_in_secs);
+		close(savefd);
 		break;
 	default:
 		exit(1);
 	}
-
 	startTime=clock();  // start clock
         time_left=count_down_time_in_secs-seconds;   // update timer
         Time();
@@ -1037,3 +1074,4 @@ int main() {
 	pthread_create(&ptid, NULL, &beginning, NULL);
 	pthread_exit(NULL);
 }
+
