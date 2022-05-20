@@ -57,6 +57,7 @@ char* introducedId;
 unsigned int hours=0;
 unsigned int minutes=0;
 unsigned int seconds=0;
+unsigned int tempseconds=0;
 unsigned int milliseconds=0;
 unsigned int totaltime=0,count_down_time_in_secs=0,time_left=0;
 clock_t countTime;
@@ -1023,9 +1024,10 @@ void* Time1(){
 		countTime=clock();
 		milliseconds=countTime-startTime;
 		seconds=(milliseconds/(CLOCKS_PER_SEC))-(minutes*60);
+		tempseconds=(milliseconds/(CLOCKS_PER_SEC));
 		minutes=(milliseconds/(CLOCKS_PER_SEC))/60;
 		hours=minutes/60;
-		time_left=count_down_time_in_secs-seconds;
+		time_left=count_down_time_in_secs-tempseconds;
 	}
 	pthread_exit(NULL);
 }
