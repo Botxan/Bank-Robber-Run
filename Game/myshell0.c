@@ -261,8 +261,8 @@ void setNpcState(char *name, int state) {
 	fd = open(npcPath, O_WRONLY);
 	sprintf(newState, "%d", state);
 	write(fd, newState, 1);
-	close(fd);
 	free(npcPath);
+	close(fd);
 }
 
 
@@ -1174,10 +1174,14 @@ int begin() {
                 	countpipe(argc,args,args);
 		        //write(pfd[1],args,strlen(args));
                         //execute(argc, args);
-                if (eof) exit(0);
+                if (eof) {
+					free(savePath);
+					exit(0);
+				}
 
 		if ((isGameOver == 1) || (time_left <= 0)) {
 			gameOver();
+			free(savePath);
 			exit(0);
 			}
 		}
