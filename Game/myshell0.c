@@ -927,21 +927,22 @@ int execute(int argc, char *argv[])
 		if (child == 0) execlp("/bin/cat", "/bin/cat", mapPath, (char *) NULL);
 		else wait(NULL);
 	}
-	else if (strcmp(argv[0], "Time") == 0)
+	else if (strcmp(argv[0], "time") == 0)
 	{
-		char times2[100]="You have ";
+		//char times2[100]="Electrician arrives in ";
 		int temphour = time_left/3600;
 		int tempminute = (time_left -(3600*temphour))/60;
 		int tempseconds=(time_left -(3600*temphour)-(tempminute*60));
-		char second[5];
-		char Minute[5];
-		char Hour[5];
-		sprintf(second, "%d",  tempseconds);
-		sprintf(Minute, "%d", tempminute);
-		sprintf(Hour, "%d", temphour);
-		strcat(times2,Hour),strcat(times2," h:"),strcat(times2,Minute),strcat(times2," m:"),strcat(times2,second),strcat(times2,"s left to finish the game \n");
+		//char second[5];
+		//char Minute[5];
+		//char Hour[5];
+		printf("\x1b[33mElectrician will arrive in %02d:%02d.\x1b[0m\n", tempminute, tempseconds);
+		//sprintf(second, "%d",  tempseconds);
+		//sprintf(Minute, "%d", tempminute);
+		//sprintf(Hour, "%d", temphour);
+		//strcat(times2,Hour),strcat(times2," h:"),strcat(times2,Minute),strcat(times2," m:"),strcat(times2,second),strcat(times2,"s left to finish the game \n");
 		converttimeprint();
-		write(0, times2, strlen(times2));
+		//write(0, times2, strlen(times2));
 	}
 
 	else if (strcmp(argv[0], "check") == 0)
@@ -1175,17 +1176,18 @@ void Time(){
 
 void converttimeprint()
 {
-	char millisecond[5];
+	//char millisecond[5];
 	char second[5];
 	char Minute[5];
-	char Hour[5];
-	sprintf(millisecond, "%d", milliseconds);
-	sprintf(second, "%d", seconds);
-	sprintf(Minute, "%d", minutes);
-	sprintf(Hour, "%d", hours);
-	char times1[100]="Time :";
-	strcat(times1,Hour),strcat(times1," h:"),strcat(times1,Minute),strcat(times1," m:"),strcat(times1,second),strcat(times1,"s \n");
-	write(0, times1, strlen(times1));
+	//char Hour[5];
+	//sprintf(millisecond, "%d", milliseconds);
+	//sprintf(second, "%d", seconds);
+	//sprintf(Minute, "%d", minutes);
+	//sprintf(Hour, "%d", hours);
+	//char times1[100]="Time :";
+	//strcat(times1,Hour),strcat(times1," h:"),strcat(times1,Minute),strcat(times1," m:"),strcat(times1,second),strcat(times1,"s \n");
+	printf("Elapsed time: %02d:%02d.\n", minutes, seconds);
+	//write(0, times1, strlen(times1));
 }
 
 
@@ -1225,13 +1227,13 @@ int begin() {
 		root = getcwd(NULL, 0);
 		chdir("Van");
 
-		// Testing
+		// Change starting path for fast testing!
 		//system("chmod -R 777 Van/MainEntrance/MainBankingHall/Corridor/SecurityRoom");
 		//chdir("Van/MainEntrance/MainBankingHall/Corridor");
 
 		home = getcwd(NULL, 0);
 		prompt="Van";
-		count_down_time_in_secs=7200;  // 1 minute is 60, 1 hour is 3600
+		count_down_time_in_secs=2400;  // 1 minute is 60, 1 hour is 3600
 
 		// Starting dialog
 		talkTo("Robert");
