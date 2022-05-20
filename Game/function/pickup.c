@@ -52,9 +52,9 @@ int main(int argc,char* argv[]) {
 		return 1;
 	}
 
-	strcpy(current, getcwd(current, 200));
+	strncpy(current, getcwd(current, 200), PATH_MAX);
 	strcat(current, "/");
-	strcat(current, argv[1]);
+	strncat(current, argv[1], PATH_MAX);
 	strcat(current, ".tool");
 	// Check if file exists in the current room
 	if (stat(current, &file) == -1) {
@@ -62,13 +62,15 @@ int main(int argc,char* argv[]) {
 		return 1;
 	}
 
-	strcpy(invPath, argv[2]);
+	strncpy(invPath, argv[2], PATH_MAX);
 	strcat(invPath, "/Inv/");
-	strcat(invPath, argv[1]);
+	strncat(invPath, argv[1], PATH_MAX);
 	strcat(invPath, ".tool");
 
-	// Get the value of the symbolic link to the real tool
-	readlink(current, pathToTool, sizeof(pathToTool));
+	strncpy(pathToTool, argv[2], PATH_MAX);
+	strcat(pathToTool, "/../assets/tool/");
+	strncat(pathToTool, argv[1], PATH_MAX);
+	strcat(pathToTool, ".tool");
 
 	// Create a symlink in /Inv (~ move the tool to inv)
 	if (symlink(pathToTool, invPath) == -1) {

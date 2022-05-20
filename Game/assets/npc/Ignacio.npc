@@ -1,13 +1,8 @@
-0
-
-// Knocking the door at any moment before deactivating security camerasas
-#0
-I can't help you now, come back later.
---0
-
-
+1
 // Automatic dialogue when leaving the security room and the cofee machine has been sabotaged with bleach or laxatives
-Hey, come closer, I don’t know your face, are you new around here?
+0#
+0A
+Hey, come closer. As director of the bank I don’t know your face, are you new around here?
 
 A:Hi... I'm the electrician, I was just checking the outlets in the security room.
 B:Hello... yes, I was just getting acquainted with the office.
@@ -15,7 +10,7 @@ B:Hello... yes, I was just getting acquainted with the office.
 
 
 1A
-Yeah... but the light that doesn't work is the one in the basement... why would you need to go into the security room?
+Yeah... but the light that doesn't work is the one in the basement... and I saw you around the security room... why would you need to go into the security room?
 
 A:According to some indications found in the electrical panel, everything seems to point to the basement lighting system having been affected due to some voltage peaks caused in the security room, probably due to the high consumption of the monitors.
 B:The consumption of the electrical panel indicates that someone has been making excessive electrical consumption in the security room, and I have come to analyze the scenario for clues.
@@ -35,37 +30,40 @@ E:Uh...I...
 I didn't understand anything you said, but I hope at the end of the day we can use the basement, I have some errands to run down there, and I wouldn't want to fall into my own security traps, you know.
 ...Ugh...I think this coffee is not in good condition..., if you'll excuse me....
 *The boss runs to the WC*
---0
+--10
 
 
 2B
 I didn't understand anything you said, but I hope at the end of the day we can use the basement, I have some errands to run down there, and I wouldn't want to fall into my own security traps, you know.
 ...Ugh...I think this coffee is not in good condition..., if you'll excuse me....
 *The boss runs to the WC*
---0
+--10
 
 
 2C
 That doesn't sound very... like something a professional would say.
 ...Ugh...I think this coffee is not in good condition..., if you'll excuse me....
 *The boss runs to the WC*
---0
+--10
+
 
 2D
 Well, you're missing out, today I notice a particular flavor...
 ...Ugh...I think this coffee is not in good condition..., if you'll excuse me....
 *The boss runs to the WC*
---0
+--10
 
 
 2E
 ...Ugh...I think this coffee is not in good condition..., if you'll excuse me....
 *The boss runs to the WC*
---0
+--10
 
 
-
-// Neither laxatives nor bleach has been used in the cofee machine before deactivating security cameras
-#1
-What do you think, that I'm an idiot? You took a long time to deactivate the cameras, man, I've seen everything you've done, getting the key card, sneaking through the ducts... and now you think you are going to escape? You know... I could just call security and have you put behind bars for the next 10 years... but I'm going to take care of you myself.
---0
+// Dead in the WC
+1#
+0A
+...
+.......
+*Not breathing*
+--10

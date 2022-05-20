@@ -9,6 +9,8 @@
 #include "./check/checkComputer.c"
 #include "./check/checkCabinet.c"
 #include "./check/checkLaptop.c"
+#include "./check/checkMonitors.c"
+#include "./check/checkFamilyPicture.c"
 
 /**
  * Function: main (check)
@@ -51,8 +53,8 @@ int main(int argc, char *argv[]) {
 	}
 
 
-	// Add +1 to checked times (except for electrical panel and laptop, they have another use)
-	if (strcmp(objectWithExtension, "electrical-panel.obj") != 0 && strcmp(objectWithExtension, "laptop.obj") == 0) {
+	// Add +1 to checked times (except for electrical panel, laptop and monitors, they have another use)
+	if ((strcmp(objectWithExtension, "electrical-panel.obj") != 0) && (strcmp(objectWithExtension, "laptop.obj") != 0) && (strcmp(objectWithExtension, "monitors.obj") != 0)) {
 		fd = open(objectWithExtension, O_RDWR);
 	        f = fdopen(fd, "r");
 		fscanf(f, "%d", &checkedTimes);
@@ -83,8 +85,25 @@ int main(int argc, char *argv[]) {
 	// Check office 1 cabinet => find employee suit
         if (strcmp(objectWithExtension, "cabinet.obj") == 0) return checkCabinet();
 
+	// ------------ Corridor --------------
+	if (strcmp(objectWithExtension, "coffee-machine.obj") == 0) printf("It is not time to take a coffee.\n");
+
 
 	// ----------- OFFICE #2 ---------------
 	if (strcmp(objectWithExtension, "laptop.obj") == 0) return checkLaptop();
+
+	// ----------- Janitor room ------------
+	if (strcmp(objectWithExtension, "janitorial-supplies.obj") == 0) {
+		printf("*You have found bleach*\n");
+		symlink("../../assets/tool/bleach.tool", "../../../../../Inv/bleach.tool");
+	}
+
+	// ----------- Security Room -----------
+	if (strcmp(objectWithExtension, "monitors.obj") == 0) return checkMonitors();
+
+
+	// ----------- Boss office -------------
+	if (strcmp(objWithExtension, "family-picture") == 0) return checkFamilyPicture();
 	return 0;
+
 }

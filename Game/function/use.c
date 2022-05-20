@@ -10,6 +10,7 @@
 #include <sys/wait.h>
 #include <libgen.h>
 #include "../defines.h"
+#include "util.c"
 
 /*
  * Function: use
@@ -32,7 +33,7 @@ int main(int argc, char *argv[]){
 	}
 
 	if (argc > 4) {
-		write(1, "\033[31mToo much arguments.\n\033[37m", strlen("\033[31mToo much arguments.\n\033[37m"));
+		write(1, "\033[31mToo many arguments.\n\033[37m", strlen("\033[31mToo many arguments.\n\033[37m"));
 		return 1;
 	}
 
@@ -89,8 +90,10 @@ int main(int argc, char *argv[]){
 			}
 			cwdBase = basename(cwd);
 
+			// It does not make sense to use the radio in the van
+			if (strcmp(cwdBase, "Van") == 0) write(1, "It does not make sense to use the radio in the van.\n", strlen("It does not make sense to use the radio in the van.\n"));
 			// Check radio is safe for use (current room = electrical panel, wc or janitors room
-			if ((strcmp(cwd, "Van") == 0) || (strcmp(cwdBase, "ElectricalPanelRoom") == 0) || (strcmp(cwdBase, "WC") == 0) || (strcmp(cwdBase, "JanitorRoom") == 0)) {
+			else if ((strcmp(cwdBase, "ElectricalPanelRoom") == 0) || (strcmp(cwdBase, "WC") == 0) || (strcmp(cwdBase, "JanitorRoom") == 0)) {
 
 				if (fork() == 0) {
 					// Get the root path of the project
@@ -108,9 +111,8 @@ int main(int argc, char *argv[]){
         	                                return 1;
 	                                }
 				} else wait(NULL);
-
 			} else write(1, "*This is not a safe place to use the radio*\n", strlen("*This is not a safe place to use the radio*\n"));
-                } else write(1, "\033[31mObject used in the room. Nothing happened.\n.\033[37m", strlen("\033[31mObject used in the room. Nothing happened.\n\033[37m"));
+                } else write(1, "\033[31mObject used in the room. Nothing happened.\n\033[37m", strlen("\033[31mObject used in the room. Nothing happened.\n\033[37m"));
 
 		return 0;
 	}
@@ -151,6 +153,14 @@ int main(int argc, char *argv[]){
 
 	switch(targetType) {
 		case DT_DIR: // directory
+			// Director office opens only when cameras are off
+			if ((strcmp(argv[2], "boss-picture") == 0) && (strcmp(argv[3], "BossOffice") == 0)) {
+				if (getObjStateInRoom("SecurityRoom/monitors") == 0) {
+					write(1, "\033[31mCannot perform this action with the cameras online.\n\033[37m", strlen("\033[31mCannot perform this action with the cameras online.\n\033[37m"));
+                                	return 0;
+				}
+			}
+
 			// Read the key_door file to obtain key->door list
 			strncpy(keyDoorPath, argv[0], sizeof(keyDoorPath));
 			strncat(keyDoorPath, "/../assets/key_door.txt", sizeof(keyDoorPath));
@@ -192,7 +202,7 @@ int main(int argc, char *argv[]){
 
 			if (found) {
 				// Check if key used by player is the one that opens the target door
-				if (strcmp(argv[2], keyDoor[keyDoorI].key) == 0) {
+				if (strcmp(tool, keyDoor[keyDoorI].key) == 0) {
 					// Change door permissions
 					strncpy(commandPath, argv[0], sizeof(commandPath));
 					strncat(commandPath, "/../chmod", sizeof(commandPath));
@@ -214,14 +224,40 @@ int main(int argc, char *argv[]){
 
 			break;
 		case DT_LNK: // symbolic link (e.g. obj)
+
 			if ((strcmp(argv[2], "laxatives") == 0) && (strcmp(argv[3], "coffee-machine") == 0)) {
 				// Add laxatives to coffee machine and obtain coffeee with laxatives
 				printf("You have poured laxatives into the coffee machine.\nThe coffee in the machine is now full of laxatives.\n[*] coffee-with-laxatives has been added to your inventory [*]\n");
 				symlink("../../assets/tool/coffee-with-laxatives.tool", "../../../../Inv/coffee-with-laxatives.tool");
 				// Remove laxatives from inventory
 				unlink("../../../../Inv/laxatives.tool");
-			}
-			else if ((strcmp(argv[2], "decoder") == 0) && (strcmp(argv[3], "laptop") == 0)) {
+
+			} else if ((strcmp(argv[2], "hacking-tool") == 0) && strcmp(argv[3], "monitors") == 0) {
+				// Hacking animation
+				printf("\033[33m*Hacking security cameras...*\033[37m\n");
+				sleep(1);
+				printf("\033[33m*Executing hackCameras.sh...*\033[37m\n");
+				sleep(1);
+				printf("\033[33m*Waiting TCP response for reverse shell*\033[37m\n");
+				sleep(1);
+				printf("\033[33m0%%\033[37m\n");
+				sleep(1);
+				printf("\033[33m17%%\033[37m\n");
+                                sleep(1);
+				printf("\033[33m48%%\033[37m\n");
+                                sleep(1);
+				printf("\033[33m69%%\033[37m\n");
+				sleep(1);
+				printf("\033[33m100%%\033[37m\n");
+				printf("\033[32m*Cameras hacked succesfully*\033[37m\n\n");
+
+				// Change monitors state to 2 (hacked)
+				setObjStateInRoom("monitors", 1);
+
+				// Remove hacking-tool from inventory
+				unlink("../../../../../Inv/hacking-tool.tool");
+
+			} else if ((strcmp(argv[2], "decoder") == 0) && (strcmp(argv[3], "laptop") == 0)) {
 				while (1) {
 					printf("Which is the cypher?\n\n");
 					printf("A: Rot13\n");
@@ -254,8 +290,15 @@ int main(int argc, char *argv[]){
 						return 0;
 
 				}
+			} else if ((strcmp(argv[2], "bleach") == 0) && (strcmp(argv[3], "coffee-machine") == 0)) {
+				printf("*You have poisoned the coffee with bleach.*\n");
+				// unlink bleach
+				unlink("../../../../Inv/bleach.tool");
+				// set coffeee-machine to poisoned (3)
+				setObjStateInRoom("coffee-machine", 3);
+
 			} else {
-				printf("Nothing happened.\n");
+				write(1, "Nothing happened.\n", strlen("Nothing happened.\n"));
 			}
 			break;
 		case DT_REG: // npc

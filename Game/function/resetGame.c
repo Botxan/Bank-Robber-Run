@@ -41,7 +41,7 @@ void resetGame()
         symlink("../../assets/roomVisitedCounter/VanCounter.txt", "Directories/Van/.counter.txt");
         symlink("../../../assets/roomVisitedCounter/MainEntranceCounter.txt", "Directories/Van/MainEntrance/.counter.txt");
         symlink("../../../../assets/roomVisitedCounter/ParkingCounter.txt", "Directories/Van/MainEntrance/Parking/.counter.txt");
-        symlink("../../../../../assets/roomVisitedCounter/BasementCounter.txt", "Directories/Van/MainEntrance/Parking/Basement/.counter.txt");
+	symlink("../../../../../assets/roomVisitedCounter/BasementCounter.txt", "Directories/Van/MainEntrance/Parking/Basement/.counter.txt");
         symlink("../../../../../../assets/roomVisitedCounter/VaultCorridorCounter.txt", "Directories/Van/MainEntrance/Parking/Basement/VaultCorridor/.counter.txt");
         symlink("../../../../../../../assets/roomVisitedCounter/VaultRoomCounter.txt", "Directories/Van/MainEntrance/Parking/Basement/VaultCorridor/VaultRoom/.counter.txt");
         symlink("../../../../../../../../assets/roomVisitedCounter/VaultCounter.txt", "Directories/Van/MainEntrance/Parking/Basement/VaultCorridor/VaultRoom/Vault/.counter.txt");
@@ -104,7 +104,6 @@ void resetGame()
 	symlink("..", "Directories/Van/MainEntrance/MainBankingHall/Corridor/WC/VentilationDucts/WC");
 	symlink("../../../ElectricalPanelRoom", "Directories/Van/MainEntrance/MainBankingHall/Corridor/WC/VentilationDucts/ElectricalPanelRoom");
 	symlink("../../SecurityRoom", "Directories/Van/MainEntrance/MainBankingHall/Corridor/WC/VentilationDucts/SecurityRoom");
-	symlink("../../Parking/Basement", "Directories/Van/MainEntrance/MainBankingHall/Corridor/Basement");
 
 
 	// Copy electrical panel
@@ -113,7 +112,7 @@ void resetGame()
 
 	// Add all the .obj to the map
         symlink("../../../../../assets/obj/electrical-panel.obj", "Directories/Van/MainEntrance/MainBankingHall/ElectricalPanelRoom/electrical-panel.obj");
-        symlink("../../../../../assets/obj/electrical-panel.obj", "Directories/Van/MainEntrance/MainBankingHall/Corridor/coffee-machine.obj");
+        symlink("../../../../../assets/obj/coffee-machine.obj", "Directories/Van/MainEntrance/MainBankingHall/Corridor/coffee-machine.obj");
         symlink("../../../../../../assets/obj/office1-computer.obj", "Directories/Van/MainEntrance/MainBankingHall/Corridor/Office1/computer.obj");
         symlink("../../../../../../assets/obj/office1-desk.obj", "Directories/Van/MainEntrance/MainBankingHall/Corridor/Office1/desk.obj");
         symlink("../../../../../../assets/obj/office1-drawers.obj", "Directories/Van/MainEntrance/MainBankingHall/Corridor/Office1/drawers.obj");
@@ -126,10 +125,10 @@ void resetGame()
 
 	// Add all the .tools to the map (except the ones provided by npcs or other interactions)
 	symlink("../../assets/tool/decoder.tool", "Directories/Inv/decoder.tool");
-	symlink("../../assets/tool/lockpick.tool", "Directories/Inv/lockpick.tool");
 	symlink("../../assets/tool/hacking-tool.tool", "Directories/Inv/hacking-tool.tool");
 	symlink("../../assets/tool/radio.tool", "Directories/Inv/radio.tool");
-	symlink("../../../../../../assets/tool/boss-picture.tool", "Directories/Van/MainEntrance/MainBankingHall/Corridor/JanitorRoom/boss-picture.tool");
+	symlink("../../../../../../assets/tool/ladder.tool", "Directories/Van/MainEntrance/MainBankingHall/Corridor/JanitorRoom/ladder.tool");
+	symlink("../../../../../../assets/tool/boss-picture.tool", "Directories/Van/MainEntrance/MainBankingHall/Corridor/SecurityRoom/boss-picture.tool");
 	symlink("../../../../../../assets/tool/night-vision-googles.tool", "Directories/Van/MainEntrance/MainBankingHall/Corridor/SecurityRoom/night-vision-googles.tool");
 
 

@@ -1,6 +1,3 @@
-ladder.tool
-VentilationDucts
-
 officer-card.tool
 Office1
 
@@ -10,16 +7,16 @@ Office2
 security-card.tool
 SecurityRoom
 
-janitor-card.tool
-JanitorsRoom
+officer-card.tool
+JanitorRoom
 
-boss-card.tool
+boss-picture.tool
 BossOffice
 
-boss-card.tool
+basement-card.tool
 Basement
 
-boss-card.tool
+basement-card.tool
 VaultRoom
 
 ladder.tool
