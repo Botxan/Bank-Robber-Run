@@ -57,12 +57,14 @@ char* introducedId;
 unsigned int hours=0;
 unsigned int minutes=0;
 unsigned int seconds=0;
-unsigned int tempseconds=0;
 unsigned int milliseconds=0;
 unsigned int totaltime=0,count_down_time_in_secs=0,time_left=0;
 clock_t countTime;
 clock_t startTime;
 void converttimeprint();
+
+
+
 
 idStruct lookuptable[19] = {
 	{"Van", VAN},
@@ -243,7 +245,7 @@ int getNpcState(char *name) {
 	close(fd);
 	free(npcPath);
 	return state[0] - '0';
-	
+
 }
 
 /**
@@ -523,6 +525,7 @@ int execute(int argc, char *argv[])
 		}
 
 
+
 		if(cd(argc,argv,home,0)==1)
 		{
 			// Increase room visited counter
@@ -560,6 +563,11 @@ int execute(int argc, char *argv[])
 
 			// Special interactions in each room
                         id=idFromName(argv[1]);
+
+
+		 int maxL = 2;int maxA = 7;int i = 0; int o = 0;
+		 char *ans[] ={"up","up","dw","rg","lf","rg","dw"}; char mIn[maxA][maxL];char mOut[maxA][maxL];char player[maxL];
+
 			switch(id)
 			{
 				case ENTRANCE:
@@ -586,7 +594,7 @@ int execute(int argc, char *argv[])
 					}
 					if(getObjState("electrical-panel")<2){
 						printf("Haven't they thought of installing some windows?? You can't see shit with the lights off...\n\n");
-						
+
 					}
 					break;
 
@@ -628,41 +636,46 @@ int execute(int argc, char *argv[])
 						setNpcState("Mat", 6);
 					}
 					break;
-				case VAULTC:;
-					int mls = 2;int mam = 7;int i = 0; int o = 0; int b = 0;
-					char *ans[] ={"up","up","dw","rg","lf","rg","dw"}; char mIn[mam][mls];char mOut[mam][mls];char player[mls];
-					if(visitedTimes%2 != 0){
-                                         printf("*It seens to be some kind of laser... I should remember my moves* ");
-					 while(i < mam)
+				case VAULTC:
+					if((visitedTimes%2) != 0){
+						i = 0;
+						//fscanf(stdin,"%s",player);
+					 while(i < maxA)
 					 {
 					  fscanf(stdin,"%s",player);
-   					  strcpy(mIn[i],player);
-					  if(strcmp(mIn[i],ans[i]) != 0)
+   					strcpy(mIn[i],player);
+					  if(strcmp(ans[i],ans[i]) != 0 || strcmp(ans[i],player) != 0)
 					  {
-					   b = 1;
-					   break;
-					  }
+							isGameOver = 1;
+							break;
+					 }else 	i++;
 					  memset(player,0,strlen(player));
-					  i++;
+						if(i == 7){
+							printf( "*Ok we're in* \n"); chdir("./VaultRoom");
+					  }
 					 }
 					}else{
-					 i = mam -1;	
-					 while(o < mam)
+					 memset(player,0,strlen(player));
+					 printf("*Time to go back...*\n");
+					 o = 0;
+					 i = 6;
+					 while(o < maxA)
 					 {
 					  fscanf(stdin,"%s",player);
-                                          strcpy(mOut[i],player);
-					  if(strcmp(mIn[i],mOut[o]) != 0)
+            strcpy(mOut[o],player);
+					  if(strcmp(ans[i],mOut[o]) != 0 || strcmp(player,ans[i]) != 0)
 					  {
-					   b = 1;
-                                           break;
-					  }
-					   memset(player,0,strlen(player));
-                                           i --; o++;
+							isGameOver = 1;
+							break;
+					 }else{
+						 i --; o++;
 					 }
-					}
-					if( b != 0)
-					{
-					 isGameOver = 1;
+					   memset(player,0,strlen(player));
+						 if(o == 7){
+							 printf( "*Yeah! I'm out!* \n");
+							 chdir("./Basement");
+						 }
+					 }
 					}
 			}
 		}
@@ -856,7 +869,7 @@ int execute(int argc, char *argv[])
 				printf("Error launching child process: %s\n", strerror(errno));
 				return 1;
 			}
-		} 
+		}
 		else
 		{
 			wait(NULL);
@@ -874,9 +887,9 @@ int execute(int argc, char *argv[])
 		else
 		{
 			while (fgets(format,1000,fp)){
-				write(0," ",strlen(" ")); 
-				write(0,format,strlen(format));       
-			} 
+				write(0," ",strlen(" "));
+				write(0,format,strlen(format));
+			}
 
 
 			fclose(fp);
@@ -1024,39 +1037,38 @@ void* Time1(){
 		countTime=clock();
 		milliseconds=countTime-startTime;
 		seconds=(milliseconds/(CLOCKS_PER_SEC))-(minutes*60);
-		tempseconds=(milliseconds/(CLOCKS_PER_SEC));
 		minutes=(milliseconds/(CLOCKS_PER_SEC))/60;
 		hours=minutes/60;
-		time_left=count_down_time_in_secs-tempseconds;
+		time_left=count_down_time_in_secs-seconds;
 	}
 	pthread_exit(NULL);
 }
 
 void Time(){
 	pthread_t ptid;
-  
+
     pthread_create(&ptid, NULL, &Time1, NULL);
     //printf("This line may be printed"
       //     " before thread terminates\n");
-  
+
 	//printf("");
-  
+
     // The following line terminates
     // the thread manually
     //pthread_cancel(ptid);
-  
+
     // Compare the two threads created
     //if(pthread_equal(ptid, pthread_self()))
       //  printf("Threads are equal\n");
     //else
       //  printf("Threads are not equal\n");
-  
+
     // Waiting for the created thread to terminate
     //pthread_join(ptid, NULL);
-  
+
    // printf("This line will be printed"
      //      " after thread ends\n");
-  
+
     //pthread_exit(NULL);
 }
 
@@ -1112,7 +1124,8 @@ int begin() {
 		chdir("Directories");
 		root = getcwd(NULL, 0);
 		//chdir("Van");
-		chdir("Van");
+		system("chmod 777 -R ./");
+		chdir("./Van/MainEntrance/Parking/Basement");
 		home = getcwd(NULL, 0);
 		prompt="Van";
 		count_down_time_in_secs=7200;  // 1 minute is 60, 1 hour is 3600
@@ -1209,4 +1222,3 @@ int main() {
 	pthread_create(&ptid, NULL, &beginning, NULL);
 	pthread_exit(NULL);
 }
-
