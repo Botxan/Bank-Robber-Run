@@ -628,7 +628,7 @@ int execute(int argc, char *argv[])
 						setNpcState("Mat", 6);
 					}
 					break;
-				case VAULTC:
+				case VAULTC:;
 					int mls = 2;int mam = 7;int i = 0; int o = 0; int b = 0;
 					char *ans[] ={"up","up","dw","rg","lf","rg","dw"}; char mIn[mam][mls];char mOut[mam][mls];char player[mls];
 					if(visitedTimes%2 != 0){
