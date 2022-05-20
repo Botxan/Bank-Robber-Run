@@ -74,7 +74,7 @@ int main(int argc,char* argv[]) {
 
 	// Create a symlink in /Inv (~ move the tool to inv)
 	if (symlink(pathToTool, invPath) == -1) {
-		write(2, "\033[31mCould not add the tool to the inventory:\033[37m ", strlen("\033[31mCould not add the tool to the inventory:\033[37m "));
+		write(2, "\033[31mCould not add the tool to the inventory:\033[37m\n ", strlen("\033[31mCould not add the tool to the inventory:\033[37m\n "));
 		write(2, strerror(errno), strlen(strerror(errno)));
 		write(2, ".\n", 2);
 	}
