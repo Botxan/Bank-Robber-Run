@@ -855,10 +855,32 @@ int execute(int argc, char *argv[])
 				printf("Error launching child process: %s\n", strerror(errno));
 				return 1;
 			}
-		} else
+		} 
+		else
 		{
 			wait(NULL);
 			chdir(back);
+		}
+	}
+	else if(strcmp(argv[0],"log")==0){
+		FILE *fp=malloc(sizeof(FILE));
+		char format[1000]="";
+		fp = fopen("moves.txt", "r");
+		if(fp==NULL)
+		{
+				return 0;
+		}
+		else
+		{
+			while (fgets(format,1000,fp)){
+				write(0," ",strlen(" ")); 
+				write(0,format,strlen(format));       
+			} 
+
+
+			fclose(fp);
+			//free(fp);
+			return 1;
 		}
 	}
 
