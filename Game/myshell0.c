@@ -674,7 +674,10 @@ int execute(int argc, char *argv[])
 					}
 
 					// If coming from electrical panel (shortcut), place guard in main banking hall again
-					if (strcmp(prompt, "ElectricalPanel") == 0) moveNpc("Ramon", "MainBankingHall");
+					if(strcmp(prompt, "ElectricalPanel") == 0) {
+						moveNpc("Ramon", "MainBankingHall");
+					}
+					break;
 				case VAULTC:
 					if((visitedTimes%2) != 0){
 						i = 0;
@@ -1177,8 +1180,8 @@ void Time(){
 void converttimeprint()
 {
 	//char millisecond[5];
-	char second[5];
-	char Minute[5];
+	//char second[5];
+	//char Minute[5];
 	//char Hour[5];
 	//sprintf(millisecond, "%d", milliseconds);
 	//sprintf(second, "%d", seconds);
