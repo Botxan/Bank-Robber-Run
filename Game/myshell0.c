@@ -712,7 +712,7 @@ int execute(int argc, char *argv[])
 				else write(0,"The object doesn't exist\n",strlen("The object doesn't exist\n"));
 
 			} else wait(NULL);
-		} else write(0,"You can only take an object at a time",strlen("You can only take an object at a time"));
+		} else write(0,"You can only take an object at a time\n",strlen("You can only take an object at a time\n"));
 	}
 
 	else if(strcmp(argv[0], "talk") == 0)
@@ -1125,9 +1125,9 @@ int begin() {
 
 		chdir("Directories");
 		root = getcwd(NULL, 0);
-		//chdir("Van");
-		system("chmod 777 -R ./");
-		chdir("./Van/MainEntrance/Parking/Basement");
+		chdir("Van");
+		//system("chmod 777 -R ./");
+		//chdir("./Van/MainEntrance/Parking/Basement");
 		home = getcwd(NULL, 0);
 		prompt="Van";
 		count_down_time_in_secs=7200;  // 1 minute is 60, 1 hour is 3600
