@@ -27,6 +27,7 @@ int checkCabinet() {
 					symlink("../../assets/skin/electrician.skin", "../../../../../Inv/electrician.skin");
 				}
 				printf("[*] Skin changed [*]\n");
+				break;
 			case 'N':
 				return 0;
 		}

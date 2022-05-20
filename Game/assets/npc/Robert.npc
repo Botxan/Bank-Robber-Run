@@ -22,6 +22,8 @@ Before we start, let's review everything we have learned these months, I don't w
  - If you need to talk to someone in there, use "talk <person>".
  - Visit your last movements with "log".
  - Check your inventory and the skin you are wearing with "inv".
+ - Watch periodically the remaning time in you watch using "time".
+ - You can use several functions in same time using '||' as separation between functions. Ex: "First function" || "Second function" || ...
 
 And as I want everything to go well, if you have any doubt, I have prepared a manual with all these utilities, although I hope you don't need them too much after all these months of practice. Use it with man <command>.
 

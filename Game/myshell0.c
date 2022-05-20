@@ -36,7 +36,7 @@ char *function;
 char *root; // /Directories
 char assets[PATH_MAX]; // /assets
 char mapPath[PATH_MAX];
-char savePath[PATH_MAX];
+char *savePath;
 int table[100];
 int visitedTimes;
 char visitedTimesText[12];
@@ -63,6 +63,9 @@ unsigned int totaltime=0,count_down_time_in_secs=0,time_left=0;
 clock_t countTime;
 clock_t startTime;
 void converttimeprint();
+
+
+
 
 idStruct lookuptable[19] = {
 	{"Van", VAN},
@@ -176,10 +179,11 @@ int idFromName(char *newRoom)
  * in the path to the current position of the npc
  */
 void moveNpc(char *name, char *dest) {
-	char nameWithExtension[PATH_MAX];
-	char find[PATH_MAX];
-	char npcPath[PATH_MAX];
-	char destPath[PATH_MAX];
+	char *nameWithExtension=malloc(PATH_MAX);
+	char *find=malloc(PATH_MAX);
+	char *npcPath=malloc(PATH_MAX);
+	char *destPath=malloc(PATH_MAX);
+	char *destPath1=malloc(PATH_MAX);
 	FILE *fp;
 
 	// Remove npc (symlink) from current location
@@ -194,12 +198,17 @@ void moveNpc(char *name, char *dest) {
 	sprintf(find, "find %s -type d -name %s 2>/dev/null", root, dest);
 	fp = popen(find, "r");
 	if (fp == NULL) printf("Failed to move %s to new location.\n", name);
-	fgets(destPath, sizeof(destPath), fp);
+	fgets(destPath1, sizeof(destPath1), fp);
 	pclose(fp);
 
 	destPath[strcspn(destPath, "\n")] = 0; // remove the newline
-	sprintf(destPath, "%s/%s.npc", destPath, name);
+	sprintf(destPath, "%s/%s.npc", destPath1, name);
 	symlink(npcPath, destPath);
+	free(nameWithExtension);
+	free(find);
+	free(npcPath);
+	free(destPath);
+	free(destPath1);
 }
 
 /* Function removeNpc
@@ -207,13 +216,15 @@ void moveNpc(char *name, char *dest) {
  * Removes the npc from the scenario
  */
 void removeNpc(char *name) {
-	char nameWithExtension[PATH_MAX];
-        char find[PATH_MAX];
+	char *nameWithExtension=malloc(PATH_MAX);
+        char *find=malloc(PATH_MAX);
 
         // Remove npc (symlink) from current location
         sprintf(nameWithExtension, "%s.npc", name);
         sprintf(find, "find %s -type l -iname %s -delete 2>/dev/null", root, nameWithExtension);
         system(find);
+		free(nameWithExtension);
+		free(find);
 }
 
 
@@ -225,7 +236,7 @@ void removeNpc(char *name) {
  * @param name the name of the npc
  */
 int getNpcState(char *name) {
-	char npcPath[PATH_MAX];
+	char *npcPath=malloc(PATH_MAX);
 	char fd;
 	char state[1]; // need to be string for read()
 
@@ -233,7 +244,9 @@ int getNpcState(char *name) {
 	fd = open(npcPath, O_RDONLY);
 	read(fd, state, 1);
 	close(fd);
+	free(npcPath);
 	return state[0] - '0';
+
 }
 
 /**
@@ -245,13 +258,14 @@ int getNpcState(char *name) {
  * @param state the new state of the npc
  */
 void setNpcState(char *name, int state) {
-	char npcPath[PATH_MAX];
+	char *npcPath=malloc(PATH_MAX);
 	char fd;
-	char newState[1];
+	char newState[10];
 	sprintf(npcPath, "%s/npc/%s.npc", assets, name);
 	fd = open(npcPath, O_WRONLY);
 	sprintf(newState, "%d", state);
 	write(fd, newState, 1);
+	free(npcPath);
 	close(fd);
 }
 
@@ -263,7 +277,7 @@ void setNpcState(char *name, int state) {
  * Note: The state is always bounded by 0 and 9
  */
 int getObjState(char *name) {
-	char objPath[PATH_MAX];
+	char *objPath=malloc(PATH_MAX);
 	char fd;
 	char state[1]; // need to be string for read
 
@@ -271,6 +285,7 @@ int getObjState(char *name) {
 	fd = open(objPath, O_RDONLY);
 	read(fd, state, 1);
 	close(fd);
+	free(objPath);
 	return state[0] - '0';
 }
 
@@ -282,7 +297,7 @@ int getObjState(char *name) {
  *
  */
 void talkTo(char *npc) {
-	char commandPath[PATH_MAX];
+	char *commandPath=malloc(PATH_MAX);
 	if (fork() == 0) {
 		sprintf(commandPath, "%s/talk", function);
 		execlp(commandPath, "talk", npc, function, NULL);
@@ -290,6 +305,7 @@ void talkTo(char *npc) {
 		if (errno != 0) printf("Error on talk function: %s\n", strerror(errno));
 		fprintf(stderr, "Unable not talk with %s.\n", npc);
 	} else wait(NULL);
+	free(commandPath);
 
 
 	// [*] Special interactions [*]
@@ -306,13 +322,14 @@ void talkTo(char *npc) {
  * the given room has been visited
  */
 int getTimesVisited(char *roomName) {
-	char roomPath[PATH_MAX];
+	char *roomPath=malloc(PATH_MAX);
 	FILE *f;
 	int state = -1;
 	sprintf(roomPath, "%s/roomVisitedCounter/%sCounter.txt", assets, roomName);
 	f = fopen(roomPath, "r");
 	fscanf(f, "%d", &state);
 	fclose(f);
+	free(roomPath);
 
 	return state;
 }
@@ -325,10 +342,14 @@ int getTimesVisited(char *roomName) {
  * Otherwise 1
  */
 int hasTool(char *name) {
-	char toolPath[PATH_MAX];
+	char *toolPath=malloc(PATH_MAX);
 
 	sprintf(toolPath, "%s/Inv/%s.tool", root, name);
-	if (access(toolPath, R_OK) == 0) return 0;
+	if (access(toolPath, R_OK) == 0) {
+		free(toolPath);
+		return 0;
+	}
+	free(toolPath);
 	return 1;
 
 }
@@ -339,9 +360,10 @@ int hasTool(char *name) {
  * Removes the given tool from player's directory
  */
 void removeTool(char *name) {
-        char toolPath[PATH_MAX];
+        char *toolPath=malloc(PATH_MAX);
         sprintf(toolPath, "%s/Inv/%s.tool", root, name);
         unlink(toolPath);
+		free(toolPath);
 }
 
 
@@ -353,10 +375,14 @@ void removeTool(char *name) {
  * Otherwise 1
  */
 int hasSkin(char *skin) {
-	char skinPath[PATH_MAX];
+	char *skinPath=malloc(PATH_MAX);
 
 	sprintf(skinPath, "%s/Inv/%s.skin", root, skin);
-        if (access(skinPath, R_OK) == 0) return 0;
+        if (access(skinPath, R_OK) == 0) {
+			free(skinPath);
+			return 0;
+		}
+		free(skinPath);
         return 1;
 }
 
@@ -524,6 +550,7 @@ int execute(int argc, char *argv[])
 		}
 
 
+
 		if(cd(argc,argv,home,0)==1)
 		{
 			// Increase room visited counter
@@ -561,6 +588,11 @@ int execute(int argc, char *argv[])
 			*/
 			// Special interactions in each room
                         id=idFromName(argv[1]);
+
+
+		 int maxL = 2;int maxA = 7;int i = 0; int o = 0;
+		 char *ans[] ={"up","up","dw","rg","lf","rg","dw"}; char mIn[maxA][maxL];char mOut[maxA][maxL];char player[maxL];
+
 			switch(id)
 			{
 				case ENTRANCE:
@@ -584,6 +616,10 @@ int execute(int argc, char *argv[])
 						moveNpc("Edurne", "ElectricalPanelRoom");
 						char *argv[2] = {"access", "ElectricalPanelRoom"};
 						execute(2, argv);
+					}
+					if(getObjState("electrical-panel")<2){
+						printf("Haven't they thought of installing some windows?? You can't see shit with the lights off...\n\n");
+
 					}
 					break;
 
@@ -638,6 +674,47 @@ int execute(int argc, char *argv[])
 
 					// If coming from electrical panel (shortcut), place guard in main banking hall again
 					if (strcmp(prompt, "ElectricalPanel") == 0) moveNpc("Ramon", "MainBankingHall");
+				case VAULTC:
+					if((visitedTimes%2) != 0){
+						i = 0;
+						//fscanf(stdin,"%s",player);
+					 while(i < maxA)
+					 {
+					  fscanf(stdin,"%s",player);
+   					strcpy(mIn[i],player);
+					  if(strcmp(ans[i],ans[i]) != 0 || strcmp(ans[i],player) != 0)
+					  {
+							isGameOver = 1;
+							break;
+					 }else 	i++;
+					  memset(player,0,strlen(player));
+						if(i == 7){
+							printf( "*Ok we're in* \n"); chdir("./VaultRoom");
+					  }
+					 }
+					}else{
+					 memset(player,0,strlen(player));
+					 printf("*Time to go back...*\n");
+					 o = 0;
+					 i = 6;
+					 while(o < maxA)
+					 {
+					  fscanf(stdin,"%s",player);
+            				 strcpy(mOut[o],player);
+					  if(strcmp(ans[i],mOut[o]) != 0 || strcmp(player,ans[i]) != 0)
+					  {
+							isGameOver = 1;
+							break;
+					 }else{
+						 i --; o++;
+					 }
+					   memset(player,0,strlen(player));
+						 if(o == 7){
+							 printf( "*Yeah! I'm out!* \n");
+							 chdir("./Basement");
+						 }
+					 }
+					}
 			}
 
 			// Display prompt
@@ -890,10 +967,32 @@ int execute(int argc, char *argv[])
 				printf("Error launching child process: %s\n", strerror(errno));
 				return 1;
 			}
-		} else
+		}
+		else
 		{
 			wait(NULL);
 			chdir(back);
+		}
+	}
+	else if(strcmp(argv[0],"log")==0){
+		FILE *fp=malloc(sizeof(FILE));
+		char format[1000]="";
+		fp = fopen("moves.txt", "r");
+		if(fp==NULL)
+		{
+				return 0;
+		}
+		else
+		{
+			while (fgets(format,1000,fp)){
+				write(0," ",strlen(" "));
+				write(0,format,strlen(format));
+			}
+
+
+			fclose(fp);
+			//free(fp);
+			return 1;
 		}
 	}
 
@@ -1044,29 +1143,29 @@ void* Time1(){
 
 void Time(){
 	pthread_t ptid;
-  
+
     pthread_create(&ptid, NULL, &Time1, NULL);
     //printf("This line may be printed"
       //     " before thread terminates\n");
-  
+
 	//printf("");
-  
+
     // The following line terminates
     // the thread manually
     //pthread_cancel(ptid);
-  
+
     // Compare the two threads created
     //if(pthread_equal(ptid, pthread_self()))
       //  printf("Threads are equal\n");
     //else
       //  printf("Threads are not equal\n");
-  
+
     // Waiting for the created thread to terminate
     //pthread_join(ptid, NULL);
-  
+
    // printf("This line will be printed"
      //      " after thread ends\n");
-  
+
     //pthread_exit(NULL);
 }
 
@@ -1098,6 +1197,7 @@ void converttimeprint()
 int begin() {
 	pthread_detach(pthread_self());
 	// Load the main menu
+	savePath=malloc(PATH_MAX);
 	int opt = show_main_menu();
 	eof=0;
 	int argc;
@@ -1121,11 +1221,11 @@ int begin() {
 
 		chdir("Directories");
 		root = getcwd(NULL, 0);
-		//chdir("Van");
+		chdir("Van");
 
 		// Testing
-		system("chmod -R 777 Van/MainEntrance/MainBankingHall/Corridor/SecurityRoom");
-		chdir("Van/MainEntrance/MainBankingHall/Corridor");
+		//system("chmod -R 777 Van/MainEntrance/MainBankingHall/Corridor/SecurityRoom");
+		//chdir("Van/MainEntrance/MainBankingHall/Corridor");
 
 		home = getcwd(NULL, 0);
 		prompt="Van";
@@ -1181,19 +1281,27 @@ int begin() {
     case 0:
     close(pfd[0]);*/
     	while (1) {
+			write(0, "\033[36m", strlen("\033[36m"));
         	write(0, prompt, strlen(prompt));
+			write(0, "\033[32m", strlen("\033[32m"));
                 write(0, ">", 1);
+				write(0, "\033[37m", strlen("\033[37m"));
                 if (read_args(&argc, args, MAXARGS, &eof) && argc > 0)
                 	countpipe(argc,args,args);
 		        //write(pfd[1],args,strlen(args));
                         //execute(argc, args);
-                if (eof) exit(0);
+                if (eof) {
+					free(savePath);
+					exit(0);
+				}
 
 		if ((isGameOver == 1) || (time_left <= 0)) {
 			gameOver();
+			free(savePath);
 			exit(0);
 			}
 		}
+		free(savePath);
 		/*
     default:
         close(pfd[1]);close(0);
@@ -1215,4 +1323,3 @@ int main() {
 	pthread_create(&ptid, NULL, &beginning, NULL);
 	pthread_exit(NULL);
 }
-

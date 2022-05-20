@@ -103,7 +103,7 @@ int main(int argc, char *argv[]) {
 
 
 	// ----------- Boss office -------------
-	if (strcmp(objWithExtension, "family-picture") == 0) return checkFamilyPicture();
+	if (strcmp(objectWithExtension, "family-picture") == 0) return checkFamilyPicture();
 	return 0;
 
 }

@@ -55,7 +55,7 @@ int main(int argc, char *argv[]){
         int keyDoorI = 0;
         int readItem = 0;
         int found = 0;
-        char commandPath[PATH_MAX];
+        char *commandPath=malloc(PATH_MAX);
         char roomPath[PATH_MAX];
 	char rootPath[PATH_MAX];
 	char obj[30];
@@ -74,6 +74,7 @@ int main(int argc, char *argv[]){
 	strncat(itemPath, tool, sizeof(itemPath));
 
 	if (access(itemPath, F_OK) == -1) {
+		free(commandPath);
 		write(1, "\033[31mYou don't have that object in the inventory.\n\033[37m", strlen("\033[31mYou don't have that object in the inventory.\n\033[37m"));
 		return 1;
 	}
@@ -85,6 +86,7 @@ int main(int argc, char *argv[]){
 		if (strcmp(argv[2], "radio") == 0) {
 			// Get current room
 			if (getcwd(cwd, sizeof(cwd)) == NULL) {
+				free(commandPath);
 				perror("getcwd() failed");
 				return 1;
 			}
@@ -105,6 +107,7 @@ int main(int argc, char *argv[]){
                 	                strcat(commandPath, "/../talk");
 	                                execlp(commandPath, "talk", "Robert", rootPath, NULL);
 	                                if (errno != 0) {
+											free(commandPath);
         	                                write(2, "Could not talk with your gang: ", strlen("Could not talk with your gang"));
 	                                        write(2, strerror(errno), strlen(strerror(errno)));
 	                                        write(2, ".\n", 2);
@@ -116,6 +119,7 @@ int main(int argc, char *argv[]){
 
 		return 0;
 	}
+	free(commandPath);
 
 	// Get file type
 	d = opendir(".");
@@ -204,8 +208,8 @@ int main(int argc, char *argv[]){
 				// Check if key used by player is the one that opens the target door
 				if (strcmp(tool, keyDoor[keyDoorI].key) == 0) {
 					// Change door permissions
-					strncpy(commandPath, argv[0], sizeof(commandPath));
-					strncat(commandPath, "/../chmod", sizeof(commandPath));
+					strncpy(commandPath, argv[0], strlen(commandPath));
+					strncat(commandPath, "/../chmod", strlen(commandPath));
                                         realpath(dir->d_name, roomPath);
 
 					if (fork() == 0) {

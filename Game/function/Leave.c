@@ -20,10 +20,7 @@
 
 
 char * Prompt1;
-int dress;
-char *home;
-int id;
-char *function;
+
 
 /////////// reading commands:
 
