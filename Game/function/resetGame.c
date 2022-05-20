@@ -17,6 +17,9 @@
  */
 void resetGame()
 {
+	
+
+	
 	// Set default to 755
 	if (fork() == 0)
         {
@@ -31,6 +34,14 @@ void resetGame()
         if (fork() == 0)
         {
                 execlp("find", "find", "./Directories", "-type", "l", "!", "-iname", "*description.txt", "-delete", NULL);
+                printf("\033[31mError emptying directories: %s\n\033[37m", strerror(errno));
+                exit(0);
+        }
+        else wait(NULL);
+		
+		if (fork() == 0)
+        {
+                execlp("find","./Directories/","-iname", "moves.txt" ,"-delete", NULL);
                 printf("\033[31mError emptying directories: %s\n\033[37m", strerror(errno));
                 exit(0);
         }
