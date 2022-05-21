@@ -82,7 +82,7 @@ int main(int argc,char *argv[]) {
 		printf("12: check\n");
 		printf("13: log\n");
 		printf("14: Leave\n");
-		printf("c: CANCEL\n");
+		printf("0: CANCEL\n");
 		scanf("%d",&ch);
 	}
 
@@ -255,7 +255,7 @@ int main(int argc,char *argv[]) {
 		fclose(touch); //close file
 		return 0;
 	}
-	else if (ch=='c' || ch=='C') {
+	else if (ch==0) {
 		return 0;
 	}
 	else {
