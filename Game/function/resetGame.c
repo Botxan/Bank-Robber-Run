@@ -229,7 +229,12 @@ void resetGame()
 	write(fd, "0", 1);
 	close(fd);
 
-
+	//Reset save txt
+	fd=open("./assets/save.txt",O_TRUNC,O_RDWR);
+	close(fd);
+	open("./assets/save.txt",O_RDWR);
+	write(fd,"Van/#7200",9);
+	close(fd);
 	// Set readonly permissions for player to those directories that need a key or tool to be opened
 	if (fork() == 0)
 	{
