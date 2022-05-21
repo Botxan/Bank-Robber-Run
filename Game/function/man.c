@@ -48,7 +48,7 @@ int main(int argc,char *argv[]) {
 		{
 			ch=10;
 		}
-		if (strcmp(argv[0], "Time") == 0 || strcmp(argv[0], "time"))
+		if (strcmp(argv[0], "Time") == 0 || strcmp(argv[0], "time")==0)
 		{
 			ch=11;
 		}
@@ -256,10 +256,19 @@ int main(int argc,char *argv[]) {
 		return 0;
 	}
 	else if (ch==0) {
+		if(argc>0)
+		{
+		printf("\033[31m\nInvalid input!\n\033[37m");
 		return 0;
+		}
+		else
+		{
+		return 0;	
+		}
 	}
 	else {
-		printf("\033[31m\nInvalid input!\n\033[37m");
+		printf("\033[31m\nInvalid input! you need to choose a number between 0 and 13.\n\033[37m");
+		main(argc,argv);
 	}
 	return 0;
 }
