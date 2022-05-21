@@ -5,7 +5,7 @@
 #define PATH "./assets/Man/"
 
 int main(int argc,char *argv[]) {
-	int ch;
+	int ch =0;
 	if(argc ==1)
 	{
 		if(strcmp(argv[0], "access") == 0 || strcmp(argv[0], "cd") == 0)
@@ -60,7 +60,7 @@ int main(int argc,char *argv[]) {
 		{
 			ch=13;
 		}
-		else
+		else if (ch==0)
 		{
 			ch=15;
 		}
