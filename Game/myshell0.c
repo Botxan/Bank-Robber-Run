@@ -25,6 +25,7 @@
 #include "./function/resetGame.h"
 #include "./function/interaction/officerBack.c"
 #include "./function/interaction/validateId.c"
+#include "./function/interaction/displayVaultCorridorPath.c"
 #include "./function/StoreMoves.h"
 
 int eof;
@@ -54,6 +55,18 @@ int introduceIdAttempts = 0;
 char* introducedId;
 
 
+// Vault corridor variables
+#define maxL 2
+#define maxA 7
+int i = 0;
+int o = 0;
+char *ans[] = {"up", "up", "left", "left", "up", "up", "up"};
+char mIn[maxA][maxL];
+char mOut[maxA][maxL];
+char player[maxL];
+char *argvStoreMoves[1];
+
+
 //time
 unsigned int hours=0;
 unsigned int minutes=0;
@@ -64,9 +77,6 @@ unsigned int totaltime=0,count_down_time_in_secs=0,time_left=0;
 clock_t countTime;
 clock_t startTime;
 void converttimeprint();
-
-
-
 
 idStruct lookuptable[19] = {
 	{"Van", VAN},
@@ -289,6 +299,28 @@ int getObjState(char *name) {
 	free(objPath);
 	return state[0] - '0';
 }
+
+
+/**
+ * Function getToolState
+ * --------------------
+ * Returns an integer indicating the state of the tool
+ * Note: The state is always bounded by 0 and 9
+ */
+int getToolState(char *name) {
+        char *objPath=malloc(PATH_MAX);
+        char fd;
+        char state[1]; // need to be string for read
+
+        sprintf(objPath, "%s/tool/%s.tool", assets, name);
+        fd = open(objPath, O_RDONLY);
+        read(fd, state, 1);
+        close(fd);
+        free(objPath);
+        return state[0] - '0';
+}
+
+
 
 /**
  * Function: talkTo
@@ -526,7 +558,7 @@ int execute(int argc, char *argv[])
 		// Security room is closed from corridor side
 		if ((strcmp(prompt, "Corridor") == 0) && (strcmp(argv[1], "SecurityRoom") == 0)) {
 			printf("\033[31mIt is locked from the inside.\033[37m\n");
-			//return 0;
+			return 0;
 		}
 
 
@@ -550,6 +582,12 @@ int execute(int argc, char *argv[])
 			}
 		}
 
+
+		// Accessing the vault corridor without night google visions equiped => deny
+		if ((strcmp(prompt, "Basement") == 0) && (strcmp(argv[1], "VaultCorridor") == 0) && (getToolState("night-vision-googles") == 0)) {
+			printf("\033[31mNo light enters the next room, and it is the one with the laser system. I'll need something to see in there.\033[37m\n");
+			return 0;
+		}
 
 
 		if(cd(argc,argv,home,0)==1)
@@ -590,9 +628,6 @@ int execute(int argc, char *argv[])
 			// Special interactions in each room
                         id=idFromName(argv[1]);
 
-
-		 int maxL = 2;int maxA = 7;int i = 0; int o = 0;
-		 char *ans[] ={"up","up","dw","rg","lf","rg","dw"}; char mIn[maxA][maxL];char mOut[maxA][maxL];char player[maxL];
 
 			switch(id)
 			{
@@ -675,47 +710,13 @@ int execute(int argc, char *argv[])
 
 					// If coming from electrical panel (shortcut), place guard in main banking hall again
 					if (strcmp(prompt, "ElectricalPanel") == 0) moveNpc("Ramon", "MainBankingHall");
-				case VAULTC:
-					if((visitedTimes%2) != 0){
-						i = 0;
-						//fscanf(stdin,"%s",player);
-					 while(i < maxA)
-					 {
-					  fscanf(stdin,"%s",player);
-   					strcpy(mIn[i],player);
-					  if(strcmp(ans[i],ans[i]) != 0 || strcmp(ans[i],player) != 0)
-					  {
-							isGameOver = 1;
-							break;
-					 }else 	i++;
-					  memset(player,0,strlen(player));
-						if(i == 7){
-							printf( "*Ok we're in* \n"); chdir("./VaultRoom");
-					  }
-					 }
-					}else{
-					 memset(player,0,strlen(player));
-					 printf("*Time to go back...*\n");
-					 o = 0;
-					 i = 6;
-					 while(o < maxA)
-					 {
-					  fscanf(stdin,"%s",player);
-            				 strcpy(mOut[o],player);
-					  if(strcmp(ans[i],mOut[o]) != 0 || strcmp(player,ans[i]) != 0)
-					  {
-							isGameOver = 1;
-							break;
-					 }else{
-						 i --; o++;
-					 }
-					   memset(player,0,strlen(player));
-						 if(o == 7){
-							 printf( "*Yeah! I'm out!* \n");
-							 chdir("./Basement");
-						 }
-					 }
+				case BOSS:
+					// Could not move before (missing permissions in boss office)
+					if (visitedTimes == 0) {
+						removeNpc("Ignacio");
+						moveNpc("Ignacio", "WC");
 					}
+					break;
 			}
 
 			// Display prompt
@@ -733,6 +734,59 @@ int execute(int argc, char *argv[])
 				// The basement card is found in the WC
 				symlink("../../../../../../assets/tool/basement-card.tool", "WC/basement-card.tool");
                         }
+
+			// Vault corridor minigame
+			if ((strcmp(prompt, "VaultCorridor") == 0) || (hasTool("thesecret") == 0)) {
+				if((visitedTimes % 2) != 0) {
+                                	displayVaultCorridorPath();
+                                       	i = 0;
+                                        while(i < maxA) {
+                                        	fscanf(stdin, "%s", player);
+                                                argvStoreMoves[0] = player;
+                                                Storemoves(argvStoreMoves);
+                                                strcpy(mIn[i], player);
+
+                                                if(strcmp(ans[i], ans[i]) != 0 || strcmp(ans[i], player) != 0) {
+							printf("\n");
+							printf("\033[31m*Incorrect path*\033[37m\n");
+                                                	isGameOver = 1;
+                                                        break;
+                                                } else i++;
+
+                                                memset(player, 0, strlen(player));
+
+                                                if(i == 7) {
+                                                	printf("\033[32mOk Im in.\033[37m\n");
+                                                        chdir("./VaultRoom");
+                                                        prompt = "VaultRoom";
+                                                }
+                                        }
+                       		} else {
+	                        	memset(player, 0, strlen(player));
+	                                o = 0;
+	                                i = 6;
+	                                while(o < maxA) {
+	                                	fscanf(stdin, "%s", player);
+	                                        strcpy(mOut[o], player);
+
+	                                        if(strcmp(ans[i], mOut[o]) != 0 || strcmp(player, ans[i]) != 0) {
+							printf("\n");
+	                                        	isGameOver = 1;
+	                                                break;
+	                                       	} else {
+	                                        	i--;
+	                                                o++;
+	                                        }
+
+	                                        memset(player,0,strlen(player));
+
+	                                        if(o == 7) {
+							printf("\n");
+							isGameOver = 2;
+	                                        }
+	                               	}
+	                      	}
+			}
 
                         //Save location and time left on file
                         savefd=open(savePath,O_TRUNC,O_RDWR);
@@ -1105,9 +1159,8 @@ int show_main_menu() {
 			switch (opt[0]) {
 				case '1': // New game
 				case '2': // Load game (not implemented yet)
-				case '3': // Options (not implemented yet)
-					return (int)opt[0] - '0'; // convert to int
-				case '4': // Quit
+					return opt[0] - '0';
+				case '3': // Quit
 					exit(0);
 				default: // Invalid option
 					write(0, "Invalid option\n", 16);
@@ -1117,16 +1170,27 @@ int show_main_menu() {
 
 		i = 0;
 	}
-
 	return -1;
 }
 
+
+/**
+ * Displays the end of the gam and resets
+ **/
 void gameOver() {
-	char command[strlen(assets) + 30];
-	sprintf(command, "cat %s/gameOver.txt", assets);
-	system(command);
+char command[strlen(assets) + 30];
+	printf("Is game over: %d\n", isGameOver);
+	if (isGameOver == 1) {
+		sprintf(command, "cat %s/gameOver.txt", assets);
+		system(command);
+	} else if (isGameOver == 2) {
+		sprintf(command, "cat %s/congratulations-ascii.txt", assets);
+		system(command);
+		printf("Time spent: %d minutes and %d seconds.\n\n", minutes, seconds);
+	}
 	chdir(function);
 	resetGame();
+	exit(0);
 }
 
 //thread for time
@@ -1177,8 +1241,8 @@ void Time(){
 void converttimeprint()
 {
 	//char millisecond[5];
-	char second[5];
-	char Minute[5];
+	//char second[5];
+	//char Minute[5];
 	//char Hour[5];
 	//sprintf(millisecond, "%d", milliseconds);
 	//sprintf(second, "%d", seconds);
@@ -1219,7 +1283,6 @@ int begin() {
 	case NEW_GAME:
 		system("clear");
 		resetGame();
-
 		// Print bank robber run ascii and begin the game!
 		system("cat ./assets/newGameAscii.txt");
 
@@ -1228,8 +1291,8 @@ int begin() {
 		chdir("Van");
 
 		// Change starting path for fast testing!
-		//system("chmod -R 777 Van/MainEntrance/MainBankingHall/Corridor/SecurityRoom");
-		//chdir("Van/MainEntrance/MainBankingHall/Corridor");
+		//system("chmod 777 Van/MainEntrance/Parking/Basement");
+		//chdir("Van/MainEntrance/Parking/Basement");
 
 		home = getcwd(NULL, 0);
 		prompt="Van";
@@ -1299,7 +1362,7 @@ int begin() {
 					exit(0);
 				}
 
-		if ((isGameOver == 1) || (time_left <= 0)) {
+		if ((isGameOver != 0) || (time_left <= 0)) {
 			gameOver();
 			free(savePath);
 			exit(0);

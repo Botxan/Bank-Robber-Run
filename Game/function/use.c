@@ -115,7 +115,23 @@ int main(int argc, char *argv[]){
 	                                }
 				} else wait(NULL);
 			} else write(1, "*This is not a safe place to use the radio*\n", strlen("*This is not a safe place to use the radio*\n"));
-                } else write(1, "\033[31mObject used in the room. Nothing happened.\n\033[37m", strlen("\033[31mObject used in the room. Nothing happened.\n\033[37m"));
+
+                } else if (strcmp(argv[2], "night-vision-googles") == 0) {
+			printf("\x1b[32m*You're wearing night vision googles. Now you can see in the dark.*\x1b[37m\n");
+			// change night vision googles state to wearing (1) and unlink
+			strncat(invPath, tool, PATH_MAX);
+			int fd = open(invPath, O_WRONLY);
+			write(fd, "1", 2);
+			close(fd);
+			unlink(invPath);
+
+		} else if (strcmp(argv[2], "thesecret") == 0) {
+			strncat(invPath, tool, PATH_MAX);
+			char buff[500];
+			int fd = open(invPath, O_RDONLY);
+			read(fd, &buff, sizeof(buff));
+			write(2, buff, sizeof(buff));
+		} else write(1, "\033[31mObject used in the room. Nothing happened.\n\033[37m", strlen("\033[31mObject used in the room. Nothing happened.\n\033[37m"));
 
 		return 0;
 	}

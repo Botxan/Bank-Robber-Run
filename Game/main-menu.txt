@@ -20,8 +20,6 @@ Bank Robber Run - A bank robbery shell escape room - By (insert group name)
 	*------------------*
 	| 2. Load game     |
 	*------------------*
-	| 3. Options       |
-	*------------------*
-	| 4. Exit          |
+	| 3. Exit          |
 	*------------------*
 

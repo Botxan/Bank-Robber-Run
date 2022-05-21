@@ -9,8 +9,7 @@
 /* ---------- Main menu ---------- */
 #define NEW_GAME 1
 #define LOAD_GAME 2
-#define OPTIONS 3
-#define QUIT 4
+#define QUIT 3
 
 /* ------------ Rooms ------------ */
 #define VAN 0
@@ -44,7 +43,7 @@
 #define MAXLINE 200
 #define MAXARGS 20
 #define NKEYS 19
-#define KEY_DOORS_SIZE 8
+#define KEY_DOORS_SIZE 7
 #define PATH_MAX 4096
 
 

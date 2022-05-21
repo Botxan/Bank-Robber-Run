@@ -16,9 +16,6 @@ BossOffice
 basement-card.tool
 Basement
 
-basement-card.tool
-VaultRoom
-
 ladder.tool
 VentilationDucts
 

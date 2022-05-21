@@ -51,7 +51,6 @@ void resetGame()
 	symlink("../../../../../assets/roomVisitedCounter/BasementCounter.txt", "Directories/Van/MainEntrance/Parking/Basement/.counter.txt");
         symlink("../../../../../../assets/roomVisitedCounter/VaultCorridorCounter.txt", "Directories/Van/MainEntrance/Parking/Basement/VaultCorridor/.counter.txt");
         symlink("../../../../../../../assets/roomVisitedCounter/VaultRoomCounter.txt", "Directories/Van/MainEntrance/Parking/Basement/VaultCorridor/VaultRoom/.counter.txt");
-        symlink("../../../../../../../../assets/roomVisitedCounter/VaultCounter.txt", "Directories/Van/MainEntrance/Parking/Basement/VaultCorridor/VaultRoom/Vault/.counter.txt");
         symlink("../../../../assets/roomVisitedCounter/MainBankingHallCounter.txt", "Directories/Van/MainEntrance/MainBankingHall/.counter.txt");
         symlink("../../../../../assets/roomVisitedCounter/ElectricalPanelRoomCounter.txt", "Directories/Van/MainEntrance/MainBankingHall/ElectricalPanelRoom/.counter.txt");
         symlink("../../../../../assets/roomVisitedCounter/LostAndFoundCounter.txt", "Directories/Van/MainEntrance/MainBankingHall/LostAndFound/.counter.txt");
@@ -73,7 +72,6 @@ void resetGame()
 	symlink("../../../../../assets/roomDescription/BasementDescription.txt", "Directories/Van/MainEntrance/Parking/Basement/.description.txt");
 	symlink("../../../../../../assets/roomDescription/VaultCorridorDescription.txt", "Directories/Van/MainEntrance/Parking/Basement/VaultCorridor/.description.txt");
 	symlink("../../../../../../../assets/roomDescription/VaultRoomDescription.txt", "Directories/Van/MainEntrance/Parking/Basement/VaultCorridor/VaultRoom/.description.txt");
-	symlink("../../../../../../../../assets/roomDescription/VaultDescription.txt", "Directories/Van/MainEntrance/Parking/Basement/VaultCorridor/VaultRoom/Vault/.description.txt");
 	symlink("../../../../assets/roomDescription/MainBankingHallDescription.txt", "Directories/Van/MainEntrance/MainBankingHall/.description.txt");
 	symlink("../../../../../assets/roomDescription/ElectricalPanelRoomDescription.txt", "Directories/Van/MainEntrance/MainBankingHall/ElectricalPanelRoom/.description.txt");
 	symlink("../../../../../assets/roomDescription/LostAndFoundDescription.txt", "Directories/Van/MainEntrance/MainBankingHall/LostAndFound/.description.txt");
@@ -96,7 +94,6 @@ void resetGame()
 	symlink("..", "Directories/Van/MainEntrance/Parking/Basement/Parking");
 	symlink("..", "Directories/Van/MainEntrance/Parking/Basement/VaultCorridor/Basement");
 	symlink("..", "Directories/Van/MainEntrance/Parking/Basement/VaultCorridor/VaultRoom/VaultCorridor");
-	symlink("..", "Directories/Van/MainEntrance/Parking/Basement/VaultCorridor/VaultRoom/Vault/VaultRoom");
 	symlink("..", "Directories/Van/MainEntrance/MainBankingHall/MainEntrance");
 	symlink("..", "Directories/Van/MainEntrance/MainBankingHall/ElectricalPanelRoom/MainBankingHall");
 	symlink("..", "Directories/Van/MainEntrance/MainBankingHall/LostAndFound/MainBankingHall");
@@ -127,7 +124,8 @@ void resetGame()
         symlink("../../../../../../assets/obj/office2-laptop.obj", "Directories/Van/MainEntrance/MainBankingHall/Corridor/Office2/laptop.obj");
 	symlink("../../../../../../assets/obj/monitors.obj", "Directories/Van/MainEntrance/MainBankingHall/Corridor/SecurityRoom/monitors.obj");
 	symlink("../../../../../../assets/obj/janitorial-supplies.obj", "Directories/Van/MainEntrance/MainBankingHall/Corridor/JanitorRoom/janitorial-supplies.obj");
-        symlink("../../../../../../assets/obj/boss-computer.obj", "Directories/Van/MainEntrance/MainBankingHall/Corridor/BossOffice/computer.obj");
+        symlink("../../../../../../assets/obj/family-picture.obj", "Directories/Van/MainEntrance/MainBankingHall/Corridor/BossOffice/family-picture.obj");
+        symlink("../../../../../../../assets/obj/vault.obj", "Directories/Van/MainEntrance/Parking/Basement/VaultCorridor/VaultRoom/vault.obj");
 
 
 	// Add all the .tools to the map (except the ones provided by npcs or other interactions)
@@ -147,11 +145,14 @@ void resetGame()
 	symlink("../../../../../../assets/npc/Jade.npc", "Directories/Van/MainEntrance/MainBankingHall/Corridor/Office2/Jade.npc");
 	symlink("../../../../../../assets/npc/Javier.npc", "Directories/Van/MainEntrance/MainBankingHall/Corridor/SecurityRoom/Javier.npc");
 	symlink("../../../../../assets/npc/Veronica.npc", "Directories/Van/MainEntrance/MainBankingHall/LostAndFound/Veronica.npc");
-	symlink("../../../../../../assets/npc/Julian.npc", "Directories/Van/MainEntrance/MainBankingHall/Corridor/BossOffice/Ignacio.npc");
+	symlink("../../../../../../assets/npc/Ignacio.npc", "Directories/Van/MainEntrance/MainBankingHall/Corridor/BossOffice/Ignacio.npc");
 
 
 	// If ventilation ducts have been discovered in previous game, remove symlink
         unlink("./Directories/Van/MainEntrance/MainBankingHall/ElectricalPanelRoom/VentilationDucts");
+
+	// If vault has been decrypted, remove decrypted file
+	remove("./assets/vault.txt");
 
 
 	// Set default skin (electrician)
@@ -201,7 +202,6 @@ void resetGame()
         }
 	closedir(d);
 
-
 	// Set .obj default status to 0 (except electrical panel room, to 3 (= all lights on)
 	d = opendir("assets/obj");
         if (!d) {
@@ -224,15 +224,13 @@ void resetGame()
         }
         closedir(d);
 
-	// Set readonly permissions for player to those directories that need a key or tool to be opened
-	if (fork() == 0)
-	{
-		execlp("./chmod","./chmod","./Directories/Van/MainEntrance/Parking/Basement/VaultCorridor/VaultRoom","0066", NULL);
-		printf("\033[31mError changing VaultRoom permissions: %s.\n\033[37m", strerror(errno));
-		exit(0);
-	}
-	else wait(NULL);
+	// Reset night vision googles state to 0
+	if ((fd = open("./assets/tool/night-vision-googles.tool", O_WRONLY)) == -1) printf("nooo\n");
+	write(fd, "0", 1);
+	close(fd);
 
+
+	// Set readonly permissions for player to those directories that need a key or tool to be opened
 	if (fork() == 0)
 	{
 		execlp("./chmod","./chmod","./Directories/Van/MainEntrance/Parking/Basement","0066", NULL);

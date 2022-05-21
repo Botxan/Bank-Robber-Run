@@ -11,6 +11,7 @@
 #include "./check/checkLaptop.c"
 #include "./check/checkMonitors.c"
 #include "./check/checkFamilyPicture.c"
+#include "./check/checkVault.c"
 
 /**
  * Function: main (check)
@@ -104,6 +105,10 @@ int main(int argc, char *argv[]) {
 
 	// ----------- Boss office -------------
 	if (strcmp(objectWithExtension, "family-picture") == 0) return checkFamilyPicture();
-	return 0;
 
+
+	// ---------- Vault room ---------------
+	if (strcmp(objectWithExtension, "vault.obj") == 0) return checkVault();
+
+	return 0;
 }

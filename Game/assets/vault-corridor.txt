@@ -1,0 +1,10 @@
+┌────────7─────────────┐        Use the following words to traverse
+│========6=============│        the vault corridor:
+│========5=============│                   up
+│========432===========│               left  right    
+│==========1===========│                  down
+└──────────0───────────┘                     
+           ^                    Type the needed steps separated by spaces
+                                or line jumps. You are in the position 0.
+
+
