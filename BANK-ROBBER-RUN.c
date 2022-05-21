@@ -16,16 +16,13 @@
 
 int main()
 {
-		chdir("Game");
-		int child=fork();
-		if(child==0)
-		{
-			char* path=strcat(getcwd(NULL, 0),"/myshell0");
-			execlp(path,"",NULL);
-			if (errno!=0) write(0, "Unknown error\n", strlen("Unknown error\n"));
-		}
-		else
-		{
-			wait(NULL);
-		}
+	chdir("Game");
+	int child=fork();
+	if(child==0)
+	{
+		char* path=strcat(getcwd(NULL, 0),"/myshell0");
+		execlp(path,"",NULL);
+		if (errno!=0) write(0, "Error launching the shell.\n", strlen("Error launching the shell\n"));
+	}
+	else wait(NULL);
 }
