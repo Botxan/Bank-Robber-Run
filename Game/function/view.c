@@ -1,5 +1,4 @@
-
-#include <sys/syscall.h> 
+#include <sys/syscall.h>
 #include <fcntl.h>
 #include <errno.h>
 #include <unistd.h>
@@ -70,10 +69,10 @@ int main(int argc,char *argv[])
 {
 	struct dirent *dir;
 	struct stat *buf = malloc(sizeof(struct stat));
-	char room[1000]="Places:\n";
-	char tool[1000]="Tools:\n";
-	char object[1000]="Objects:\n";
-	char npc[1000]="People:\n";
+	char room[100]="Places [access]:\n";
+	char tool[100]="Tools [pickup]:\n";
+	char object[100]="Objects [check]:\n";
+	char npc[100]="People [talk]:\n";
 
 	switch(argc)
 	{
@@ -127,14 +126,14 @@ int main(int argc,char *argv[])
 				}
 			}
 		}
-		write(0,room, strlen(room));
-		write(0,"\n", strlen("\n\n"));
-		write(0,tool, strlen(tool));
-		write(0,"\n", strlen("\n\n"));
-		write(0,object, strlen(object));
-		write(0,"\n", strlen("\n\n"));
-		write(0,npc, strlen(npc));
-		write(0,"\n", strlen("\n\n"));
+		write(1,room, strlen(room));
+		write(1,"\n", strlen("\n\n"));
+		write(1,tool, strlen(tool));
+		write(1,"\n", strlen("\n\n"));
+		write(1,object, strlen(object));
+		write(1,"\n", strlen("\n\n"));
+		write(1,npc, strlen(npc));
+		write(1,"\n", strlen("\n\n"));
 		closedir(d);
 		break;
 	}
@@ -150,8 +149,8 @@ int main(int argc,char *argv[])
 				{
 					if (dir->d_name[0] != '.' && dir->d_name[strlen(dir->d_name)-1] != '~')
 					{
-						write(0,dir->d_name, strlen(dir->d_name));
-						write(0,"\n", strlen("\n"));
+						write(1,dir->d_name, strlen(dir->d_name));
+						write(1,"\n", strlen("\n"));
 					}
 				}
 				else
@@ -169,8 +168,8 @@ int main(int argc,char *argv[])
 						case 4:
 							break;
 						default:
-							write(0,dir->d_name, strlen(dir->d_name));
-							write(0,"\n", strlen("\n"));
+							write(1,dir->d_name, strlen(dir->d_name));
+							write(1,"\n", strlen("\n"));
 							break;
 						}
 					}
@@ -252,14 +251,14 @@ int main(int argc,char *argv[])
 								}
 							}
 						}
-						write(0,room, strlen(room));
-						write(0,"\n", strlen("\n\n"));
-						write(0,tool, strlen(tool));
-						write(0,"\n", strlen("\n\n"));
-						write(0,object, strlen(object));
-						write(0,"\n", strlen("\n\n"));
-						write(0,npc, strlen(npc));
-						write(0,"\n", strlen("\n\n"));
+						write(1,room, strlen(room));
+						write(1,"\n", strlen("\n\n"));
+						write(1,tool, strlen(tool));
+						write(1,"\n", strlen("\n\n"));
+						write(1,object, strlen(object));
+						write(1,"\n", strlen("\n\n"));
+						write(1,npc, strlen(npc));
+						write(1,"\n", strlen("\n\n"));
 						chdir(home);
 						closedir(d);
 					}
@@ -314,14 +313,14 @@ int main(int argc,char *argv[])
 							}
 						}
 					}
-					write(0,room, strlen(room));
-					write(0,"\n", strlen("\n\n"));
-					write(0,tool, strlen(tool));
-					write(0,"\n", strlen("\n\n"));
-					write(0,object, strlen(object));
-					write(0,"\n", strlen("\n\n"));
-					write(0,npc, strlen(npc));
-					write(0,"\n", strlen("\n\n"));
+					write(1,room, strlen(room));
+					write(1,"\n", strlen("\n\n"));
+					write(1,tool, strlen(tool));
+					write(1,"\n", strlen("\n\n"));
+					write(1,object, strlen(object));
+					write(1,"\n", strlen("\n\n"));
+					write(1,npc, strlen(npc));
+					write(1,"\n", strlen("\n\n"));
 					chdir(home);
 					closedir(d);
 				}
@@ -380,8 +379,8 @@ int main(int argc,char *argv[])
 										case 4:
 											break;
 										default:
-											write(0,dir->d_name, strlen(dir->d_name));
-											write(0,"\n", strlen("\n"));
+											write(1,dir->d_name, strlen(dir->d_name));
+											write(1,"\n", strlen("\n"));
 											break;
 									}
 								}
@@ -390,8 +389,8 @@ int main(int argc,char *argv[])
 							{
 								if (dir->d_name[0] != '.' && dir->d_name[strlen(dir->d_name)-1] != '~')
 								{
-									write(0,dir->d_name, strlen(dir->d_name));
-									write(0,"\n", strlen("\n"));
+									write(1,dir->d_name, strlen(dir->d_name));
+									write(1,"\n", strlen("\n"));
 								}
 							}
 						}
@@ -409,8 +408,8 @@ int main(int argc,char *argv[])
 						{
 							if (dir->d_name[0] != '.' && dir->d_name[strlen(dir->d_name)-1] != '~')
 							{
-								write(0,dir->d_name, strlen(dir->d_name));
-								write(0,"\n", strlen("\n"));
+								write(1,dir->d_name, strlen(dir->d_name));
+								write(1,"\n", strlen("\n"));
 							}
 						}
 					}
@@ -475,8 +474,8 @@ int main(int argc,char *argv[])
 							{
 								if (dir->d_name[0] != '.' && dir->d_name[strlen(dir->d_name)-1] != '~')
 								{
-									write(0,dir->d_name, strlen(dir->d_name));
-									write(0,"\n", strlen("\n"));
+									write(1,dir->d_name, strlen(dir->d_name));
+									write(1,"\n", strlen("\n"));
 								}
 							}
 							chdir(home);
@@ -498,8 +497,8 @@ int main(int argc,char *argv[])
 						{
 							if (dir->d_name[0] != '.' && dir->d_name[strlen(dir->d_name)-1] != '~')
 							{
-								write(0,dir->d_name, strlen(dir->d_name));
-								write(0,"\n", strlen("\n"));
+								write(1,dir->d_name, strlen(dir->d_name));
+								write(1,"\n", strlen("\n"));
 							}
 						}
 					}
@@ -586,14 +585,14 @@ int main(int argc,char *argv[])
 								}
 							}
 						}
-						write(0,room, strlen(room));
-						write(0,"\n", strlen("\n\n"));
-						write(0,tool, strlen(tool));
-						write(0,"\n", strlen("\n\n"));
-						write(0,object, strlen(object));
-						write(0,"\n", strlen("\n\n"));
-						write(0,npc, strlen(npc));
-						write(0,"\n", strlen("\n\n"));
+						write(1,room, strlen(room));
+						write(1,"\n", strlen("\n\n"));
+						write(1,tool, strlen(tool));
+						write(1,"\n", strlen("\n\n"));
+						write(1,object, strlen(object));
+						write(1,"\n", strlen("\n\n"));
+						write(1,npc, strlen(npc));
+						write(1,"\n", strlen("\n\n"));
 						chdir(home);
 						closedir(d);
 					}
@@ -648,14 +647,14 @@ int main(int argc,char *argv[])
 							}
 						}
 					}
-					write(0,room, strlen(room));
-					write(0,"\n", strlen("\n\n"));
-					write(0,tool, strlen(tool));
-					write(0,"\n", strlen("\n\n"));
-					write(0,object, strlen(object));
-					write(0,"\n", strlen("\n\n"));
-					write(0,npc, strlen(npc));
-					write(0,"\n", strlen("\n\n"));
+					write(1,room, strlen(room));
+					write(1,"\n", strlen("\n\n"));
+					write(1,tool, strlen(tool));
+					write(1,"\n", strlen("\n\n"));
+					write(1,object, strlen(object));
+					write(1,"\n", strlen("\n\n"));
+					write(1,npc, strlen(npc));
+					write(1,"\n", strlen("\n\n"));
 					chdir(home);
 					closedir(d);
 				} else write(1,"\033[31mYou need to use some object to open this door or this room doesn't exist \n\033[37m", strlen("\033[31mYou need to use some object to open this door or this room doesn't exist \n\n\033[37m"));
@@ -668,6 +667,3 @@ int main(int argc,char *argv[])
 	free(buf);
 	return 0;
 }
-
-
-

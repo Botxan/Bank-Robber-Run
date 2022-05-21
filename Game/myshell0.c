@@ -25,6 +25,7 @@
 #include "./function/resetGame.h"
 #include "./function/interaction/officerBack.c"
 #include "./function/interaction/validateId.c"
+#include "./function/interaction/displayVaultCorridorPath.c"
 #include "./function/StoreMoves.h"
 
 int eof;
@@ -45,12 +46,25 @@ FILE *f;
 int pfd[2];
 int savefd;
 char lastLocation[PATH_MAX];
+
+
 // situational variables
 int distractedGuard = 0;
 int isGameOver = 0;
 int introduceIdAttempts = 0;
 char* introducedId;
 
+
+// Vault corridor variables
+#define maxL 2
+#define maxA 7
+int i = 0;
+int o = 0;
+char *ans[] = {"up", "up", "left", "left", "up", "up", "up"};
+char mIn[maxA][maxL];
+char mOut[maxA][maxL];
+char player[maxL];
+char *argvStoreMoves[1];
 
 
 //time
@@ -243,7 +257,7 @@ int getNpcState(char *name) {
 	close(fd);
 	free(npcPath);
 	return state[0] - '0';
-	
+
 }
 
 /**
@@ -285,6 +299,28 @@ int getObjState(char *name) {
 	free(objPath);
 	return state[0] - '0';
 }
+
+
+/**
+ * Function getToolState
+ * --------------------
+ * Returns an integer indicating the state of the tool
+ * Note: The state is always bounded by 0 and 9
+ */
+int getToolState(char *name) {
+        char *objPath=malloc(PATH_MAX);
+        char fd;
+        char state[1]; // need to be string for read
+
+        sprintf(objPath, "%s/tool/%s.tool", assets, name);
+        fd = open(objPath, O_RDONLY);
+        read(fd, state, 1);
+        close(fd);
+        free(objPath);
+        return state[0] - '0';
+}
+
+
 
 /**
  * Function: talkTo
@@ -390,7 +426,6 @@ int execute(int argc, char *argv[])
 {
 	char path[100];
 	char path2[100];
-	char auxPath[strlen(function) + 50];
 	int child;
 	strcpy(path,function);
 	strcpy(path2,function);
@@ -418,41 +453,41 @@ int execute(int argc, char *argv[])
 	else if(strcmp(argv[0], "access") == 0 || strcmp(argv[0], "cd") == 0)
 	{
 		// Pre entering events
-		if(strcmp(prompt, "VentilationDucts") == 0)
-		{
-			if(argv[2] !=NULL)
-			{
-				if(strcmp(argv[1], "SecurityRoom") == 0 || strcmp(argv[2], "SecurityRoom") == 0)
-				{
-					strcat(path,"/chmod");
-					strcat(path2,"/Directories/Van/MainEntrance/MainBankingHall/Corridor/SecurityRoom");
-					int chmod7 = fork();
-					if(chmod7 == 0) execlp(path,"./chmod",path2,"rwxrwxrwx", NULL);
-					else wait(NULL);
-				}
-			}
-			else
-			{
-				if(strcmp(argv[1], "SecurityRoom") == 0)
-				{
-					strcat(path,"/chmod");
-					strcat(path2,"/Directories/Van/MainEntrance/MainBankingHall/Corridor/SecurityRoom");
-					int chmod7 = fork();
 
-					if(chmod7 == 0) execlp(path,"./chmod",path2,"rwxrwxrwx", NULL);
-					else wait(NULL);
-				}
+		// Using shortcut from electrical panel room to ventilation ducts => avoid possible events
+		if ((strcmp(prompt, "ElectricalPanelRoom") == 0) && (strcmp(argv[1], "VentilationDucts") == 0)) {
+			// Only if available of course
+			if (getTimesVisited("VentilationDucts") > 0) {
+				//moveGuard
+				moveNpc("Ramon", "MainEntrance");
+			}
+		}
+
+
+		// Unreachable ventilation ducts => Too high (hint for ladder)
+		if ((strcmp(prompt, "WC") == 0) && (strcmp(argv[1], "VentilationDucts") == 0)) {
+			struct stat statBuf;
+			if (stat("VentilationDucts", &statBuf) < 0) {
+				write(2, "VentiltionDucts not found\n", strlen("VentilationDucts not found\n"));
+				exit(0);
+			}
+
+			mode_t bits =  statBuf.st_mode;
+			if ((bits & S_IXUSR) == 0) {
+				write(1, "\033[31mUnreachable. The ducts are too high.\033[37m\n", strlen("\033[31mUnreachable. The ducts are too high.\033[37m\n"));
+				return 0;
 			}
 		}
 
 		// Main banking hall lights are on and guard is there and electrician skin is wear => guard prohibits entrance to coridor
-		if ((strcmp(prompt, "MainBankingHall") == 0) && (strcmp(argv[1], "Corridor") == 0) && (access("Ramon.npc", R_OK) == 0) && ((getObjState("electrical-panel") == 2) || (getObjState("electrical-panel") == 3))) {
+		if ((strcmp(prompt, "MainBankingHall") == 0) && (strcmp(argv[1], "Corridor") == 0) && (access("Ramon.npc", R_OK) == 0) && (getObjState("electrical-panel") >= 2)) {
 			talkTo("Ramon");
 			return 0;
 		}
 
 		// Before leaving office1 for first time, office is coming back!!
 		if ((strcmp(prompt, "Office1") == 0) && ((strcmp(argv[1], "Corridor") == 0) || (strcmp(argv[1], "..") == 0)) && (getTimesVisited("Office1") == 1) && (getNpcState("Matt") != 5) && (getNpcState("Matt") != 6) && (getNpcState("Matt") != 7)) {
+
 			char decision = officerBack();
 			moveNpc("Matt", "Office1");
 			setNpcState("Matt", 1);
@@ -474,7 +509,7 @@ int execute(int argc, char *argv[])
 					talkTo("Matt");
 					break;
 			}
-			return 0;
+				return 0;
 		}
 
 		// Knocking Jade's door and Jade is not unconscious (7)
@@ -510,8 +545,6 @@ int execute(int argc, char *argv[])
 		// and current skin
 		if ((strcmp(prompt, "MainBankingHall") == 0) && (strcmp(argv[1], "LostAndFound") == 0)) {
 			// Email not read
-			printf("the laptop state is: %d\n", getObjState("office2-laptop"));
-			printf("hastool officer card: %d\n", hasTool("officer-card"));
 			if ((getObjState("office2-laptop") == 0) && (hasTool("officer-card") != 0)) setNpcState("Veronica", 0);
 			else { // email read
 				if (hasSkin("electrician") == 0) setNpcState("Veronica", 1);
@@ -520,6 +553,40 @@ int execute(int argc, char *argv[])
 					else setNpcState("Veronica", 3);
 				}
 			}
+		}
+
+		// Security room is closed from corridor side
+		if ((strcmp(prompt, "Corridor") == 0) && (strcmp(argv[1], "SecurityRoom") == 0)) {
+			printf("\033[31mIt is locked from the inside.\033[37m\n");
+			return 0;
+		}
+
+
+		// Directors room is opened with boss picture (biometric access)
+		if ((strcmp(prompt, "Corridor") == 0) && (strcmp(argv[1], "BossOffice") == 0)) {
+			struct stat statBuf;
+                        if (stat("BossOffice", &statBuf) < 0) {
+                                write(2, "BossOffice not found\n", strlen("BossOffice not found\n"));
+                                exit(0);
+                        }
+
+                        mode_t bits =  statBuf.st_mode;
+                        if ((bits & S_IXUSR) == 0) {
+				printf("\033[31mIt is locked. Looks like it uses some kind of facial recognition.\033[37m\n");
+                                return 0;
+                        } else {
+				if (getObjState("coffee-machine") != 3) {
+				printf("\033[31mCannot enter while the director is inside. There has to be a way to get him out.\033[37m\n");
+                                return 0;
+				}
+			}
+		}
+
+
+		// Accessing the vault corridor without night google visions equiped => deny
+		if ((strcmp(prompt, "Basement") == 0) && (strcmp(argv[1], "VaultCorridor") == 0) && (getToolState("night-vision-googles") == 0)) {
+			printf("\033[31mNo light enters the next room, and it is the one with the laser system. I'll need something to see in there.\033[37m\n");
+			return 0;
 		}
 
 
@@ -539,7 +606,7 @@ int execute(int argc, char *argv[])
 			write(fd, visitedTimesText, strlen(visitedTimesText));
 			close(fd);
 			fclose(f);
-
+			/*
 			// Display prompt
                         prompt=strrchr(getcwd(NULL, 0),'/')+1;
 
@@ -557,9 +624,11 @@ int execute(int argc, char *argv[])
 			write(savefd,saveText,strlen(saveText));
 			write(savefd,"#",1);
 			dprintf(savefd,"%d",time_left);
-
+			*/
 			// Special interactions in each room
                         id=idFromName(argv[1]);
+
+
 			switch(id)
 			{
 				case ENTRANCE:
@@ -587,6 +656,7 @@ int execute(int argc, char *argv[])
 					if(getObjState("electrical-panel")<2){
 						printf("Haven't they thought of installing some windows?? You can't see shit with the lights off...\n\n");
 						setNpcState("Ramon",3);
+
 					}
 					break;
 
@@ -597,12 +667,6 @@ int execute(int argc, char *argv[])
 
 						// Move bank manager to electrical panel room
 						moveNpc("Edurne", "MainBankingHall");
-					}
-
-					// view the janitors key card
-					if (visitedTimes == 2) {
-						sprintf(auxPath, "%s/assets/tool/janitor-card.tool", function);
-						symlink(auxPath, "janitor-card.tool");
 					}
 
 					// Dialog to distract ward is available while corridor has not reached and guard
@@ -628,43 +692,121 @@ int execute(int argc, char *argv[])
 						setNpcState("Mat", 6);
 					}
 					break;
-				case VAULTC:;
-					int mls = 2;int mam = 7;int i = 0; int o = 0; int b = 0;
-					char *ans[] ={"up","up","dw","rg","lf","rg","dw"}; char mIn[mam][mls];char mOut[mam][mls];char player[mls];
-					if(visitedTimes%2 != 0){
-                                         printf("*It seens to be some kind of laser... I should remember my moves* ");
-					 while(i < mam)
-					 {
-					  fscanf(stdin,"%s",player);
-   					  strcpy(mIn[i],player);
-					  if(strcmp(mIn[i],ans[i]) != 0)
-					  {
-					   b = 1;
-					   break;
-					  }
-					  memset(player,0,strlen(player));
-					  i++;
-					 }
-					}else{
-					 i = mam -1;	
-					 while(o < mam)
-					 {
-					  fscanf(stdin,"%s",player);
-                                          strcpy(mOut[i],player);
-					  if(strcmp(mIn[i],mOut[o]) != 0)
-					  {
-					   b = 1;
-                                           break;
-					  }
-					   memset(player,0,strlen(player));
-                                           i --; o++;
-					 }
+				case VENT:
+					// Unlock the ventilation ducts to electrical panel (bidirectional) and to the security room (unidirectional)
+					if (visitedTimes == 1) {
+						printf("\033[32m*You have discovered the ventilation ducts!*\033[37m\n");
+						printf("\033[32m*Ventilation ducts are now accesible also from the electrical panel room**\033[37m\n");
+
+						// Create new symlink
+						symlink("../Corridor/WC/VentilationDucts", "../../../ElectricalPanelRoom/VentilationDucts");
+
+						// Unlock the security room
+						if (fork() == 0) {
+							execlp("../../../../../../../chmod", "chmod", "../../SecurityRoom", "0775", NULL);
+							printf("\033[31mError changing SecurityRoom permissions: %s.\n\033[37m", strerror(errno));
+							exit(0);
+						}
 					}
-					if( b != 0)
-					{
-					 isGameOver = 1;
+
+					// If coming from electrical panel (shortcut), place guard in main banking hall again
+					if (strcmp(prompt, "ElectricalPanel") == 0) moveNpc("Ramon", "MainBankingHall");
+					break;
+				case BOSS:
+					// Could not move before (missing permissions in boss office)
+					if (visitedTimes == 0) {
+						removeNpc("Ignacio");
+						moveNpc("Ignacio", "WC");
 					}
+					if(strcmp(prompt, "ElectricalPanel") == 0) {
+						moveNpc("Ramon", "MainBankingHall");
+					}
+					break;
 			}
+
+			// Display prompt
+                        prompt=strrchr(getcwd(NULL, 0),'/')+1;
+
+			// Special interaction
+			// Returning to corridor when coffee machine is poisoned and monitors have been hacked
+			// If bleach has been used in coffee machine and monitors have been hacked
+                        if ((strcmp(prompt, "Corridor") == 0) && (getObjState("coffee-machine") == 3) && (getObjState("monitors") == 1) && (getNpcState("Ignacio") == 0)) {
+                        	moveNpc("Ignacio", "Corridor");
+                                talkTo("Ignacio");
+
+				// Ignacio is moved to the bathroom
+				moveNpc("Ignacio", "WC");
+				// The basement card is found in the WC
+				symlink("../../../../../../assets/tool/basement-card.tool", "WC/basement-card.tool");
+                        }
+
+			// Vault corridor minigame
+			if ((strcmp(prompt, "VaultCorridor") == 0) || (hasTool("thesecret") == 0)) {
+				if((visitedTimes % 2) != 0) {
+                                	displayVaultCorridorPath();
+                                       	i = 0;
+                                        while(i < maxA) {
+                                        	fscanf(stdin, "%s", player);
+                                                argvStoreMoves[0] = player;
+                                                Storemoves(argvStoreMoves);
+                                                strcpy(mIn[i], player);
+
+                                                if(strcmp(ans[i], ans[i]) != 0 || strcmp(ans[i], player) != 0) {
+							printf("\n");
+							printf("\033[31m*Incorrect path*\033[37m\n");
+                                                	isGameOver = 1;
+                                                        break;
+                                                } else i++;
+
+                                                memset(player, 0, strlen(player));
+
+                                                if(i == 7) {
+                                                	printf("\033[32mOk Im in.\033[37m\n");
+                                                        chdir("./VaultRoom");
+                                                        prompt = "VaultRoom";
+                                                }
+                                        }
+                       		} else {
+	                        	memset(player, 0, strlen(player));
+	                                o = 0;
+	                                i = 6;
+	                                while(o < maxA) {
+	                                	fscanf(stdin, "%s", player);
+	                                        strcpy(mOut[o], player);
+
+	                                        if(strcmp(ans[i], mOut[o]) != 0 || strcmp(player, ans[i]) != 0) {
+							printf("\n");
+	                                        	isGameOver = 1;
+	                                                break;
+	                                       	} else {
+	                                        	i--;
+	                                                o++;
+	                                        }
+
+	                                        memset(player,0,strlen(player));
+
+	                                        if(o == 7) {
+							printf("\n");
+							isGameOver = 2;
+	                                        }
+	                               	}
+	                      	}
+			}
+
+                        //Save location and time left on file
+                        savefd=open(savePath,O_TRUNC,O_RDWR);
+                        close(savefd);
+                        savefd=open(savePath,O_RDWR);
+                        char *currentWD;
+                        currentWD=getcwd(NULL,0);
+                        int iVan=0;
+                        while(!(currentWD[iVan]=='V'&&currentWD[iVan+1]=='a'&&currentWD[iVan+2]=='n')){iVan++;}//fin$
+                        char *saveText;
+                        currentWD[iVan+3]='#';
+                        saveText=strrchr(currentWD,'#')+1;
+                        write(savefd,saveText,strlen(saveText));
+                        write(savefd,"#",1);
+                        dprintf(savefd,"%d",time_left);
 		}
 	}
 
@@ -698,12 +840,18 @@ int execute(int argc, char *argv[])
 				else write(0,"The object doesn't exist\n",strlen("The object doesn't exist\n"));
 
 			} else wait(NULL);
-		} else write(0,"You can only take an object at a time",strlen("You can only take an object at a time"));
+		} else write(0,"You can only take an object at a time\n",strlen("You can only take an object at a time\n"));
 	}
 
 	else if(strcmp(argv[0], "talk") == 0)
 	{
 		if(argc == 2) {
+			// No dialogues in the Van, just follow radio instructions
+			if ((strcmp(prompt, "Van") == 0) && (strcmp(argv[1], "Robert") == 0)) {
+				write(1, "If you need my help, use the radio in safe zones.\n", strlen("If you need my help, use the radio in safe zones.\n"));
+				return 0;
+			}
+
 			talkTo(argv[1]);
 
 			// Special interactions
@@ -724,10 +872,24 @@ int execute(int argc, char *argv[])
 						char invPath[PATH_MAX];
 						strcpy(invPath, root);
 						strcat(invPath, "/Inv/officer-card.tool");
-						printf("cardPath: %s\n", cardPath);
-						printf("invPath: %s\n", invPath);
 						symlink(cardPath, invPath);
 						printf("*officer-card has been added to your inventory*\n");
+
+						// update radio status
+						if (getNpcState("Robert") == 4) setNpcState("Robert", 5);
+						else setNpcState("Robert", 6);
+
+						if (fork() == 0) {
+							execlp("../../../../../chmod","chmod","../Corridor/Office1","0066", NULL);
+					                printf("\033[31mError changing Office1 permissions: %s.\n\033[37m", strerror(errno));
+					                exit(0);
+						} else wait(NULL);
+
+						if (fork() == 0) {
+                                                        execlp("../../../../../chmod","chmod","../Corridor/Office2","0066", NULL);
+                                                        printf("\033[31mError changing Office2 permissions: %s.\n\033[37m", strerror(errno));
+                                                        exit(0);
+                                                } else wait(NULL);
 
 					} else {
 						introduceIdAttempts++;
@@ -803,6 +965,15 @@ int execute(int argc, char *argv[])
                         setNpcState("Ramon", 2);
                         distractedGuard = 1;
                 }
+
+		// Bleach used in coffee machine (+ security cameras deactivated)
+		if((strcmp((strrchr(getcwd(NULL, 0),'/') + 1), "Corridor") == 0) && (getNpcState("Ignacio") == 0) && (strcmp(argv[1], "bleach") == 0) && (strcmp(argv[2], "coffee-machine") == 0) && (getObjState("coffee-machine") == 3) && (getObjState("monitors") == 1)) {
+			moveNpc("Ignacio", "Corridor");
+			talkTo("Ignacio");
+			moveNpc("Ignacio", "WC");
+			// Add basement key card on the floor
+			symlink("../../../../../../assets/tool/basement-card.tool", "WC/basement-card.tool");
+		}
 	}
 	else if (strcmp(argv[0], "map") == 0)
 	{
@@ -812,19 +983,20 @@ int execute(int argc, char *argv[])
 	}
 	else if (strcmp(argv[0], "Time") == 0||strcmp(argv[0],"time")==0)
 	{
-		char times2[100]="You have ";
+		//char times2[100]="Electrician arrives in ";
 		int temphour = time_left/3600;
 		int tempminute = (time_left -(3600*temphour))/60;
 		int tempseconds=(time_left -(3600*temphour)-(tempminute*60));
-		char second[5];
-		char Minute[5];
-		char Hour[5];
-		sprintf(second, "%d",  tempseconds);
-		sprintf(Minute, "%d", tempminute);
-		sprintf(Hour, "%d", temphour);
-		strcat(times2,Hour),strcat(times2," h:"),strcat(times2,Minute),strcat(times2," m:"),strcat(times2,second),strcat(times2,"s left to finish the game \n");
+		//char second[5];
+		//char Minute[5];
+		//char Hour[5];
+		printf("\x1b[33mElectrician will arrive in %02d:%02d.\x1b[0m\n", tempminute, tempseconds);
+		//sprintf(second, "%d",  tempseconds);
+		//sprintf(Minute, "%d", tempminute);
+		//sprintf(Hour, "%d", temphour);
+		//strcat(times2,Hour),strcat(times2," h:"),strcat(times2,Minute),strcat(times2," m:"),strcat(times2,second),strcat(times2,"s left to finish the game \n");
 		converttimeprint();
-		write(0, times2, strlen(times2));
+		//write(0, times2, strlen(times2));
 	}
 
 	else if (strcmp(argv[0], "check") == 0)
@@ -851,7 +1023,7 @@ int execute(int argc, char *argv[])
 				printf("Error launching child process: %s\n", strerror(errno));
 				return 1;
 			}
-		} 
+		}
 		else
 		{
 			wait(NULL);
@@ -869,9 +1041,9 @@ int execute(int argc, char *argv[])
 		else
 		{
 			while (fgets(format,1000,fp)){
-				write(0," ",strlen(" ")); 
-				write(0,format,strlen(format));       
-			} 
+				write(0," ",strlen(" "));
+				write(0,format,strlen(format));
+			}
 
 
 			fclose(fp);
@@ -918,7 +1090,6 @@ int countpipe(int argc,char *argv[],char *test[])
 	}
 	else
 	{
-		printf("after else");
 		int number=0;
 		table[result]=i;
 		while(result+1 != compare)
@@ -988,9 +1159,8 @@ int show_main_menu() {
 			switch (opt[0]) {
 				case '1': // New game
 				case '2': // Load game (not implemented yet)
-				case '3': // Options (not implemented yet)
-					return (int)opt[0] - '0'; // convert to int
-				case '4': // Quit
+					return opt[0] - '0';
+				case '3': // Quit
 					exit(0);
 				default: // Invalid option
 					write(0, "Invalid option\n", 16);
@@ -1000,16 +1170,27 @@ int show_main_menu() {
 
 		i = 0;
 	}
-
 	return -1;
 }
 
+
+/**
+ * Displays the end of the gam and resets
+ **/
 void gameOver() {
-	char command[strlen(assets) + 30];
-	sprintf(command, "cat %s/gameOver.txt", assets);
-	system(command);
+char command[strlen(assets) + 30];
+	printf("Is game over: %d\n", isGameOver);
+	if (isGameOver == 1) {
+		sprintf(command, "cat %s/gameOver.txt", assets);
+		system(command);
+	} else if (isGameOver == 2) {
+		sprintf(command, "cat %s/congratulations-ascii.txt", assets);
+		system(command);
+		printf("Time spent: %d minutes and %d seconds.\n\n", minutes, seconds);
+	}
 	chdir(function);
 	resetGame();
+	exit(0);
 }
 
 //thread for time
@@ -1029,29 +1210,29 @@ void* Time1(){
 
 void Time(){
 	pthread_t ptid;
-  
+
     pthread_create(&ptid, NULL, &Time1, NULL);
     //printf("This line may be printed"
       //     " before thread terminates\n");
-  
+
 	//printf("");
-  
+
     // The following line terminates
     // the thread manually
     //pthread_cancel(ptid);
-  
+
     // Compare the two threads created
     //if(pthread_equal(ptid, pthread_self()))
       //  printf("Threads are equal\n");
     //else
       //  printf("Threads are not equal\n");
-  
+
     // Waiting for the created thread to terminate
     //pthread_join(ptid, NULL);
-  
+
    // printf("This line will be printed"
      //      " after thread ends\n");
-  
+
     //pthread_exit(NULL);
 }
 
@@ -1059,17 +1240,18 @@ void Time(){
 
 void converttimeprint()
 {
-	char millisecond[5];
-	char second[5];
-	char Minute[5];
-	char Hour[5];
-	sprintf(millisecond, "%d", milliseconds);
-	sprintf(second, "%d", seconds);
-	sprintf(Minute, "%d", minutes);
-	sprintf(Hour, "%d", hours);
-	char times1[100]="Time :";
-	strcat(times1,Hour),strcat(times1," h:"),strcat(times1,Minute),strcat(times1," m:"),strcat(times1,second),strcat(times1,"s \n");
-	write(0, times1, strlen(times1));
+	//char millisecond[5];
+	//char second[5];
+	//char Minute[5];
+	//char Hour[5];
+	//sprintf(millisecond, "%d", milliseconds);
+	//sprintf(second, "%d", seconds);
+	//sprintf(Minute, "%d", minutes);
+	//sprintf(Hour, "%d", hours);
+	//char times1[100]="Time :";
+	//strcat(times1,Hour),strcat(times1," h:"),strcat(times1,Minute),strcat(times1," m:"),strcat(times1,second),strcat(times1,"s \n");
+	printf("Elapsed time: %02d:%02d.\n", minutes, seconds);
+	//write(0, times1, strlen(times1));
 }
 
 
@@ -1095,22 +1277,26 @@ int begin() {
 	strncpy(savePath, function, PATH_MAX);
 	strncat(savePath, "/assets/save.txt",PATH_MAX);
 	sprintf(assets, "%s/assets", getcwd(NULL, 0));
+
 	// Perform the corresponding action depending on user selection
 	switch(opt) {
 	case NEW_GAME:
 		system("clear");
 		resetGame();
-
 		// Print bank robber run ascii and begin the game!
 		system("cat ./assets/newGameAscii.txt");
 
 		chdir("Directories");
 		root = getcwd(NULL, 0);
-		//chdir("Van");
 		chdir("Van");
+
+		// Change starting path for fast testing!
+		//system("chmod 777 Van/MainEntrance/Parking/Basement");
+		//chdir("Van/MainEntrance/Parking/Basement");
+
 		home = getcwd(NULL, 0);
 		prompt="Van";
-		count_down_time_in_secs=7200;  // 1 minute is 60, 1 hour is 3600
+		count_down_time_in_secs=2400;  // 1 minute is 60, 1 hour is 3600
 
 		// Starting dialog
 		talkTo("Robert");
@@ -1176,7 +1362,7 @@ int begin() {
 					exit(0);
 				}
 
-		if ((isGameOver == 1) || (time_left <= 0)) {
+		if ((isGameOver != 0) || (time_left <= 0)) {
 			gameOver();
 			free(savePath);
 			exit(0);
@@ -1204,4 +1390,3 @@ int main() {
 	pthread_create(&ptid, NULL, &beginning, NULL);
 	pthread_exit(NULL);
 }
-
