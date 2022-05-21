@@ -176,11 +176,16 @@ int idFromName(char *newRoom)
 {
 	int i;
 	idStruct room;
-	for (i=0; i < NKEYS; i++) {
+	for (i=0; i < NKEYS-1; i++) {
+		//write(2,"test",strlen("test"));
 		room = lookuptable[i];
-		if (strcmp(room.name, newRoom) == 0)
+		if (strcmp(room.name, newRoom) == 0){
+			
 		return room.id;
+		
+		}
 	}
+	
 	return 0;
 }
 
@@ -429,8 +434,8 @@ int hasSkin(char *skin) {
 
 int execute(int argc, char *argv[])
 {
-	char path[100];
-	char path2[100];
+	char path[1000];
+	char path2[1000];
 	int child;
 	strcpy(path,function);
 	strcpy(path2,function);
