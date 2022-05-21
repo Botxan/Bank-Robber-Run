@@ -46,6 +46,7 @@ FILE *f;
 int pfd[2];
 int savefd;
 char lastLocation[PATH_MAX];
+int cond=1;
 
 
 // situational variables
@@ -77,6 +78,7 @@ unsigned int totaltime=0,count_down_time_in_secs=0,time_left=0;
 clock_t countTime;
 clock_t startTime;
 void converttimeprint();
+void Time();
 
 idStruct lookuptable[19] = {
 	{"Van", VAN},
@@ -913,9 +915,14 @@ int execute(int argc, char *argv[])
 		} else write(0,"You can only talk to a person at a time\n",strlen("You can only talk to a person at a time\n"));
 	}
 
-	else if(strcmp(argv[0], "Pause") == 0|| strcmp(argv[0],"pause") == 0 || strcmp(argv[0], "P") == 0|| strcmp(argv[0], "quit") == 0|| strcmp(argv[0], "q") == 0)
+	else if(strcmp(argv[0], "Pause") == 0|| strcmp(argv[0],"pause") == 0 || strcmp(argv[0], "P") == 0|| strcmp(argv[0], "quit") == 0|| strcmp(argv[0], "q") == 0 || strcmp(argv[0], "Leave") == 0)
 	{
+		
+		totaltime=time_left;
+		cond=0;
 		int t =Leave();
+		count_down_time_in_secs=totaltime;
+		cond=1;
 		if(t==1)
 		{
 			eof=1;
@@ -923,6 +930,7 @@ int execute(int argc, char *argv[])
 		}
 		if(t==0)
 		{
+			Time();
 			eof=0;
 		}
 
@@ -1197,7 +1205,7 @@ char command[strlen(assets) + 30];
 
 //thread for time
 void* Time1(){
-	while(1){
+	while(cond){
 		pthread_detach(pthread_self());
 		countTime=clock();
 		milliseconds=countTime-startTime;

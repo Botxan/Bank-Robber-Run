@@ -32,7 +32,7 @@ int main(int argc,char *argv[]) {
 		{
 			ch=6;
 		}
-		if(strcmp(argv[0], "Pause") == 0 || strcmp(argv[0], "P") == 0|| strcmp(argv[0], "quit") == 0|| strcmp(argv[0], "q") == 0)
+		if(strcmp(argv[0], "Pause") == 0 || strcmp(argv[0], "P") == 0|| strcmp(argv[0], "quit") == 0|| strcmp(argv[0], "q") == 0 || strcmp(argv[0], "leave") == 0)
 		{
 			ch=7;
 		}
@@ -81,6 +81,7 @@ int main(int argc,char *argv[]) {
 		printf("11: Time\n");
 		printf("12: check\n");
 		printf("13: log\n");
+		printf("14: Leave\n");
 		printf("c: CANCEL\n");
 		scanf("%d",&ch);
 	}
@@ -163,7 +164,7 @@ int main(int argc,char *argv[]) {
 		fclose(man); //close file
 		return 0;
 	}
-	else if (ch==7) {
+	else if (ch==7 || ch==14 ) {
 		FILE* mv; //pointer to file
 		int display;
 		mv = fopen(PATH "Pause.l", "r"); //file access in read mode
