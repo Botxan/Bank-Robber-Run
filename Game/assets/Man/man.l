@@ -6,12 +6,14 @@ NAME
 man - Gives an overview of the available commands
 
 SYNOPSIS
-       man
+       man or man [command]
 
 DESCRIPTION
      	This command provides the user an overview of the available commands within the shell. The commands are listed and the user can select which man page to open. After selecting it, the man page for the command opens up.
 
-			There are no additional arguments or parameters needed.
+		Additional arguments or parameters are not necessary.
+
+		if the user writes a command after man, the man page for this command opens up.
 
 
 SEE ALSO
@@ -19,9 +21,9 @@ SEE ALSO
 
 REPORTING BUGS
 
-No bugs reported.
+No bugs were reported.
        
 AUTHOR
-	  Written by IOS group
-
+	  Written by the IOS group
+	  
 
