@@ -267,7 +267,7 @@ int main(int argc,char *argv[]) {
 		return 0;
 	}
 	else {
-		printf("\033[31m\nInvalid input! you need to choose a number between 0 and 13.\n\033[37m");
+		printf("\033[31m\nInvalid input! you need to choose a number between 1 and 14.\n\033[37m");
 		main(argc,argv);
 	}
 	return 0;
