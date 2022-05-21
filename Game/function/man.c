@@ -60,6 +60,10 @@ int main(int argc,char *argv[]) {
 		{
 			ch=13;
 		}
+		else
+		{
+			ch=15;
+		}
 	}
 	else
 	{
@@ -164,7 +168,7 @@ int main(int argc,char *argv[]) {
 		fclose(man); //close file
 		return 0;
 	}
-	else if (ch==7 || ch==14 ) {
+	else if (ch==7 || ch==14) {
 		FILE* mv; //pointer to file
 		int display;
 		mv = fopen(PATH "Pause.l", "r"); //file access in read mode
@@ -255,16 +259,12 @@ int main(int argc,char *argv[]) {
 		fclose(touch); //close file
 		return 0;
 	}
-	else if (ch==0) {
-		if(argc>0)
-		{
+	else if (ch==15) {
 		printf("\033[31m\nInvalid input!\n\033[37m");
 		return 0;
-		}
-		else
-		{
-		return 0;	
-		}
+	}
+	else if (ch==0) {
+		return 0;
 	}
 	else {
 		printf("\033[31m\nInvalid input! you need to choose a number between 0 and 13.\n\033[37m");
