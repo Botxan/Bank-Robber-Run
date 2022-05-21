@@ -586,7 +586,7 @@ int execute(int argc, char *argv[])
 					}
 					if(getObjState("electrical-panel")<2){
 						printf("Haven't they thought of installing some windows?? You can't see shit with the lights off...\n\n");
-						
+						setNpcState("Ramon",3);
 					}
 					break;
 
@@ -750,7 +750,7 @@ int execute(int argc, char *argv[])
 		} else write(0,"You can only talk to a person at a time\n",strlen("You can only talk to a person at a time\n"));
 	}
 
-	else if(strcmp(argv[0], "Pause") == 0 || strcmp(argv[0], "P") == 0|| strcmp(argv[0], "quit") == 0|| strcmp(argv[0], "q") == 0)
+	else if(strcmp(argv[0], "Pause") == 0|| strcmp(argv[0],"pause") == 0 || strcmp(argv[0], "P") == 0|| strcmp(argv[0], "quit") == 0|| strcmp(argv[0], "q") == 0)
 	{
 		int t =Leave();
 		if(t==1)
@@ -761,11 +761,6 @@ int execute(int argc, char *argv[])
 		if(t==0)
 		{
 			eof=0;
-		}
-		if(t==2)
-		{
-			//save don't implement for the moment
-			eof=1;
 		}
 
 
@@ -815,7 +810,7 @@ int execute(int argc, char *argv[])
 		if (child == 0) execlp("/bin/cat", "/bin/cat", mapPath, (char *) NULL);
 		else wait(NULL);
 	}
-	else if (strcmp(argv[0], "Time") == 0)
+	else if (strcmp(argv[0], "Time") == 0||strcmp(argv[0],"time")==0)
 	{
 		char times2[100]="You have ";
 		int temphour = time_left/3600;
