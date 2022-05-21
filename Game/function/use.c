@@ -107,7 +107,7 @@ int main(int argc, char *argv[]){
                 	                strcat(commandPath, "/../talk");
 	                                execlp(commandPath, "talk", "Robert", rootPath, NULL);
 	                                if (errno != 0) {
-											free(commandPath);
+						free(commandPath);
         	                                write(2, "Could not talk with your gang: ", strlen("Could not talk with your gang"));
 	                                        write(2, strerror(errno), strlen(strerror(errno)));
 	                                        write(2, ".\n", 2);
@@ -135,7 +135,6 @@ int main(int argc, char *argv[]){
 
 		return 0;
 	}
-	free(commandPath);
 
 	// Get file type
 	d = opendir(".");
@@ -224,8 +223,8 @@ int main(int argc, char *argv[]){
 				// Check if key used by player is the one that opens the target door
 				if (strcmp(tool, keyDoor[keyDoorI].key) == 0) {
 					// Change door permissions
-					strncpy(commandPath, argv[0], strlen(commandPath));
-					strncat(commandPath, "/../chmod", strlen(commandPath));
+					strncpy(commandPath, argv[0], PATH_MAX);
+					strncat(commandPath, "/../chmod", PATH_MAX);
                                         realpath(dir->d_name, roomPath);
 
 					if (fork() == 0) {
@@ -233,6 +232,7 @@ int main(int argc, char *argv[]){
 						execlp(commandPath, commandPath, roomPath, "0755", (char *) NULL);
 						if (errno != 0) {
 							printf("\033[31mProblem unlocking the door: %s.\n\033[37m", strerror(errno));
+							free(commandPath);
 							return 1;
 						}
 					} else wait(NULL);
@@ -331,5 +331,6 @@ int main(int argc, char *argv[]){
 			printf("\033[31mUnknown file type\n\033[37m");
 	}
 
+	free(commandPath);
 	return 0;
 }

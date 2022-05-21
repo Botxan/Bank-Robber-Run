@@ -670,18 +670,19 @@ int execute(int argc, char *argv[])
 
 					// Dialog to distract ward is available while corridor has not reached and guard
 					// is in the main banking hall
-					if ((getTimesVisited("Corridor") == 0) && (getNpcState("Ramon") != 9)) {
+					if ((getTimesVisited("Corridor") == 0) && (getNpcState("Ramon") != 9) && distractedGuard == 0) {
 						setNpcState("Robert", 1);
 					}
 					break;
 				case CORRIDOR:
 					if (visitedTimes == 1) {
 						// Robert will no longer will display the dialog to distract the guard
-						setNpcState("Robert", 4);
+						// but will be unavailable if you have use that option
+						if (!distractedGuard) setNpcState("Robert", 3);
+
 						// The ward will return to the main banking hall
 						setNpcState("Ramon", 0);
 						moveNpc("Ramon", "MainBankingHall");
-						distractedGuard = 0;
 						talkTo("Matt");
 
 						// If you are rude with Matt
@@ -874,8 +875,8 @@ int execute(int argc, char *argv[])
 						symlink(cardPath, invPath);
 						printf("*officer-card has been added to your inventory*\n");
 
-						// update radio status
-						if (getNpcState("Robert") == 4) setNpcState("Robert", 5);
+						// update robert status depending if he has been distracting the guard
+						if (distractedGuard) setNpcState("Robert", 5);
 						else setNpcState("Robert", 6);
 
 						if (fork() == 0) {
@@ -977,6 +978,7 @@ int execute(int argc, char *argv[])
 			moveNpc("Ignacio", "WC");
 			// Add basement key card on the floor
 			symlink("../../../../../../assets/tool/basement-card.tool", "WC/basement-card.tool");
+			setNpcState("Robert", 8);
 		}
 	}
 	else if (strcmp(argv[0], "map") == 0)
@@ -1295,8 +1297,8 @@ int begin() {
 		chdir("Van");
 
 		// Change starting path for fast testing!
-		//system("chmod 777 Van/MainEntrance/Parking/Basement");
-		//chdir("Van/MainEntrance/Parking/Basement");
+		//system("chmod 777 Van/MainEntrance/MainBankingHall/Corridor");
+		//chdir("Van/MainEntrance/MainBankingHall/Corridor/");
 
 		home = getcwd(NULL, 0);
 		prompt="Van";
