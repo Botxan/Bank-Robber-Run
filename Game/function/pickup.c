@@ -81,5 +81,6 @@ int main(int argc,char* argv[]) {
 
 	// Remove the tool from the environment
 	unlink(current);
+	printf("%s added to inventory", argv[1]);
 	return 0;
 }
