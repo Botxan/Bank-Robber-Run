@@ -86,7 +86,7 @@ int main(int argc,char *argv[]) {
 		printf("12: check\n");
 		printf("13: log\n");
 		printf("14: Leave\n");
-		printf("0: CANCEL\n");
+		printf("All letters: CANCEL\n");
 		scanf("%d",&ch);
 	}
 
