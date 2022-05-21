@@ -1,15 +1,18 @@
-man(IOS)                    Specification Document                      man(SEO)
+		man(IOS)                    Specification Document                      man(SEO)
 
 
 
 NAME
-view-will show all the objetc, doors, etc of the room where the user is.
+view-will show all the objects, doors, etc of the room where the user is.
 
 SYNOPSIS
-       view[]
+       view [option] [file] 
+	   
 
 DESCRIPTION
-	This command will show as the command  ls all the elements of the room (file) for the user. 
+	This command will show as the command ls all the elements of the room (file) for the user. 
+	
+	-r Only see directory 
 
 SEE ALSO
 	use(), man().
@@ -19,4 +22,10 @@ REPORTING BUGS
        
 AUTHOR
 	  Written by IOS group
+	  
+
+	  
+
+
+
 

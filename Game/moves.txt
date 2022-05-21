@@ -1,3 +1,0 @@
-cd MainEntrance 
-exi 
-exit 

@@ -1,3 +1,4 @@
+	man(IOS)                    Specification Document                      man(SEO)
 
 
 
@@ -10,7 +11,7 @@ SYNOPSIS
 
 DESCRIPTION
 
-	This command shows the player the time he has to finish the game. The timer will start at the same time that the user types the play comand. The timer goes down until the end, when is at the end the game will be finished and the player eliminated if they do not win. 
+	This command shows the player the time he has to finish the game. The timer will start at the same time that the user types the play command. The timer goes down until the end when at the end the game will be finished and the player is eliminated if they do not win. 
 
 
 SEE ALSO
@@ -20,4 +21,3 @@ REPORTING BUGS
 
 AUTHOR
 	  Written by IOS group
-

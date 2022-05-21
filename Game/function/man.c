@@ -5,7 +5,7 @@
 #define PATH "./assets/Man/"
 
 int main(int argc,char *argv[]) {
-	int ch;
+	int ch =0;
 	if(argc ==1)
 	{
 		if(strcmp(argv[0], "access") == 0 || strcmp(argv[0], "cd") == 0)
@@ -32,7 +32,7 @@ int main(int argc,char *argv[]) {
 		{
 			ch=6;
 		}
-		if(strcmp(argv[0], "Pause") == 0 || strcmp(argv[0], "P") == 0|| strcmp(argv[0], "quit") == 0|| strcmp(argv[0], "q") == 0)
+		if(strcmp(argv[0], "Pause") == 0 || strcmp(argv[0], "P") == 0|| strcmp(argv[0], "quit") == 0|| strcmp(argv[0], "q") == 0 || strcmp(argv[0], "leave") == 0)
 		{
 			ch=7;
 		}
@@ -48,13 +48,21 @@ int main(int argc,char *argv[]) {
 		{
 			ch=10;
 		}
-		if (strcmp(argv[0], "Time") == 0)
+		if (strcmp(argv[0], "Time") == 0 || strcmp(argv[0], "time")==0)
 		{
 			ch=11;
 		}
 		if (strcmp(argv[0], "check") == 0)
 		{
 			ch=12;
+		}
+		if (strcmp(argv[0], "log") == 0)
+		{
+			ch=13;
+		}
+		else if (ch==0)
+		{
+			ch=15;
 		}
 	}
 	else
@@ -76,7 +84,9 @@ int main(int argc,char *argv[]) {
 		printf("10: map\n");
 		printf("11: Time\n");
 		printf("12: check\n");
-		printf("c: CANCEL\n");
+		printf("13: log\n");
+		printf("14: Leave\n");
+		printf("All letters: CANCEL\n");
 		scanf("%d",&ch);
 	}
 
@@ -158,7 +168,7 @@ int main(int argc,char *argv[]) {
 		fclose(man); //close file
 		return 0;
 	}
-	else if (ch==7) {
+	else if (ch==7 || ch==14) {
 		FILE* mv; //pointer to file
 		int display;
 		mv = fopen(PATH "Pause.l", "r"); //file access in read mode
@@ -236,11 +246,29 @@ int main(int argc,char *argv[]) {
 		fclose(touch); //close file
 		return 0;
 	}
-	else if (ch=='c' || ch=='C') {
+	else if (ch==13) {
+		FILE* touch; //pointer to file
+		int display;
+		touch = fopen(PATH "log.l", "r"); //file access in read mode
+		while (1) { //loop to extract characters
+			display = fgetc(touch); //read the file
+			if (feof(touch)) //end of file indicator
+			break;
+			printf("%c", display); //displaying content
+		}
+		fclose(touch); //close file
+		return 0;
+	}
+	else if (ch==15) {
+		printf("\033[31m\nInvalid input!\n\033[37m");
+		return 0;
+	}
+	else if (ch==0) {
 		return 0;
 	}
 	else {
-		printf("\033[31m\nInvalid input!\n\033[37m");
+		printf("\033[31m\nInvalid input! you need to choose a number between 1 and 14.\n\033[37m");
+		main(argc,argv);
 	}
 	return 0;
 }
