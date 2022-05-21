@@ -626,7 +626,7 @@ int execute(int argc, char *argv[])
 			dprintf(savefd,"%d",time_left);
 			*/
 			// Special interactions in each room
-                        id=idFromName(argv[1]);
+                        id=idFromName(strrchr(getcwd(NULL, 0),'/')+1);
 
 
 			switch(id)
