@@ -710,11 +710,15 @@ int execute(int argc, char *argv[])
 
 					// If coming from electrical panel (shortcut), place guard in main banking hall again
 					if (strcmp(prompt, "ElectricalPanel") == 0) moveNpc("Ramon", "MainBankingHall");
+					break;
 				case BOSS:
 					// Could not move before (missing permissions in boss office)
 					if (visitedTimes == 0) {
 						removeNpc("Ignacio");
 						moveNpc("Ignacio", "WC");
+					}
+					if(strcmp(prompt, "ElectricalPanel") == 0) {
+						moveNpc("Ramon", "MainBankingHall");
 					}
 					break;
 			}
