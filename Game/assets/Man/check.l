@@ -1,4 +1,4 @@
-man(IOS)                    Specification Document                      man(SEO)
+	man(IOS)                    Specification Document                      man(SEO)
 
 
 
@@ -9,8 +9,9 @@ SYNOPSIS
 	check []
 
 DESCRIPTION
-	This command is for use of the object that the user has obtained in the game. This command has to be used with an object you have chosen to use on the room you are in. If the object chosen is not on the inventory you will notice that you don’t have it. 
-	Before using this command you can call inv() to show the elements you have to not spend much time on. 
+	This command is for interacting with objects in the game. 
+	This command has to be used with an object in your room.
+
 	
 SEE ALSO
 	inv(), pickUp()
@@ -20,4 +21,6 @@ REPORTING BUGS
 
 AUTHOR
 	  Written by IOS group
+
+
 

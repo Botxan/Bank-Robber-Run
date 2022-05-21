@@ -48,13 +48,17 @@ int main(int argc,char *argv[]) {
 		{
 			ch=10;
 		}
-		if (strcmp(argv[0], "Time") == 0)
+		if (strcmp(argv[0], "Time") == 0 || strcmp(argv[0], "time"))
 		{
 			ch=11;
 		}
 		if (strcmp(argv[0], "check") == 0)
 		{
 			ch=12;
+		}
+		if (strcmp(argv[0], "log") == 0)
+		{
+			ch=13;
 		}
 	}
 	else
@@ -76,6 +80,7 @@ int main(int argc,char *argv[]) {
 		printf("10: map\n");
 		printf("11: Time\n");
 		printf("12: check\n");
+		printf("13: log\n");
 		printf("c: CANCEL\n");
 		scanf("%d",&ch);
 	}
@@ -227,6 +232,19 @@ int main(int argc,char *argv[]) {
 		FILE* touch; //pointer to file
 		int display;
 		touch = fopen(PATH "check.l", "r"); //file access in read mode
+		while (1) { //loop to extract characters
+			display = fgetc(touch); //read the file
+			if (feof(touch)) //end of file indicator
+			break;
+			printf("%c", display); //displaying content
+		}
+		fclose(touch); //close file
+		return 0;
+	}
+	else if (ch==13) {
+		FILE* touch; //pointer to file
+		int display;
+		touch = fopen(PATH "log.l", "r"); //file access in read mode
 		while (1) { //loop to extract characters
 			display = fgetc(touch); //read the file
 			if (feof(touch)) //end of file indicator
