@@ -30,8 +30,6 @@
 #define BASEMENT 15
 #define VAULTR 16	// Vault room
 #define VAULTC 17	// Vault corridor
-#define VAULT 18
-
 
 /* ------------ Skins ------------ */
 #define SUIT 0

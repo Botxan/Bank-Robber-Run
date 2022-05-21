@@ -26,7 +26,7 @@
 #include "./function/interaction/officerBack.c"
 #include "./function/interaction/validateId.c"
 #include "./function/interaction/displayVaultCorridorPath.c"
-#include "./function/StoreMoves.h"
+#include "./function/storeMoves.h"
 
 int eof;
 char *prompt;
@@ -56,15 +56,19 @@ char* introducedId;
 
 
 // Vault corridor variables
-#define maxL 2
+#define maxL 4
 #define maxA 7
 int i = 0;
 int o = 0;
-char *ans[] = {"up", "up", "left", "left", "up", "up", "up"};
+char *ans1[] = {"up", "up", "left", "left", "up", "up", "up"};
+char *ans2[] = {"down", "down", "down", "right", "right", "down", "down"};
 char mIn[maxA][maxL];
 char mOut[maxA][maxL];
 char player[maxL];
-char *argvStoreMoves[1];
+char **argvStoreMoves;
+int vaultCorridorAccessMode = 0;
+int ch;
+char *hintLog[6] = {"-----"};
 
 
 //time
@@ -97,7 +101,6 @@ idStruct lookuptable[19] = {
 	{"Basement", BASEMENT},
 	{"VaultCorridor", VAULTC},
 	{"VaultRoom", VAULTR},
-	{"Vault", VAULT}
 };
 
 /*
@@ -589,12 +592,10 @@ int execute(int argc, char *argv[])
 			return 0;
 		}
 
-
 		if(cd(argc,argv,home,0)==1)
 		{
 			// Increase room visited counter
 			fd = open("./.counter.txt", O_RDWR);
-
 
 			if (fd == -1) write(2, "Could not add room visited counter. File .counter not found\n.", strlen("Could not add room visited counter. File .counter not found\n."));
 
@@ -606,28 +607,9 @@ int execute(int argc, char *argv[])
 			write(fd, visitedTimesText, strlen(visitedTimesText));
 			close(fd);
 			fclose(f);
-			/*
-			// Display prompt
-                        prompt=strrchr(getcwd(NULL, 0),'/')+1;
 
-			//Save location and time left on file
-			savefd=open(savePath,O_TRUNC,O_RDWR);
-			close(savefd);
-			savefd=open(savePath,O_RDWR);
-			char *currentWD;
-			currentWD=getcwd(NULL,0);
-			int iVan=0;
-			while(!(currentWD[iVan]=='V'&&currentWD[iVan+1]=='a'&&currentWD[iVan+2]=='n')){iVan++;}//find Van in the string and get pos
-			char *saveText;
-			currentWD[iVan+3]='#';
-			saveText=strrchr(currentWD,'#')+1;
-			write(savefd,saveText,strlen(saveText));
-			write(savefd,"#",1);
-			dprintf(savefd,"%d",time_left);
-			*/
 			// Special interactions in each room
-                        id=idFromName(argv[1]);
-
+                        id=idFromName(strrchr(getcwd(NULL, 0),'/')+1);
 
 			switch(id)
 			{
@@ -723,6 +705,14 @@ int execute(int argc, char *argv[])
 						moveNpc("Ramon", "MainBankingHall");
 					}
 					break;
+				case VAULTR:
+					system("reset");
+					printf("\033[32mOk I'm in.\033[37m\n");
+					system("cat .description.txt");
+
+					// Night vision googles run out of battery
+					if (visitedTimes == 1) printf("\x1b[33mWARNING! The battery of the vision goggles has run out. You will not be able to see the return path. Think about something to retrace your steps before entering the vault corridor again.\x1b[0m\n");
+					break;
 			}
 
 			// Display prompt
@@ -742,57 +732,74 @@ int execute(int argc, char *argv[])
                         }
 
 			// Vault corridor minigame
-			if ((strcmp(prompt, "VaultCorridor") == 0) || (hasTool("thesecret") == 0)) {
-				if((visitedTimes % 2) != 0) {
-                                	displayVaultCorridorPath();
-                                       	i = 0;
-                                        while(i < maxA) {
-                                        	fscanf(stdin, "%s", player);
-                                                argvStoreMoves[0] = player;
-                                                Storemoves(argvStoreMoves);
-                                                strcpy(mIn[i], player);
+                        if ((strcmp(prompt, "VaultCorridor") == 0) || (hasTool("thesecret") == 0)) {
+				argvStoreMoves = malloc(PATH_MAX);
 
-                                                if(strcmp(ans[i], ans[i]) != 0 || strcmp(ans[i], player) != 0) {
-							printf("\n");
-							printf("\033[31m*Incorrect path*\033[37m\n");
-                                                	isGameOver = 1;
+                                if(vaultCorridorAccessMode == 0) {
+                                        displayVaultCorridorPath();
+                                        i = 0;
+					// Store small hint in the log
+					storeMoves(root, hintLog);
+                                        while(i < maxA) {
+                                                fscanf(stdin, "%s", player);
+                                                argvStoreMoves[0] = player;
+                                                storeMoves(root, argvStoreMoves);
+                                                strcpy(mIn[i], player);
+                                                if(strcmp(ans1[i], player) != 0) {
+                                                        printf("\n");
+                                                        printf("\033[31m*Incorrect path*\033[37m\n");
+                                                        chdir("..");
+                                                        prompt = "Basement";
                                                         break;
                                                 } else i++;
 
                                                 memset(player, 0, strlen(player));
 
                                                 if(i == 7) {
-                                                	printf("\033[32mOk Im in.\033[37m\n");
-                                                        chdir("./VaultRoom");
-                                                        prompt = "VaultRoom";
+							vaultCorridorAccessMode = 1;
+                                                        char *cdArgv[2] = {"access", "VaultRoom"};
+							storeMoves(root, hintLog);
+                                                        return execute(2, cdArgv);
                                                 }
                                         }
-                       		} else {
-	                        	memset(player, 0, strlen(player));
-	                                o = 0;
-	                                i = 6;
-	                                while(o < maxA) {
-	                                	fscanf(stdin, "%s", player);
-	                                        strcpy(mOut[o], player);
+					storeMoves(root, hintLog);
+                                } else {
+                                        i = 0;
 
-	                                        if(strcmp(ans[i], mOut[o]) != 0 || strcmp(player, ans[i]) != 0) {
-							printf("\n");
-	                                        	isGameOver = 1;
-	                                                break;
-	                                       	} else {
-	                                        	i--;
-	                                                o++;
-	                                        }
+                                        while(i < maxA) {
+                                                fscanf(stdin, "%s", player);
+                                                argvStoreMoves[0] = player;
 
-	                                        memset(player,0,strlen(player));
+                                                storeMoves(root, argvStoreMoves);
+                                                strcpy(mIn[i], player);
+                                                if(strcmp(ans2[i], player) != 0) {
+						        printf("\n");
+                                                        printf("\033[31m*Incorrect path*\033[37m\n");
+                                                        chdir("VaultRoom");
+                                                        prompt = "VaultRoom";
+                                                        break;
+                                                } else i++;
 
-	                                        if(o == 7) {
-							printf("\n");
-							isGameOver = 2;
-	                                        }
-	                               	}
-	                      	}
-			}
+						player[0] = '\0';
+
+                                                if(i == 7) {
+							vaultCorridorAccessMode = 0;
+                                                        printf("\n");
+							chdir("..");
+							prompt = "Basement";
+
+							// End of the game
+							if (hasTool("thesecret") == 0) {
+								isGameOver = 2;
+								return 0;
+							 }
+                                                }
+                                        }
+                                }
+				free(argvStoreMoves);
+				// Flush scanf cache
+                                while( (ch = fgetc(stdin)) != EOF && ch != '\n' );
+                        }
 
                         //Save location and time left on file
                         savefd=open(savePath,O_TRUNC,O_RDWR);
@@ -1033,12 +1040,18 @@ int execute(int argc, char *argv[])
 		}
 	}
 	else if(strcmp(argv[0],"log")==0){
-		FILE *fp=malloc(sizeof(FILE));
-		char format[1000]="";
-		fp = fopen("moves.txt", "r");
-		if(fp==NULL)
-		{
-				return 0;
+		FILE *fp = malloc(sizeof(FILE));
+		char *logFile = malloc(PATH_MAX);
+		char format[1000] = "";
+
+		strncpy(logFile, root, PATH_MAX);
+		strcat(logFile, "/../moves.txt");
+
+		fp = fopen(logFile, "r");
+
+		if(fp == NULL) {
+			write(1, "\033[31mLog file not found.\n\033[37m ", strlen("\033[31mLog file not found.\n\033[37m"));
+			exit(0);
 		}
 		else
 		{
@@ -1049,12 +1062,11 @@ int execute(int argc, char *argv[])
 
 
 			fclose(fp);
-			//free(fp);
 			return 1;
 		}
 	}
 
-	else write(1, "\033[31mthis function doesn't exist \n\033[37m ", strlen("\033[31mthis function doesn't exist \n\033[37m"));
+	else write(1, "\033[31mThe introduced function doesn't exist.\n\033[37m ", strlen("\033[31mThe introduced function doesn't exist.\n\033[37m"));
 
 
 
@@ -1086,7 +1098,7 @@ int countpipe(int argc,char *argv[],char *test[])
 	int compare = 0;
 	if(result==0)
 	{
-		Storemoves(test);
+		storeMoves(root, test);
 		execute(argc, test);
 
 	}
@@ -1112,7 +1124,7 @@ int countpipe(int argc,char *argv[],char *test[])
 			}
 			compare++;
 			number++;
-			Storemoves(save);
+			storeMoves(root, save);
 			execute(p, save);
 			write(0,"\n",strlen("\n"));
 		}
@@ -1181,12 +1193,12 @@ int show_main_menu() {
  **/
 void gameOver() {
 char command[strlen(assets) + 30];
-	printf("Is game over: %d\n", isGameOver);
 	if (isGameOver == 1) {
 		sprintf(command, "cat %s/gameOver.txt", assets);
 		system(command);
 	} else if (isGameOver == 2) {
 		sprintf(command, "cat %s/congratulations-ascii.txt", assets);
+		printf("The command: %s \n", command);
 		system(command);
 		printf("Time spent: %d minutes and %d seconds.\n\n", minutes, seconds);
 	}
@@ -1214,46 +1226,12 @@ void Time(){
 	pthread_t ptid;
 
     pthread_create(&ptid, NULL, &Time1, NULL);
-    //printf("This line may be printed"
-      //     " before thread terminates\n");
-
-	//printf("");
-
-    // The following line terminates
-    // the thread manually
-    //pthread_cancel(ptid);
-
-    // Compare the two threads created
-    //if(pthread_equal(ptid, pthread_self()))
-      //  printf("Threads are equal\n");
-    //else
-      //  printf("Threads are not equal\n");
-
-    // Waiting for the created thread to terminate
-    //pthread_join(ptid, NULL);
-
-   // printf("This line will be printed"
-     //      " after thread ends\n");
-
-    //pthread_exit(NULL);
 }
 
-//convert number to time
-
+// Prints the elapsed time of the game
 void converttimeprint()
 {
-	//char millisecond[5];
-	//char second[5];
-	//char Minute[5];
-	//char Hour[5];
-	//sprintf(millisecond, "%d", milliseconds);
-	//sprintf(second, "%d", seconds);
-	//sprintf(Minute, "%d", minutes);
-	//sprintf(Hour, "%d", hours);
-	//char times1[100]="Time :";
-	//strcat(times1,Hour),strcat(times1," h:"),strcat(times1,Minute),strcat(times1," m:"),strcat(times1,second),strcat(times1,"s \n");
 	printf("Elapsed time: %02d:%02d.\n", minutes, seconds);
-	//write(0, times1, strlen(times1));
 }
 
 
@@ -1262,8 +1240,6 @@ void converttimeprint()
 * --------------
 * Displays the main menu and executes the action selected by the user
 */
-
-
 int begin() {
 	pthread_detach(pthread_self());
 	// Load the main menu
@@ -1287,14 +1263,16 @@ int begin() {
 		resetGame();
 		// Print bank robber run ascii and begin the game!
 		system("cat ./assets/newGameAscii.txt");
+		printf("\n\x1b[34mNote: throughout the game you will have to collect some clues. It is advisable to write down important information to avoid having to walk around.\x1b[0m\n");
+		printf("--------------------------------------------------------------------------------------------------------------------------------------------------\n\n");
 
 		chdir("Directories");
 		root = getcwd(NULL, 0);
 		chdir("Van");
 
-		// Change starting path for fast testing!
-		//system("chmod 777 Van/MainEntrance/MainBankingHall/Corridor");
-		//chdir("Van/MainEntrance/MainBankingHall/Corridor/");
+		// --- Change starting path for fast testing ---
+		//system("chmod 777 Van/MainEntrance/Parking/Basement/");
+		//chdir("Van/MainEntrance/Parking/Basement/");
 
 		home = getcwd(NULL, 0);
 		prompt="Van";
@@ -1335,20 +1313,6 @@ int begin() {
         time_left=count_down_time_in_secs-seconds;   // update timer
         Time();
 
-	/*
-    if(pipe(pfd))
-    {
-        write(0,"Log Pipe ERROR", strlen("Log Pipe ERROR"));
-        exit(2);
-    }
-
-    switch(fork())
-    {
-    case -1:
-    write(0,"FORK ERROR",strlen("FORK ERROR"));
-	break;
-    case 0:
-    close(pfd[0]);*/
     	while (1) {
 			write(0, "\033[36m", strlen("\033[36m"));
         	write(0, prompt, strlen(prompt));
@@ -1357,8 +1321,6 @@ int begin() {
 				write(0, "\033[37m", strlen("\033[37m"));
                 if (read_args(&argc, args, MAXARGS, &eof) && argc > 0)
                 	countpipe(argc,args,args);
-		        //write(pfd[1],args,strlen(args));
-                        //execute(argc, args);
                 if (eof) {
 					free(savePath);
 					exit(0);
@@ -1371,14 +1333,6 @@ int begin() {
 			}
 		}
 		free(savePath);
-		/*
-    default:
-        close(pfd[1]);close(0);
-        dup2(pfd[0],STDIN_FILENO);close(pfd[0]);
-		char *path=strcat(function,"/StoreMoves");
-        execlp(path,"StoreMoves",NULL);
-    }
-	*/
 	pthread_exit(NULL);
 }
 

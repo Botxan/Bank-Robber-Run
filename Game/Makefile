@@ -5,7 +5,7 @@ CC1 = gcc -rdynamic
 CPPFLAGS = -MMD 
 CFLAGS =  -Wall -Wextra  -std=gnu99 -g 
 
-SRC = myshell0.c  function/cd.c function/view.c function/Leave.c function/chmod.c function/resetGame.c function/StoreMoves.c
+SRC = myshell0.c  function/cd.c function/view.c function/Leave.c function/chmod.c function/resetGame.c function/storeMoves.c
 OBJ = ${SRC:.c=.o}
 DEP = ${SRC:.c=.d}
 
