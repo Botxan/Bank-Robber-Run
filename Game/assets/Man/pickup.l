@@ -9,8 +9,7 @@ SYNOPSIS
        PickUp [object]
 
 DESCRIPTION
-      This command provides the user power to get all the things that save in files that the user has the permission.  The object obtained will be added to the inventory of the user. 
-           
+	Adds a tool placed in the current room (or by interaction with an npc or object) into the inventory of the player, and removes the tool from its original place.           
 
 SEE ALSO
 	inv(), Leave().

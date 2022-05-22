@@ -6,12 +6,10 @@ NAME
        talk- these commands give the user availability to speak and interact with other members of the game. 
 
 SYNOPSIS
-       talk
+       talk[npc]
 
 DESCRIPTION
-      This command provides the user the power to talk with other members of the play to obtain information and also to obtain objects. 
-To make a conversation with others, you need to choose an option from the list.
-          
+This command provides the user the ability to talk with other characters of the game to obtain information and also to obtain objects. Some dialogues may require a response from the user, which consist of introducing from stdin one of the valid answers.
 
 SEE ALSO
 
