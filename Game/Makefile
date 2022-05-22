@@ -108,5 +108,5 @@ man: ${SRC12}
 	$(CC1) -o $@ $^ $(CFLAGS)
 	
 clean:
-	@rm -f ${OBJ} ${DEP} myshell0 ${DEP1} ${OBJ1} view  ${DEP2} ${OBJ2} cd ${DEP3} ${OBJ3} inv ${DEP4} ${OBJ4} Leave ${DEP5} ${OBJ5} pickup ${DEP6} ${OBJ6} talk ${DEP7} ${OBJ7} pwd ${DEP8} ${OBJ8} chmod ${DEP9} ${OBJ9} use ${DEP10} ${OBJ10} ../BANK-ROBBER-RUN ${DEP11} ${OBJ11} check ${DEP12} ${OBJ12} man 
+	@rm -f ${OBJ} ${DEP} myshell0 ${DEP1} ${OBJ1} view  ${DEP2} ${OBJ2} cd ${DEP3} ${OBJ3} inv ${DEP4} ${OBJ4} leave ${DEP5} ${OBJ5} pickup ${DEP6} ${OBJ6} talk ${DEP7} ${OBJ7} pwd ${DEP8} ${OBJ8} chmod ${DEP9} ${OBJ9} use ${DEP10} ${OBJ10} ../BANK-ROBBER-RUN ${DEP11} ${OBJ11} check ${DEP12} ${OBJ12} man 
 # END
