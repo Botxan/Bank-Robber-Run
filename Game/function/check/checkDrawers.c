@@ -23,7 +23,6 @@ int checkDrawers(char *root, int checkedTimes) {
 			return -1;
 		}
         } else wait(NULL);
-        printf("[*] You have found laxatives [*]\n");
 
 	return 0;
 }

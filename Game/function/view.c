@@ -61,11 +61,11 @@ void deletextension(char argv[])
 }
 
 
-#ifdef FUNCTION
-int view(int argc,char *argv[])
-#else
+//#ifdef FUNCTION
+//int view(int argc,char *argv[])
+//#else
 int main(int argc,char *argv[])
-#endif
+//#endif
 {
 	struct dirent *dir;
 	struct stat *buf = malloc(sizeof(struct stat));

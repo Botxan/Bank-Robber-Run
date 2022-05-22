@@ -32,6 +32,7 @@ int storeMoves(char *root, char* argv[])
 	}
 
 	write(fd, "\n", 1);
+	close(fd);
 	free(movesPath);
 	return 0;
 

@@ -9,6 +9,7 @@
 #include <dirent.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <ctype.h>
 
 #include "../defines.h"
 
@@ -81,6 +82,7 @@ int main(int argc,char* argv[]) {
 
 	// Remove the tool from the environment
 	unlink(current);
-	printf("%s added to inventory", argv[1]);
+	argv[1][0] = toupper(argv[1][0]);
+	printf("\x1b[34m%s added to inventory.\n\x1b[0m", argv[1]);
 	return 0;
 }

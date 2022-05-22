@@ -134,7 +134,7 @@ void resetGame()
 	symlink("../../assets/tool/radio.tool", "Directories/Inv/radio.tool");
 	symlink("../../../../../../assets/tool/ladder.tool", "Directories/Van/MainEntrance/MainBankingHall/Corridor/JanitorRoom/ladder.tool");
 	symlink("../../../../../../assets/tool/boss-picture.tool", "Directories/Van/MainEntrance/MainBankingHall/Corridor/SecurityRoom/boss-picture.tool");
-	symlink("../../../../../../assets/tool/night-vision-googles.tool", "Directories/Van/MainEntrance/MainBankingHall/Corridor/SecurityRoom/night-vision-googles.tool");
+	symlink("../../../../../../assets/tool/night-vision-goggles.tool", "Directories/Van/MainEntrance/MainBankingHall/Corridor/SecurityRoom/night-vision-goggles.tool");
 
 
 	// Add all the .npc to the map
@@ -225,7 +225,7 @@ void resetGame()
         closedir(d);
 
 	// Reset night vision googles state to 0
-	if ((fd = open("./assets/tool/night-vision-googles.tool", O_WRONLY)) == -1) printf("nooo\n");
+	if ((fd = open("./assets/tool/night-vision-goggles.tool", O_WRONLY)) == -1) printf("nooo\n");
 	write(fd, "0", 1);
 	close(fd);
 

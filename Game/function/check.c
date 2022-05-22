@@ -95,7 +95,7 @@ int main(int argc, char *argv[]) {
 
 	// ----------- Janitor room ------------
 	if (strcmp(objectWithExtension, "janitorial-supplies.obj") == 0) {
-		printf("*You have found bleach*\n");
+		printf("\x1b[34mYou have found bleach.\x1b[0m\n");
 		symlink("../../assets/tool/bleach.tool", "../../../../../Inv/bleach.tool");
 	}
 

@@ -3,6 +3,7 @@
 int checkCabinet() {
 	char opt;
 	int electrician = -1; // 0 => electrician, -1 => executive
+	char line[256];
 
 	while (1) {
 		// Get player's current skin
@@ -14,7 +15,8 @@ int checkCabinet() {
 
 		printf("Y: Yes.\n");
 		printf("N: No.\n");
-		scanf(" %[^\n]%*c", &opt);
+		fgets(line, sizeof(line), stdin);
+		opt = line[0];
 
 		switch(opt) {
 			case 'Y':
@@ -27,7 +29,7 @@ int checkCabinet() {
 					symlink("../../assets/skin/electrician.skin", "../../../../../Inv/electrician.skin");
 				}
 				printf("[*] Skin changed [*]\n");
-				break;
+				return 0;
 			case 'N':
 				return 0;
 		}

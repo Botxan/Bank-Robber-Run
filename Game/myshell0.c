@@ -18,9 +18,7 @@
 #include <libgen.h>
 
 #include "defines.h"
-#include "./function/view.h"
 #include "./function/cd.h"
-#include "./function/inv.h"
 #include "./function/Leave.h"
 #include "./function/resetGame.h"
 #include "./function/interaction/officerBack.c"
@@ -180,12 +178,10 @@ int idFromName(char *newRoom)
 		//write(2,"test",strlen("test"));
 		room = lookuptable[i];
 		if (strcmp(room.name, newRoom) == 0){
-			
 		return room.id;
-		
 		}
 	}
-	
+
 	return 0;
 }
 
@@ -200,11 +196,11 @@ int idFromName(char *newRoom)
  * in the path to the current position of the npc
  */
 void moveNpc(char *name, char *dest) {
-	char *nameWithExtension=malloc(PATH_MAX);
-	char *find=malloc(PATH_MAX);
-	char *npcPath=malloc(PATH_MAX);
-	char *destPath=malloc(PATH_MAX);
-	char *destPath1=malloc(PATH_MAX);
+	char *nameWithExtension = malloc(PATH_MAX*5);
+	char *find = malloc(PATH_MAX);
+	char *npcPath = malloc(PATH_MAX);
+	char *destPath = malloc(PATH_MAX);
+	char *destPath1 = malloc(PATH_MAX);
 	FILE *fp;
 
 	// Remove npc (symlink) from current location
@@ -219,12 +215,13 @@ void moveNpc(char *name, char *dest) {
 	sprintf(find, "find %s -type d -name %s 2>/dev/null", root, dest);
 	fp = popen(find, "r");
 	if (fp == NULL) printf("Failed to move %s to new location.\n", name);
-	fgets(destPath1, sizeof(destPath1), fp);
+	fgets(destPath1, PATH_MAX, fp);
 	pclose(fp);
-
-	destPath[strcspn(destPath, "\n")] = 0; // remove the newline
+	destPath1[strcspn(destPath1, "\n")] = 0; // remove the newline
 	sprintf(destPath, "%s/%s.npc", destPath1, name);
+
 	symlink(npcPath, destPath);
+
 	free(nameWithExtension);
 	free(find);
 	free(npcPath);
@@ -594,7 +591,7 @@ int execute(int argc, char *argv[])
 
 
 		// Accessing the vault corridor without night google visions equiped => deny
-		if ((strcmp(prompt, "Basement") == 0) && (strcmp(argv[1], "VaultCorridor") == 0) && (getToolState("night-vision-googles") == 0)) {
+		if ((strcmp(prompt, "Basement") == 0) && (strcmp(argv[1], "VaultCorridor") == 0) && (getToolState("night-vision-goggles") == 0)) {
 			printf("\033[31mNo light enters the next room, and it is the one with the laser system. I'll need something to see in there.\033[37m\n");
 			return 0;
 		}
@@ -686,7 +683,7 @@ int execute(int argc, char *argv[])
 					// Unlock the ventilation ducts to electrical panel (bidirectional) and to the security room (unidirectional)
 					if (visitedTimes == 1) {
 						printf("\033[32m*You have discovered the ventilation ducts!*\033[37m\n");
-						printf("\033[32m*Ventilation ducts are now accesible also from the electrical panel room**\033[37m\n");
+						printf("\033[32m*Ventilation ducts are now accesible also from the electrical panel room*\033[37m\n");
 
 						// Create new symlink
 						symlink("../Corridor/WC/VentilationDucts", "../../../ElectricalPanelRoom/VentilationDucts");
@@ -696,7 +693,7 @@ int execute(int argc, char *argv[])
 							execlp("../../../../../../../chmod", "chmod", "../../SecurityRoom", "0775", NULL);
 							printf("\033[31mError changing SecurityRoom permissions: %s.\n\033[37m", strerror(errno));
 							exit(0);
-						}
+						} else wait(NULL);
 					}
 
 					// If coming from electrical panel (shortcut), place guard in main banking hall again
@@ -822,6 +819,7 @@ int execute(int argc, char *argv[])
                         write(savefd,saveText,strlen(saveText));
                         write(savefd,"#",1);
                         dprintf(savefd,"%d",time_left);
+			close(fd);
 		}
 	}
 
@@ -888,8 +886,7 @@ int execute(int argc, char *argv[])
 						strcpy(invPath, root);
 						strcat(invPath, "/Inv/officer-card.tool");
 						symlink(cardPath, invPath);
-						printf("*officer-card has been added to your inventory*\n");
-
+						printf("\x1b[34mOfficer-card has been added to your inventory.\x1b[0m\n");
 						// update robert status depending if he has been distracting the guard
 						if (distractedGuard) setNpcState("Robert", 5);
 						else setNpcState("Robert", 6);
@@ -1283,8 +1280,8 @@ int begin() {
 		chdir("Van");
 
 		// --- Change starting path for fast testing ---
-		//system("chmod 777 Van/MainEntrance/Parking/Basement/");
-		//chdir("Van/MainEntrance/Parking/Basement/");
+		//system("chmod 777 Van/MainEntrance/MainBankingHall/Corridor/SecurityRoom");
+		//chdir("Van/MainEntrance/MainBankingHall/Corridor/");
 
 		home = getcwd(NULL, 0);
 		prompt="Van";

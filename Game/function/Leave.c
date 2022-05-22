@@ -1,6 +1,4 @@
-
-
-#include <sys/syscall.h> 
+#include <sys/syscall.h>
 #include <fcntl.h>
 #include <errno.h>
 #include <unistd.h>
@@ -86,8 +84,8 @@ int execute1(int argc, char *argv[])
 		return 0;
 	}
 	return 3;
-		
 }
+
 /////////////////////////////////////////////////
 #ifdef FUNCTION
 int Leave()

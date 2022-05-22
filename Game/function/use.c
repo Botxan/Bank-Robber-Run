@@ -116,9 +116,9 @@ int main(int argc, char *argv[]){
 				} else wait(NULL);
 			} else write(1, "*This is not a safe place to use the radio*\n", strlen("*This is not a safe place to use the radio*\n"));
 
-                } else if (strcmp(argv[2], "night-vision-googles") == 0) {
-			printf("\x1b[32m*You're wearing night vision googles. Now you can see in the dark.*\x1b[37m\n");
-			// change night vision googles state to wearing (1) and unlink
+                } else if (strcmp(argv[2], "night-vision-goggles") == 0) {
+			printf("\x1b[32m*You're wearing night vision goggles. Now you can see in the dark.*\x1b[37m\n");
+			// change night vision goggles state to wearing (1) and unlink
 			strncat(invPath, tool, PATH_MAX);
 			int fd = open(invPath, O_WRONLY);
 			write(fd, "1", 2);
@@ -228,7 +228,6 @@ int main(int argc, char *argv[]){
                                         realpath(dir->d_name, roomPath);
 
 					if (fork() == 0) {
-						//char *args[] = {roomPath, "0755"};
 						execlp(commandPath, commandPath, roomPath, "0755", (char *) NULL);
 						if (errno != 0) {
 							printf("\033[31mProblem unlocking the door: %s.\n\033[37m", strerror(errno));
@@ -237,7 +236,7 @@ int main(int argc, char *argv[]){
 						}
 					} else wait(NULL);
 
-					write(1, "Door unlocked\n", strlen("Door unlocked\n"));
+					write(1, "\x1b[32mDoor unlocked.\x1b[0m\n", strlen("\x1b[32mDoor unlocked.\x1b[0m\n"));
 				} else write(1, "\033[31mWrong key.\n\033[37m", strlen("\033[31mWrong key.\n\033[37m"));
 
 			} else write(1, "This door doesn't require any key to be opened.\n", strlen("This door doesn't require any key to be opened.\n"));
@@ -247,7 +246,7 @@ int main(int argc, char *argv[]){
 
 			if ((strcmp(argv[2], "laxatives") == 0) && (strcmp(argv[3], "coffee-machine") == 0)) {
 				// Add laxatives to coffee machine and obtain coffeee with laxatives
-				printf("You have poured laxatives into the coffee machine.\nThe coffee in the machine is now full of laxatives.\n[*] coffee-with-laxatives has been added to your inventory [*]\n");
+				printf("You have poured laxatives into the coffee machine.\nThe coffee in the machine is now full of laxatives.\n\x1b[34mCoffee-with-laxatives has been added to your inventory.\x1b[0m\n");
 				symlink("../../assets/tool/coffee-with-laxatives.tool", "../../../../Inv/coffee-with-laxatives.tool");
 				// Remove laxatives from inventory
 				unlink("../../../../Inv/laxatives.tool");
