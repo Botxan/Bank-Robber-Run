@@ -3,14 +3,12 @@
 0A
 I hope you have in mind what we agreed. You enter the vault room, take the fucking money and leave, I'll see you on the way out.
 
-Remember the plan, the electrician will arrive at the bank in a couple of hours, so you'll have to impersonate him so the receptionist will let you in. Once inside, he will take you to the electrical panel room. Find a way to sneak into the corridor from the Main Banking Hall. The basement leading to the vault room is located there, but you will need the oficcer's key card to enter the basement.
+Remember the plan, the electrician will arrive at the bank in an hour, so you'll have to impersonate him so the receptionist will let you in. Once inside, he will take you to the electrical panel room. Find a way to sneak into the corridor from the Main Banking Hall. The basement leading to the vault room is located there, but you will need the oficcer's key card to enter the basement.
 
 Be sure to bring the necessary tools:
  - The decoder, for decrypting potentially valuable files.
  - The camera jammer. It is important that you disable the security cameras as soon as possible, but first focus on getting the fucking card.
  - The radio. When you don't know how to continue, use it to contact me, I will give you indications on how to act and on the time we have left. Not all places are safe to talk, so it's best to use it in the electrical panel room, WC or the janitor's room.
-
-Oh, and take this lock pick with you too, it will be useful to open a door with a simple lock. Keep in mind that it will break with use, so take good care of it.
 
 The map will also be useful, make use of it with the map command.
 Before we start, let's review everything we have learned these months, I don't want any surprises:
@@ -20,7 +18,6 @@ Before we start, let's review everything we have learned these months, I don't w
  - If you find something useful, pick it up with "pickup <tool> (or pu)".
  - You can use your objects with "use <tool> [door|object]".
  - If you need to talk to someone in there, use "talk <person>".
- - Visit your last movements with "log".
  - Check your inventory and the skin you are wearing with "inv".
  - Watch periodically the remaning time in you watch using "time".
  - You can see all your last movements with "log".
@@ -126,7 +123,7 @@ Find a way to sneak into the security room. Find a way to obtain the basement ca
 // Security cameras are deactivated and director card has been obtained
 8#
 0A
-I think the atmosphere is starting to get really tense there. If you haven't taken the basement card, it should in the WC, next to the director. Be sure to find some tools to see clearly down there in the basement, as the electrical problem with the bench resides precisely there. It seems that the light in the basement stopped working 3 days ago. Also, the vault is protected with a password that only the director knows. Search his office, you may find some clues.
+I think the atmosphere is starting to get really tense there. If you haven't taken the basement card, it should in the WC, next to the director. Be sure to find some tools to see clearly down there in the basement, as the electrical problem with the bank resides precisely there. It seems that the light in the basement stopped working 3 days ago. Also, the vault is protected with a password that only the director knows. Search his office, you may find some clues.
 
 When you have what we are looking for, come back to the Van. Come on, there is not much time left!
 --80

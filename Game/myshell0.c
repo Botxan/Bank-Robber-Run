@@ -701,7 +701,7 @@ int execute(int argc, char *argv[])
 					break;
 				case BOSS:
 					// Could not move before (missing permissions in boss office)
-					if (visitedTimes == 0) {
+					if (visitedTimes == 1) {
 						removeNpc("Ignacio");
 						moveNpc("Ignacio", "WC");
 					}
@@ -1285,7 +1285,7 @@ int begin() {
 
 		home = getcwd(NULL, 0);
 		prompt="Van";
-		count_down_time_in_secs=2400;  // 1 minute is 60, 1 hour is 3600
+		count_down_time_in_secs=3600;  // 1 minute is 60, 1 hour is 3600
 
 		// Starting dialog
 		talkTo("Robert");

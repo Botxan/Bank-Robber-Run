@@ -104,7 +104,7 @@ int main(int argc, char *argv[]) {
 
 
 	// ----------- Boss office -------------
-	if (strcmp(objectWithExtension, "family-picture") == 0) return checkFamilyPicture();
+	if (strcmp(objectWithExtension, "family-picture.obj") == 0) return checkFamilyPicture();
 
 
 	// ---------- Vault room ---------------
