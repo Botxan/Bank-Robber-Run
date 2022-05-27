@@ -22,7 +22,6 @@ int checkLaptop() {
 			case 'A': // DB
 				printf("Password: ");
 				fgets(line, sizeof(line), stdin);
-				printf("read line:%s", line);
 				if (strcmp(line, "8522\n") == 0) {
 					printf("Correct password.\n");
 					printf("Displaying database...\n");
