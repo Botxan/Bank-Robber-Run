@@ -1170,7 +1170,7 @@ int show_main_menu() {
 
 	// Loop until valid option is selected, and directly return
 	while(1) {
-		write(0, "Select an option [1|2|3|4]: ", 29);
+		write(0, "Select an option [1|2|3]: ", 27);
 
 		while (read(0, opt+i, 1)) {
 			if (opt[i] == '\n') break; // end of user input
@@ -1280,8 +1280,8 @@ int begin() {
 		chdir("Van");
 
 		// --- Change starting path for fast testing ---
-		//system("chmod 777 Van/MainEntrance/MainBankingHall/Corridor/SecurityRoom");
-		//chdir("Van/MainEntrance/MainBankingHall/Corridor/");
+		//system("chmod 777 Van/MainEntrance/Parking/Basement");
+		//chdir("Van/MainEntrance/Parking/Basement");
 
 		home = getcwd(NULL, 0);
 		prompt="Van";
