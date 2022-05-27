@@ -35,10 +35,11 @@ cd ..
   <br /><br />
   <div align="center">
     <img src="https://user-images.githubusercontent.com/33251573/170688930-d707585d-3ce4-4c0b-a830-a5a4e5653f3f.gif" width="1000">
-    <img src="https://user-images.githubusercontent.com/33251573/170691314-541096e8-de28-4b5d-9334-225eb27cd099.gif" width="1000">
+    <img src="https://user-images.githubusercontent.com/33251573/170699856-a6c3cdd2-a9b1-4216-82e7-178f4ff3945b.gif" width="1000">
     <img src="https://user-images.githubusercontent.com/33251573/170691383-e5ac2f6d-45f3-4ffe-af97-91d22ce128f1.gif" width="1000">
   </div>
 </details>
+
 
 ---
 
